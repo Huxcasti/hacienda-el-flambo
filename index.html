@@ -1,0 +1,1828 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+
+  <meta name="theme-color" content="#476a35" />
+
+  <title>Hacienda El Flambo | Reservaciones</title>
+
+  <style>
+    :root {
+      --verde: #476a35;
+      --verde-oscuro: #2f4b24;
+      --verde-claro: #edf4e9;
+
+      --crema: #f8f5ed;
+      --blanco: #ffffff;
+
+      --texto: #20251f;
+      --texto-suave: #687067;
+
+      --borde: #dfe5dc;
+
+      --amarillo: #f2c14e;
+      --rojo: #c94c4c;
+
+      --sombra:
+        0 10px 30px rgba(41, 59, 34, 0.10);
+
+      --radio: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+
+      background: var(--crema);
+      color: var(--texto);
+
+      min-height: 100vh;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* =========================================================
+       HEADER
+    ========================================================= */
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+
+      padding:
+        calc(12px + env(safe-area-inset-top))
+        18px
+        12px;
+    }
+
+    .topbar-inner {
+      max-width: 1100px;
+      margin: auto;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 15px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+
+      border-radius: 14px;
+
+      display: grid;
+      place-items: center;
+
+      font-size: 24px;
+
+      background: var(--verde-claro);
+    }
+
+    .brand-text strong {
+      display: block;
+      color: var(--verde-oscuro);
+      font-size: 16px;
+    }
+
+    .brand-text span {
+      display: block;
+
+      color: var(--texto-suave);
+      font-size: 12px;
+
+      margin-top: 1px;
+    }
+
+    .prototype-badge {
+      background: #fff4cd;
+      color: #715a00;
+
+      font-size: 11px;
+      font-weight: 800;
+
+      padding: 7px 10px;
+
+      border-radius: 999px;
+
+      white-space: nowrap;
+    }
+
+    /* =========================================================
+       HERO
+    ========================================================= */
+
+    .hero {
+      background:
+        linear-gradient(
+          135deg,
+          rgba(47, 75, 36, 0.96),
+          rgba(71, 106, 53, 0.90)
+        );
+
+      color: white;
+
+      padding: 62px 20px 70px;
+    }
+
+    .hero-inner {
+      max-width: 900px;
+      margin: auto;
+
+      text-align: center;
+    }
+
+    .hero-emoji {
+      font-size: 54px;
+      margin-bottom: 15px;
+    }
+
+    .hero h1 {
+      font-size: clamp(35px, 8vw, 62px);
+      line-height: 1.02;
+
+      letter-spacing: -2px;
+
+      margin-bottom: 16px;
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin: 0 auto;
+
+      font-size: 17px;
+      line-height: 1.6;
+
+      opacity: 0.94;
+    }
+
+    .hero-actions {
+      margin-top: 30px;
+
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+
+      gap: 12px;
+    }
+
+    .btn {
+      border: 0;
+
+      border-radius: 14px;
+
+      padding: 14px 20px;
+
+      font-weight: 800;
+
+      transition:
+        transform 0.15s ease,
+        opacity 0.15s ease;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn-primary {
+      background: white;
+      color: var(--verde-oscuro);
+    }
+
+    .btn-secondary {
+      color: white;
+
+      background: rgba(255, 255, 255, 0.13);
+
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    /* =========================================================
+       GENERAL
+    ========================================================= */
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+
+      padding: 35px 18px 70px;
+    }
+
+    .section-title {
+      margin-bottom: 20px;
+    }
+
+    .section-title small {
+      display: block;
+
+      color: var(--verde);
+
+      font-size: 12px;
+      font-weight: 900;
+
+      text-transform: uppercase;
+
+      letter-spacing: 1.5px;
+
+      margin-bottom: 7px;
+    }
+
+    .section-title h2 {
+      font-size: 30px;
+      letter-spacing: -0.7px;
+    }
+
+    .section-title p {
+      color: var(--texto-suave);
+
+      margin-top: 8px;
+
+      line-height: 1.5;
+    }
+
+    /* =========================================================
+       STEPS
+    ========================================================= */
+
+    .steps {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+      gap: 15px;
+
+      margin-bottom: 45px;
+    }
+
+    .step {
+      background: var(--blanco);
+
+      border: 1px solid var(--borde);
+
+      border-radius: var(--radio);
+
+      padding: 22px;
+
+      box-shadow: var(--sombra);
+    }
+
+    .step-icon {
+      width: 48px;
+      height: 48px;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 15px;
+
+      background: var(--verde-claro);
+
+      font-size: 24px;
+
+      margin-bottom: 15px;
+    }
+
+    .step strong {
+      display: block;
+
+      margin-bottom: 6px;
+    }
+
+    .step p {
+      color: var(--texto-suave);
+
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* =========================================================
+       FORM
+    ========================================================= */
+
+    .reservation-card {
+      background: var(--blanco);
+
+      border-radius: 26px;
+
+      border: 1px solid var(--borde);
+
+      padding: 26px;
+
+      box-shadow: var(--sombra);
+    }
+
+    .form-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+
+      gap: 7px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 800;
+
+      color: #3d453b;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+
+      background: #fbfcfa;
+
+      border: 1.5px solid var(--borde);
+
+      border-radius: 14px;
+
+      padding: 14px 15px;
+
+      color: var(--texto);
+
+      outline: none;
+
+      transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--verde);
+
+      box-shadow:
+        0 0 0 4px rgba(71, 106, 53, 0.10);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 105px;
+    }
+
+    .people-box {
+      grid-column: 1 / -1;
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+      gap: 12px;
+
+      background: var(--verde-claro);
+
+      padding: 17px;
+
+      border-radius: 18px;
+    }
+
+    .people-box .field input {
+      background: white;
+    }
+
+    .summary-box {
+      margin-top: 22px;
+
+      background: #f7f9f6;
+
+      border: 1px solid var(--borde);
+
+      border-radius: 18px;
+
+      padding: 18px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+
+      gap: 15px;
+
+      padding: 8px 0;
+
+      color: var(--texto-suave);
+
+      font-size: 14px;
+    }
+
+    .summary-row strong {
+      color: var(--texto);
+      text-align: right;
+    }
+
+    .total-row {
+      border-top: 1px solid var(--borde);
+
+      margin-top: 7px;
+      padding-top: 14px;
+
+      color: var(--texto);
+      font-weight: 900;
+    }
+
+    .submit-btn {
+      width: 100%;
+
+      margin-top: 20px;
+
+      border: 0;
+
+      border-radius: 16px;
+
+      padding: 17px;
+
+      background: var(--verde);
+
+      color: white;
+
+      font-weight: 900;
+
+      font-size: 16px;
+    }
+
+    .submit-btn:active {
+      transform: scale(0.99);
+    }
+
+    .privacy-note {
+      margin-top: 12px;
+
+      text-align: center;
+
+      font-size: 12px;
+
+      color: var(--texto-suave);
+
+      line-height: 1.5;
+    }
+
+    /* =========================================================
+       CONFIRMATION
+    ========================================================= */
+
+    .confirmation {
+      display: none;
+
+      margin-top: 24px;
+
+      background: #eaf5e5;
+
+      border: 1px solid #b8d5ad;
+
+      border-radius: 20px;
+
+      padding: 22px;
+    }
+
+    .confirmation.show {
+      display: block;
+    }
+
+    .confirmation h3 {
+      color: var(--verde-oscuro);
+
+      margin-bottom: 9px;
+    }
+
+    .confirmation p {
+      color: #50604a;
+
+      line-height: 1.55;
+    }
+
+    .reservation-number {
+      display: inline-block;
+
+      margin-top: 13px;
+
+      background: white;
+
+      border: 1px solid #cfe0c8;
+
+      border-radius: 12px;
+
+      padding: 10px 13px;
+
+      font-weight: 900;
+
+      color: var(--verde-oscuro);
+    }
+
+    /* =========================================================
+       FEATURES
+    ========================================================= */
+
+    .features-section {
+      margin-top: 50px;
+    }
+
+    .features {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 15px;
+    }
+
+    .feature {
+      display: flex;
+
+      gap: 14px;
+
+      background: white;
+
+      border: 1px solid var(--borde);
+
+      border-radius: 18px;
+
+      padding: 18px;
+    }
+
+    .feature-icon {
+      font-size: 25px;
+    }
+
+    .feature strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .feature p {
+      font-size: 13px;
+
+      color: var(--texto-suave);
+
+      line-height: 1.45;
+    }
+
+    /* =========================================================
+       FOOTER
+    ========================================================= */
+
+    footer {
+      background: var(--verde-oscuro);
+
+      color: white;
+
+      padding:
+        35px
+        20px
+        calc(35px + env(safe-area-inset-bottom));
+
+      text-align: center;
+    }
+
+    footer strong {
+      display: block;
+
+      font-size: 18px;
+
+      margin-bottom: 8px;
+    }
+
+    footer p {
+      opacity: 0.75;
+
+      font-size: 13px;
+    }
+
+    /* =========================================================
+       MOBILE
+    ========================================================= */
+
+    @media (max-width: 720px) {
+      .steps {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .field.full {
+        grid-column: auto;
+      }
+
+      .people-box {
+        grid-column: auto;
+        grid-template-columns: 1fr;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      .reservation-card {
+        padding: 20px;
+      }
+
+      .hero {
+        padding-top: 48px;
+        padding-bottom: 55px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =======================================================
+       HEADER
+  ======================================================== -->
+
+  <header class="topbar">
+
+    <div class="topbar-inner">
+
+      <div class="brand">
+
+        <div class="brand-icon">
+          🌿
+        </div>
+
+        <div class="brand-text">
+          <strong>Hacienda El Flambo</strong>
+          <span>Reservaciones</span>
+        </div>
+
+      </div>
+
+      <div class="prototype-badge">
+        PROTOTIPO
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- =======================================================
+       HERO
+  ======================================================== -->
+
+  <section class="hero">
+
+    <div class="hero-inner">
+
+      <div class="hero-emoji">
+        🐴🌳
+      </div>
+
+      <h1>
+        Reserva tu experiencia
+      </h1>
+
+      <p>
+        Solicita tu fecha de manera rápida y sencilla.
+        Completa tus datos y recibe un número de reservación.
+      </p>
+
+      <div class="hero-actions">
+
+        <a href="#reservar" class="btn btn-primary">
+          Reservar ahora
+        </a>
+
+        <a href="#como-funciona" class="btn btn-secondary">
+          ¿Cómo funciona?
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =======================================================
+       MAIN
+  ======================================================== -->
+
+  <main class="container">
+
+
+    <!-- COMO FUNCIONA -->
+
+    <section id="como-funciona">
+
+      <div class="section-title">
+
+        <small>
+          Fácil y rápido
+        </small>
+
+        <h2>
+          ¿Cómo funciona?
+        </h2>
+
+        <p>
+          El sistema está diseñado para que una reservación
+          pueda completarse desde cualquier teléfono.
+        </p>
+
+      </div>
+
+
+      <div class="steps">
+
+        <article class="step">
+
+          <div class="step-icon">
+            📅
+          </div>
+
+          <strong>
+            1. Escoge tu fecha
+          </strong>
+
+          <p>
+            Selecciona el día que deseas visitar o realizar
+            tu actividad.
+          </p>
+
+        </article>
+
+
+        <article class="step">
+
+          <div class="step-icon">
+            📝
+          </div>
+
+          <strong>
+            2. Completa tus datos
+          </strong>
+
+          <p>
+            Indica quién realiza la reservación y la cantidad
+            aproximada de personas.
+          </p>
+
+        </article>
+
+
+        <article class="step">
+
+          <div class="step-icon">
+            ✅
+          </div>
+
+          <strong>
+            3. Recibe confirmación
+          </strong>
+
+          <p>
+            El sistema crea un número de reservación para
+            identificar tu solicitud.
+          </p>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         RESERVATION FORM
+    ====================================================== -->
+
+    <section id="reservar">
+
+      <div class="section-title">
+
+        <small>
+          Reservaciones
+        </small>
+
+        <h2>
+          Solicita tu fecha
+        </h2>
+
+        <p>
+          Completa la información solicitada.
+        </p>
+
+      </div>
+
+
+      <div class="reservation-card">
+
+        <form id="reservationForm">
+
+          <div class="form-grid">
+
+
+            <!-- NOMBRE -->
+
+            <div class="field">
+
+              <label for="name">
+                Nombre completo *
+              </label>
+
+              <input
+                id="name"
+                type="text"
+                autocomplete="name"
+                placeholder="Nombre y apellidos"
+                required
+              />
+
+            </div>
+
+
+            <!-- TELEFONO -->
+
+            <div class="field">
+
+              <label for="phone">
+                Teléfono *
+              </label>
+
+              <input
+                id="phone"
+                type="tel"
+                autocomplete="tel"
+                placeholder="787-000-0000"
+                required
+              />
+
+            </div>
+
+
+            <!-- EMAIL -->
+
+            <div class="field">
+
+              <label for="email">
+                Correo electrónico
+              </label>
+
+              <input
+                id="email"
+                type="email"
+                autocomplete="email"
+                placeholder="correo@ejemplo.com"
+              />
+
+            </div>
+
+
+            <!-- DATE -->
+
+            <div class="field">
+
+              <label for="date">
+                Fecha deseada *
+              </label>
+
+              <input
+                id="date"
+                type="date"
+                required
+              />
+
+            </div>
+
+
+            <!-- RESERVATION TYPE -->
+
+            <div class="field full">
+
+              <label for="reservationType">
+                Tipo de reservación *
+              </label>
+
+              <select
+                id="reservationType"
+                required
+              >
+
+                <option value="">
+                  Selecciona una opción
+                </option>
+
+                <option value="Visita">
+                  Visita
+                </option>
+
+                <option value="Cumpleaños">
+                  Cumpleaños
+                </option>
+
+                <option value="Actividad privada">
+                  Actividad privada
+                </option>
+
+                <option value="Evento especial">
+                  Evento especial
+                </option>
+
+                <option value="Otro">
+                  Otro
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <!-- PEOPLE -->
+
+            <div class="people-box">
+
+              <div class="field">
+
+                <label for="adults">
+                  Adultos
+                </label>
+
+                <input
+                  id="adults"
+                  type="number"
+                  min="0"
+                  value="1"
+                />
+
+              </div>
+
+
+              <div class="field">
+
+                <label for="children">
+                  Niños
+                </label>
+
+                <input
+                  id="children"
+                  type="number"
+                  min="0"
+                  value="0"
+                />
+
+              </div>
+
+
+              <div class="field">
+
+                <label for="babies">
+                  Infantes
+                </label>
+
+                <input
+                  id="babies"
+                  type="number"
+                  min="0"
+                  value="0"
+                />
+
+              </div>
+
+            </div>
+
+
+            <!-- NOTES -->
+
+            <div class="field full">
+
+              <label for="notes">
+                Información adicional
+              </label>
+
+              <textarea
+                id="notes"
+                placeholder="Ejemplo: cumpleaños, decoración, preguntas o información que desees añadir..."
+              ></textarea>
+
+            </div>
+
+          </div>
+
+
+          <!-- SUMMARY -->
+
+          <div class="summary-box">
+
+            <div class="summary-row">
+
+              <span>
+                Fecha
+              </span>
+
+              <strong id="summaryDate">
+                No seleccionada
+              </strong>
+
+            </div>
+
+
+            <div class="summary-row">
+
+              <span>
+                Tipo
+              </span>
+
+              <strong id="summaryType">
+                No seleccionado
+              </strong>
+
+            </div>
+
+
+            <div class="summary-row total-row">
+
+              <span>
+                Personas
+              </span>
+
+              <strong id="summaryPeople">
+                1
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <button
+            class="submit-btn"
+            type="submit"
+          >
+            Solicitar reservación
+          </button>
+
+
+          <p class="privacy-note">
+
+            Esta versión es un prototipo.
+            La disponibilidad y los pagos se conectarán
+            posteriormente al sistema administrativo.
+
+          </p>
+
+        </form>
+
+
+        <!-- CONFIRMATION -->
+
+        <div
+          id="confirmation"
+          class="confirmation"
+        >
+
+          <h3>
+            ✅ Solicitud recibida
+          </h3>
+
+          <p id="confirmationText">
+          </p>
+
+          <div
+            id="reservationNumber"
+            class="reservation-number"
+          >
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FEATURES
+    ====================================================== -->
+
+    <section class="features-section">
+
+      <div class="section-title">
+
+        <small>
+          Próximamente
+        </small>
+
+        <h2>
+          Todo conectado
+        </h2>
+
+        <p>
+          Estas son algunas funciones que iremos añadiendo
+          al sistema.
+        </p>
+
+      </div>
+
+
+      <div class="features">
+
+
+        <article class="feature">
+
+          <div class="feature-icon">
+            📆
+          </div>
+
+          <div>
+
+            <strong>
+              Calendario administrativo
+            </strong>
+
+            <p>
+              Ver fechas disponibles y reservaciones desde
+              un solo panel.
+            </p>
+
+          </div>
+
+        </article>
+
+
+        <article class="feature">
+
+          <div class="feature-icon">
+            👥
+          </div>
+
+          <div>
+
+            <strong>
+              Lista de invitados
+            </strong>
+
+            <p>
+              Registrar nombres y controlar quién ha llegado
+              al evento.
+            </p>
+
+          </div>
+
+        </article>
+
+
+        <article class="feature">
+
+          <div class="feature-icon">
+            ✅
+          </div>
+
+          <div>
+
+            <strong>
+              Check-in
+            </strong>
+
+            <p>
+              Al marcar una persona como presente,
+              su nombre aparecerá en verde.
+            </p>
+
+          </div>
+
+        </article>
+
+
+        <article class="feature">
+
+          <div class="feature-icon">
+            💳
+          </div>
+
+          <div>
+
+            <strong>
+              Pagos
+            </strong>
+
+            <p>
+              Más adelante podremos conectar depósitos
+              o pagos electrónicos.
+            </p>
+
+          </div>
+
+        </article>
+
+
+        <article class="feature">
+
+          <div class="feature-icon">
+            📧
+          </div>
+
+          <div>
+
+            <strong>
+              Confirmaciones
+            </strong>
+
+            <p>
+              Envío automático de confirmaciones y
+              recordatorios.
+            </p>
+
+          </div>
+
+        </article>
+
+
+        <article class="feature">
+
+          <div class="feature-icon">
+            📊
+          </div>
+
+          <div>
+
+            <strong>
+              Reportes
+            </strong>
+
+            <p>
+              Reservaciones, asistencia e ingresos
+              organizados por fecha.
+            </p>
+
+          </div>
+
+        </article>
+
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =======================================================
+       FOOTER
+  ======================================================== -->
+
+  <footer>
+
+    <strong>
+      Hacienda El Flambo
+    </strong>
+
+    <p>
+      Sistema de reservaciones · Prototipo
+    </p>
+
+  </footer>
+
+
+  <!-- =======================================================
+       JAVASCRIPT
+  ======================================================== -->
+
+  <script>
+
+    /*
+      ========================================================
+      HACIENDA EL FLAMBO
+      PRIMER PROTOTIPO
+
+      En esta primera versión las reservaciones se guardan
+      en localStorage.
+
+      Luego cambiaremos esto por una base de datos real
+      para que el panel administrativo vea las reservas
+      desde cualquier dispositivo.
+      ========================================================
+    */
+
+
+    const form =
+      document.getElementById("reservationForm");
+
+    const nameInput =
+      document.getElementById("name");
+
+    const phoneInput =
+      document.getElementById("phone");
+
+    const emailInput =
+      document.getElementById("email");
+
+    const dateInput =
+      document.getElementById("date");
+
+    const reservationType =
+      document.getElementById("reservationType");
+
+    const adultsInput =
+      document.getElementById("adults");
+
+    const childrenInput =
+      document.getElementById("children");
+
+    const babiesInput =
+      document.getElementById("babies");
+
+    const notesInput =
+      document.getElementById("notes");
+
+    const summaryDate =
+      document.getElementById("summaryDate");
+
+    const summaryType =
+      document.getElementById("summaryType");
+
+    const summaryPeople =
+      document.getElementById("summaryPeople");
+
+    const confirmation =
+      document.getElementById("confirmation");
+
+    const confirmationText =
+      document.getElementById("confirmationText");
+
+    const reservationNumber =
+      document.getElementById("reservationNumber");
+
+
+    /*
+      ========================================================
+      MINIMUM DATE = TODAY
+      ========================================================
+    */
+
+    function setMinimumDate() {
+
+      const today =
+        new Date();
+
+      const year =
+        today.getFullYear();
+
+      const month =
+        String(today.getMonth() + 1)
+          .padStart(2, "0");
+
+      const day =
+        String(today.getDate())
+          .padStart(2, "0");
+
+      dateInput.min =
+        `${year}-${month}-${day}`;
+
+    }
+
+
+    setMinimumDate();
+
+
+    /*
+      ========================================================
+      FORMAT DATE
+      ========================================================
+    */
+
+    function formatDate(dateString) {
+
+      if (!dateString) {
+
+        return "No seleccionada";
+
+      }
+
+
+      const date =
+        new Date(
+          dateString + "T12:00:00"
+        );
+
+
+      return date.toLocaleDateString(
+        "es-PR",
+        {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric"
+        }
+      );
+
+    }
+
+
+    /*
+      ========================================================
+      TOTAL PEOPLE
+      ========================================================
+    */
+
+    function getPeopleTotal() {
+
+      const adults =
+        Number(adultsInput.value) || 0;
+
+      const children =
+        Number(childrenInput.value) || 0;
+
+      const babies =
+        Number(babiesInput.value) || 0;
+
+
+      return (
+        adults +
+        children +
+        babies
+      );
+
+    }
+
+
+    /*
+      ========================================================
+      UPDATE SUMMARY
+      ========================================================
+    */
+
+    function updateSummary() {
+
+      summaryDate.textContent =
+        formatDate(
+          dateInput.value
+        );
+
+
+      summaryType.textContent =
+        reservationType.value ||
+        "No seleccionado";
+
+
+      summaryPeople.textContent =
+        getPeopleTotal();
+
+    }
+
+
+    dateInput.addEventListener(
+      "change",
+      updateSummary
+    );
+
+
+    reservationType.addEventListener(
+      "change",
+      updateSummary
+    );
+
+
+    adultsInput.addEventListener(
+      "input",
+      updateSummary
+    );
+
+
+    childrenInput.addEventListener(
+      "input",
+      updateSummary
+    );
+
+
+    babiesInput.addEventListener(
+      "input",
+      updateSummary
+    );
+
+
+    /*
+      ========================================================
+      GENERATE RESERVATION ID
+      ========================================================
+    */
+
+    function generateReservationId() {
+
+      const now =
+        new Date();
+
+
+      const year =
+        String(now.getFullYear())
+          .slice(-2);
+
+
+      const month =
+        String(now.getMonth() + 1)
+          .padStart(2, "0");
+
+
+      const day =
+        String(now.getDate())
+          .padStart(2, "0");
+
+
+      const random =
+        Math.floor(
+          1000 +
+          Math.random() * 9000
+        );
+
+
+      return (
+        `HF-${year}${month}${day}-${random}`
+      );
+
+    }
+
+
+    /*
+      ========================================================
+      GET SAVED RESERVATIONS
+      ========================================================
+    */
+
+    function getReservations() {
+
+      try {
+
+        const saved =
+          localStorage.getItem(
+            "hacienda_el_flambo_reservations"
+          );
+
+
+        if (!saved) {
+
+          return [];
+
+        }
+
+
+        return JSON.parse(saved);
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "Error leyendo reservaciones:",
+          error
+        );
+
+
+        return [];
+
+      }
+
+    }
+
+
+    /*
+      ========================================================
+      SAVE RESERVATIONS
+      ========================================================
+    */
+
+    function saveReservations(
+      reservations
+    ) {
+
+      localStorage.setItem(
+        "hacienda_el_flambo_reservations",
+        JSON.stringify(
+          reservations
+        )
+      );
+
+    }
+
+
+    /*
+      ========================================================
+      SUBMIT
+      ========================================================
+    */
+
+    form.addEventListener(
+      "submit",
+      function(event) {
+
+        event.preventDefault();
+
+
+        const totalPeople =
+          getPeopleTotal();
+
+
+        if (totalPeople <= 0) {
+
+          alert(
+            "Debes indicar al menos una persona."
+          );
+
+          return;
+
+        }
+
+
+        const id =
+          generateReservationId();
+
+
+        const reservation = {
+
+          id: id,
+
+          name:
+            nameInput.value.trim(),
+
+          phone:
+            phoneInput.value.trim(),
+
+          email:
+            emailInput.value.trim(),
+
+          date:
+            dateInput.value,
+
+          reservationType:
+            reservationType.value,
+
+          adults:
+            Number(
+              adultsInput.value
+            ) || 0,
+
+          children:
+            Number(
+              childrenInput.value
+            ) || 0,
+
+          babies:
+            Number(
+              babiesInput.value
+            ) || 0,
+
+          totalPeople:
+            totalPeople,
+
+          notes:
+            notesInput.value.trim(),
+
+          status:
+            "pendiente",
+
+          checkedIn:
+            false,
+
+          createdAt:
+            new Date()
+              .toISOString()
+
+        };
+
+
+        /*
+          Guardar reservación
+        */
+
+        const reservations =
+          getReservations();
+
+
+        reservations.unshift(
+          reservation
+        );
+
+
+        saveReservations(
+          reservations
+        );
+
+
+        /*
+          Mostrar confirmación
+        */
+
+        confirmationText.textContent =
+
+          `${reservation.name}, recibimos tu solicitud para ${formatDate(reservation.date)}. La reservación incluye ${reservation.totalPeople} persona(s).`;
+
+
+        reservationNumber.textContent =
+
+          `Reservación: ${reservation.id}`;
+
+
+        confirmation.classList.add(
+          "show"
+        );
+
+
+        /*
+          Llevar pantalla
+          a confirmación
+        */
+
+        confirmation.scrollIntoView(
+          {
+            behavior: "smooth",
+            block: "center"
+          }
+        );
+
+
+        /*
+          Limpiar formulario
+        */
+
+        form.reset();
+
+
+        adultsInput.value = 1;
+
+        childrenInput.value = 0;
+
+        babiesInput.value = 0;
+
+
+        updateSummary();
+
+      }
+    );
+
+
+    /*
+      Iniciar resumen
+    */
+
+    updateSummary();
+
+  </script>
+
+</body>
+</html>
