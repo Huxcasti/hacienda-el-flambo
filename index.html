@@ -431,6 +431,35 @@
        GUEST LIST
     ========================================================= */
 
+    .guest-quantity-box {
+      margin-bottom: 20px;
+      padding: 18px;
+      background: #f7fbf5;
+      border: 1px solid var(--borde);
+      border-radius: 18px;
+    }
+
+    .guest-quantity-box label {
+      display: block;
+      margin-bottom: 7px;
+    }
+
+    .guest-quantity-help {
+      margin-top: 7px;
+      color: var(--texto-suave);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .guest-list-empty {
+      padding: 20px;
+      text-align: center;
+      color: var(--texto-suave);
+      background: #fafbf9;
+      border: 1px dashed var(--borde);
+      border-radius: 16px;
+    }
+
     .guest-section {
       margin-top: 28px;
 
@@ -535,23 +564,6 @@
       font-weight: 900;
     }
 
-    .add-guest {
-      width: 100%;
-
-      margin-top: 13px;
-
-      border: 2px dashed #bdd0b5;
-
-      border-radius: 15px;
-
-      padding: 14px;
-
-      background: #f7fbf5;
-
-      color: var(--verde-oscuro);
-
-      font-weight: 900;
-    }
 
     .guest-summary {
       margin-top: 16px;
@@ -1078,8 +1090,9 @@
                 <h3>👥 Lista de invitados</h3>
 
                 <p>
-                  Escribe el nombre de cada persona
-                  que estará incluida en la reservación.
+                  Primero indica cuántas personas asistirán.
+                  El sistema abrirá automáticamente un campo
+                  para escribir el nombre de cada una.
                 </p>
               </div>
 
@@ -1087,20 +1100,37 @@
                 id="guestCountBadge"
                 class="guest-count-badge"
               >
-                1 invitado
+                0 invitados
               </div>
 
             </div>
 
-            <div id="guestList"></div>
+            <div class="guest-quantity-box">
+              <label for="guestQuantity">
+                ¿Cuántas personas van a asistir? *
+              </label>
 
-            <button
-              id="addGuestButton"
-              class="add-guest"
-              type="button"
-            >
-              + Añadir invitado
-            </button>
+              <input
+                id="guestQuantity"
+                type="number"
+                min="1"
+                max="150"
+                inputmode="numeric"
+                placeholder="Ejemplo: 25"
+                required
+              >
+
+              <p class="guest-quantity-help">
+                Cuando escribas la cantidad, aparecerán abajo
+                los espacios para completar cada nombre.
+              </p>
+            </div>
+
+            <div id="guestList">
+              <div class="guest-list-empty" id="guestListEmpty">
+                Indica primero la cantidad de personas.
+              </div>
+            </div>
 
             <div class="guest-summary">
 
@@ -1296,8 +1326,8 @@
     const guestList =
       document.getElementById("guestList");
 
-    const addGuestButton =
-      document.getElementById("addGuestButton");
+    const guestQuantityInput =
+      document.getElementById("guestQuantity");
 
     const guestCountBadge =
       document.getElementById("guestCountBadge");
@@ -1487,12 +1517,6 @@
         }
       );
 
-      guestList.appendChild(
-        row
-      );
-
-      updateGuestSummary();
-
       return row;
 
     }
@@ -1611,21 +1635,93 @@
 
     }
 
-    addGuestButton.addEventListener(
-      "click",
-      function() {
+    function syncGuestFields() {
 
-        const newRow =
-          createGuestRow();
+      const requested =
+        Math.max(
+          0,
+          Math.min(
+            150,
+            Number(guestQuantityInput.value) || 0
+          )
+        );
 
-        const nameField =
-          newRow.querySelector(
-            ".guest-name"
+      const existingRows =
+        Array.from(
+          guestList.querySelectorAll(
+            ".guest-row"
+          )
+        );
+
+      const savedGuests =
+        existingRows.map(
+          function(row) {
+            return {
+              name:
+                row.querySelector(".guest-name").value,
+              type:
+                row.querySelector(".guest-type").value
+            };
+          }
+        );
+
+      guestList.innerHTML = "";
+
+      if (requested === 0) {
+
+        const empty =
+          document.createElement("div");
+
+        empty.className =
+          "guest-list-empty";
+
+        empty.id =
+          "guestListEmpty";
+
+        empty.textContent =
+          "Indica primero la cantidad de personas.";
+
+        guestList.appendChild(
+          empty
+        );
+
+        updateGuestSummary();
+
+        return;
+      }
+
+      for (
+        let index = 0;
+        index < requested;
+        index++
+      ) {
+
+        const previous =
+          savedGuests[index] || {
+            name: "",
+            type: "adulto"
+          };
+
+        const row =
+          createGuestRow(
+            previous.name,
+            previous.type
           );
 
-        nameField.focus();
+        guestList.appendChild(
+          row
+        );
 
       }
+
+      updateGuestSummary();
+
+    }
+
+
+    guestQuantityInput.addEventListener(
+      "input",
+      syncGuestFields
     );
 
     function updateSummary() {
@@ -1735,8 +1831,10 @@
       if (guests.length === 0) {
 
         alert(
-          "Debes añadir al menos un invitado."
+          "Indica cuántas personas van a asistir."
         );
+
+        guestQuantityInput.focus();
 
         return false;
 
@@ -1878,16 +1976,16 @@
 
         form.reset();
 
-        guestList.innerHTML = "";
+        guestQuantityInput.value =
+          "";
 
-        createGuestRow();
+        guestList.innerHTML =
+          '<div class="guest-list-empty" id="guestListEmpty">Indica primero la cantidad de personas.</div>';
 
         updateSummary();
 
       }
     );
-
-    createGuestRow();
 
     updateSummary();
 
