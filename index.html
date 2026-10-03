@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
 
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  />
+  >
 
-  <meta name="theme-color" content="#476a35" />
+  <meta name="theme-color" content="#476a35">
 
   <title>Hacienda El Flambo | Reservaciones</title>
 
@@ -26,8 +26,8 @@
 
       --borde: #dfe5dc;
 
-      --amarillo: #f2c14e;
       --rojo: #c94c4c;
+      --rojo-claro: #fff1f1;
 
       --sombra:
         0 10px 30px rgba(41, 59, 34, 0.10);
@@ -87,6 +87,7 @@
       z-index: 100;
 
       background: rgba(255, 255, 255, 0.94);
+
       backdrop-filter: blur(15px);
       -webkit-backdrop-filter: blur(15px);
 
@@ -166,7 +167,7 @@
       background:
         linear-gradient(
           135deg,
-          rgba(47, 75, 36, 0.96),
+          rgba(47, 75, 36, 0.97),
           rgba(71, 106, 53, 0.90)
         );
 
@@ -189,6 +190,7 @@
 
     .hero h1 {
       font-size: clamp(35px, 8vw, 62px);
+
       line-height: 1.02;
 
       letter-spacing: -2px;
@@ -425,26 +427,174 @@
       min-height: 105px;
     }
 
-    .people-box {
+    /* =========================================================
+       GUEST LIST
+    ========================================================= */
+
+    .guest-section {
+      margin-top: 28px;
+
+      border-top: 1px solid var(--borde);
+
+      padding-top: 26px;
+    }
+
+    .guest-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+
+      gap: 15px;
+
+      margin-bottom: 18px;
+    }
+
+    .guest-header h3 {
+      color: var(--verde-oscuro);
+
+      font-size: 21px;
+
+      margin-bottom: 5px;
+    }
+
+    .guest-header p {
+      color: var(--texto-suave);
+
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .guest-count-badge {
+      flex-shrink: 0;
+
+      background: var(--verde-claro);
+      color: var(--verde-oscuro);
+
+      padding: 8px 12px;
+
+      border-radius: 999px;
+
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    #guestList {
+      display: flex;
+      flex-direction: column;
+
+      gap: 12px;
+    }
+
+    .guest-row {
+      display: grid;
+
+      grid-template-columns:
+        minmax(0, 1fr)
+        160px
+        46px;
+
+      gap: 10px;
+
+      align-items: center;
+
+      padding: 12px;
+
+      background: #f8faf7;
+
+      border: 1px solid var(--borde);
+
+      border-radius: 17px;
+    }
+
+    .guest-number {
       grid-column: 1 / -1;
+
+      font-size: 11px;
+      font-weight: 900;
+
+      color: var(--verde);
+
+      text-transform: uppercase;
+
+      letter-spacing: 0.8px;
+    }
+
+    .remove-guest {
+      width: 46px;
+      height: 46px;
+
+      border: 0;
+
+      border-radius: 13px;
+
+      background: var(--rojo-claro);
+
+      color: var(--rojo);
+
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .add-guest {
+      width: 100%;
+
+      margin-top: 13px;
+
+      border: 2px dashed #bdd0b5;
+
+      border-radius: 15px;
+
+      padding: 14px;
+
+      background: #f7fbf5;
+
+      color: var(--verde-oscuro);
+
+      font-weight: 900;
+    }
+
+    .guest-summary {
+      margin-top: 16px;
 
       display: grid;
 
       grid-template-columns:
-        repeat(3, minmax(0, 1fr));
+        repeat(4, minmax(0, 1fr));
 
-      gap: 12px;
+      gap: 8px;
+    }
 
+    .guest-stat {
       background: var(--verde-claro);
 
-      padding: 17px;
+      border-radius: 14px;
 
-      border-radius: 18px;
+      padding: 13px 8px;
+
+      text-align: center;
     }
 
-    .people-box .field input {
-      background: white;
+    .guest-stat strong {
+      display: block;
+
+      color: var(--verde-oscuro);
+
+      font-size: 20px;
+
+      margin-bottom: 3px;
     }
+
+    .guest-stat span {
+      color: var(--texto-suave);
+
+      font-size: 11px;
+
+      font-weight: 700;
+    }
+
+    /* =========================================================
+       SUMMARY
+    ========================================================= */
 
     .summary-box {
       margin-top: 22px;
@@ -670,11 +820,6 @@
         grid-column: auto;
       }
 
-      .people-box {
-        grid-column: auto;
-        grid-template-columns: 1fr;
-      }
-
       .features {
         grid-template-columns: 1fr;
       }
@@ -686,6 +831,43 @@
       .hero {
         padding-top: 48px;
         padding-bottom: 55px;
+      }
+
+      .guest-row {
+        grid-template-columns:
+          minmax(0, 1fr)
+          115px
+          44px;
+
+        padding: 10px;
+      }
+
+      .guest-summary {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 430px) {
+      .guest-row {
+        grid-template-columns:
+          minmax(0, 1fr)
+          105px
+          42px;
+
+        gap: 7px;
+      }
+
+      .guest-row input,
+      .guest-row select {
+        padding: 12px 9px;
+
+        font-size: 14px;
+      }
+
+      .remove-guest {
+        width: 42px;
+        height: 42px;
       }
     }
   </style>
@@ -740,8 +922,8 @@
       </h1>
 
       <p>
-        Solicita tu fecha de manera rápida y sencilla.
-        Completa tus datos y recibe un número de reservación.
+        Solicita tu fecha, registra tu grupo y prepara
+        tu lista de invitados desde cualquier teléfono.
       </p>
 
       <div class="hero-actions">
@@ -783,8 +965,8 @@
         </h2>
 
         <p>
-          El sistema está diseñado para que una reservación
-          pueda completarse desde cualquier teléfono.
+          La reservación y la lista de invitados se preparan
+          desde el mismo formulario.
         </p>
 
       </div>
@@ -803,8 +985,8 @@
           </strong>
 
           <p>
-            Selecciona el día que deseas visitar o realizar
-            tu actividad.
+            Selecciona el día que deseas visitar
+            o realizar tu actividad.
           </p>
 
         </article>
@@ -813,16 +995,16 @@
         <article class="step">
 
           <div class="step-icon">
-            📝
+            👥
           </div>
 
           <strong>
-            2. Completa tus datos
+            2. Añade tus invitados
           </strong>
 
           <p>
-            Indica quién realiza la reservación y la cantidad
-            aproximada de personas.
+            Escribe cada nombre e indica si es adulto,
+            niño o infante.
           </p>
 
         </article>
@@ -839,8 +1021,8 @@
           </strong>
 
           <p>
-            El sistema crea un número de reservación para
-            identificar tu solicitud.
+            El sistema crea un número para identificar
+            tu reservación.
           </p>
 
         </article>
@@ -867,7 +1049,8 @@
         </h2>
 
         <p>
-          Completa la información solicitada.
+          Completa tus datos y prepara la lista
+          de personas que asistirán.
         </p>
 
       </div>
@@ -877,15 +1060,18 @@
 
         <form id="reservationForm">
 
+
+          <!-- =========================
+               DATOS PRINCIPALES
+          ========================== -->
+
           <div class="form-grid">
 
-
-            <!-- NOMBRE -->
 
             <div class="field">
 
               <label for="name">
-                Nombre completo *
+                Nombre de quien reserva *
               </label>
 
               <input
@@ -894,12 +1080,10 @@
                 autocomplete="name"
                 placeholder="Nombre y apellidos"
                 required
-              />
+              >
 
             </div>
 
-
-            <!-- TELEFONO -->
 
             <div class="field">
 
@@ -913,12 +1097,10 @@
                 autocomplete="tel"
                 placeholder="787-000-0000"
                 required
-              />
+              >
 
             </div>
 
-
-            <!-- EMAIL -->
 
             <div class="field">
 
@@ -931,12 +1113,10 @@
                 type="email"
                 autocomplete="email"
                 placeholder="correo@ejemplo.com"
-              />
+              >
 
             </div>
 
-
-            <!-- DATE -->
 
             <div class="field">
 
@@ -948,12 +1128,10 @@
                 id="date"
                 type="date"
                 required
-              />
+              >
 
             </div>
 
-
-            <!-- RESERVATION TYPE -->
 
             <div class="field full">
 
@@ -995,62 +1173,6 @@
             </div>
 
 
-            <!-- PEOPLE -->
-
-            <div class="people-box">
-
-              <div class="field">
-
-                <label for="adults">
-                  Adultos
-                </label>
-
-                <input
-                  id="adults"
-                  type="number"
-                  min="0"
-                  value="1"
-                />
-
-              </div>
-
-
-              <div class="field">
-
-                <label for="children">
-                  Niños
-                </label>
-
-                <input
-                  id="children"
-                  type="number"
-                  min="0"
-                  value="0"
-                />
-
-              </div>
-
-
-              <div class="field">
-
-                <label for="babies">
-                  Infantes
-                </label>
-
-                <input
-                  id="babies"
-                  type="number"
-                  min="0"
-                  value="0"
-                />
-
-              </div>
-
-            </div>
-
-
-            <!-- NOTES -->
-
             <div class="field full">
 
               <label for="notes">
@@ -1059,7 +1181,7 @@
 
               <textarea
                 id="notes"
-                placeholder="Ejemplo: cumpleaños, decoración, preguntas o información que desees añadir..."
+                placeholder="Ejemplo: cumpleaños, decoración, preguntas o cualquier información importante..."
               ></textarea>
 
             </div>
@@ -1067,7 +1189,111 @@
           </div>
 
 
-          <!-- SUMMARY -->
+          <!-- =========================
+               GUEST LIST
+          ========================== -->
+
+          <section class="guest-section">
+
+            <div class="guest-header">
+
+              <div>
+
+                <h3>
+                  👥 Lista de invitados
+                </h3>
+
+                <p>
+                  Escribe el nombre de cada persona
+                  que estará incluida en la reservación.
+                </p>
+
+              </div>
+
+              <div
+                id="guestCountBadge"
+                class="guest-count-badge"
+              >
+                1 invitado
+              </div>
+
+            </div>
+
+
+            <div id="guestList">
+            </div>
+
+
+            <button
+              id="addGuestButton"
+              class="add-guest"
+              type="button"
+            >
+              + Añadir invitado
+            </button>
+
+
+            <div class="guest-summary">
+
+              <div class="guest-stat">
+
+                <strong id="totalGuests">
+                  0
+                </strong>
+
+                <span>
+                  Total
+                </span>
+
+              </div>
+
+
+              <div class="guest-stat">
+
+                <strong id="totalAdults">
+                  0
+                </strong>
+
+                <span>
+                  Adultos
+                </span>
+
+              </div>
+
+
+              <div class="guest-stat">
+
+                <strong id="totalChildren">
+                  0
+                </strong>
+
+                <span>
+                  Niños
+                </span>
+
+              </div>
+
+
+              <div class="guest-stat">
+
+                <strong id="totalBabies">
+                  0
+                </strong>
+
+                <span>
+                  Infantes
+                </span>
+
+              </div>
+
+            </div>
+
+          </section>
+
+
+          <!-- =========================
+               SUMMARY
+          ========================== -->
 
           <div class="summary-box">
 
@@ -1100,11 +1326,11 @@
             <div class="summary-row total-row">
 
               <span>
-                Personas
+                Total de invitados
               </span>
 
               <strong id="summaryPeople">
-                1
+                0
               </strong>
 
             </div>
@@ -1121,17 +1347,17 @@
 
 
           <p class="privacy-note">
-
-            Esta versión es un prototipo.
-            La disponibilidad y los pagos se conectarán
-            posteriormente al sistema administrativo.
-
+            Esta es una versión de demostración.
+            Posteriormente conectaremos las reservaciones
+            al panel administrativo y a una base de datos.
           </p>
 
         </form>
 
 
-        <!-- CONFIRMATION -->
+        <!-- =========================
+             CONFIRMATION
+        ========================== -->
 
         <div
           id="confirmation"
@@ -1167,7 +1393,7 @@
       <div class="section-title">
 
         <small>
-          Próximamente
+          Sistema
         </small>
 
         <h2>
@@ -1175,8 +1401,8 @@
         </h2>
 
         <p>
-          Estas son algunas funciones que iremos añadiendo
-          al sistema.
+          La idea es conectar esta reservación posteriormente
+          con el panel administrativo de Hacienda El Flambo.
         </p>
 
       </div>
@@ -1198,8 +1424,8 @@
             </strong>
 
             <p>
-              Ver fechas disponibles y reservaciones desde
-              un solo panel.
+              Ver fechas disponibles y reservaciones
+              desde un solo panel.
             </p>
 
           </div>
@@ -1220,8 +1446,8 @@
             </strong>
 
             <p>
-              Registrar nombres y controlar quién ha llegado
-              al evento.
+              Cada reservación conservará la lista
+              completa de personas.
             </p>
 
           </div>
@@ -1238,12 +1464,34 @@
           <div>
 
             <strong>
-              Check-in
+              Check-in individual
             </strong>
 
             <p>
-              Al marcar una persona como presente,
-              su nombre aparecerá en verde.
+              Hacienda podrá marcar cada invitado
+              cuando llegue.
+            </p>
+
+          </div>
+
+        </article>
+
+
+        <article class="feature">
+
+          <div class="feature-icon">
+            🟢
+          </div>
+
+          <div>
+
+            <strong>
+              Estado en verde
+            </strong>
+
+            <p>
+              Cuando alguien entre, su nombre
+              cambiará automáticamente a verde.
             </p>
 
           </div>
@@ -1276,28 +1524,6 @@
         <article class="feature">
 
           <div class="feature-icon">
-            📧
-          </div>
-
-          <div>
-
-            <strong>
-              Confirmaciones
-            </strong>
-
-            <p>
-              Envío automático de confirmaciones y
-              recordatorios.
-            </p>
-
-          </div>
-
-        </article>
-
-
-        <article class="feature">
-
-          <div class="feature-icon">
             📊
           </div>
 
@@ -1315,7 +1541,6 @@
           </div>
 
         </article>
-
 
       </div>
 
@@ -1350,14 +1575,12 @@
     /*
       ========================================================
       HACIENDA EL FLAMBO
-      PRIMER PROTOTIPO
+      RESERVACIONES + LISTA DE INVITADOS
 
-      En esta primera versión las reservaciones se guardan
-      en localStorage.
+      En esta etapa usamos localStorage.
 
-      Luego cambiaremos esto por una base de datos real
-      para que el panel administrativo vea las reservas
-      desde cualquier dispositivo.
+      Luego conectaremos este mismo formato
+      a una base de datos real.
       ========================================================
     */
 
@@ -1365,47 +1588,78 @@
     const form =
       document.getElementById("reservationForm");
 
+
     const nameInput =
       document.getElementById("name");
+
 
     const phoneInput =
       document.getElementById("phone");
 
+
     const emailInput =
       document.getElementById("email");
+
 
     const dateInput =
       document.getElementById("date");
 
+
     const reservationType =
       document.getElementById("reservationType");
 
-    const adultsInput =
-      document.getElementById("adults");
-
-    const childrenInput =
-      document.getElementById("children");
-
-    const babiesInput =
-      document.getElementById("babies");
 
     const notesInput =
       document.getElementById("notes");
 
+
+    const guestList =
+      document.getElementById("guestList");
+
+
+    const addGuestButton =
+      document.getElementById("addGuestButton");
+
+
+    const guestCountBadge =
+      document.getElementById("guestCountBadge");
+
+
+    const totalGuestsElement =
+      document.getElementById("totalGuests");
+
+
+    const totalAdultsElement =
+      document.getElementById("totalAdults");
+
+
+    const totalChildrenElement =
+      document.getElementById("totalChildren");
+
+
+    const totalBabiesElement =
+      document.getElementById("totalBabies");
+
+
     const summaryDate =
       document.getElementById("summaryDate");
+
 
     const summaryType =
       document.getElementById("summaryType");
 
+
     const summaryPeople =
       document.getElementById("summaryPeople");
+
 
     const confirmation =
       document.getElementById("confirmation");
 
+
     const confirmationText =
       document.getElementById("confirmationText");
+
 
     const reservationNumber =
       document.getElementById("reservationNumber");
@@ -1413,7 +1667,7 @@
 
     /*
       ========================================================
-      MINIMUM DATE = TODAY
+      MINIMUM DATE
       ========================================================
     */
 
@@ -1422,16 +1676,22 @@
       const today =
         new Date();
 
+
       const year =
         today.getFullYear();
 
+
       const month =
-        String(today.getMonth() + 1)
-          .padStart(2, "0");
+        String(
+          today.getMonth() + 1
+        ).padStart(2, "0");
+
 
       const day =
-        String(today.getDate())
-          .padStart(2, "0");
+        String(
+          today.getDate()
+        ).padStart(2, "0");
+
 
       dateInput.min =
         `${year}-${month}-${day}`;
@@ -1478,34 +1738,335 @@
 
     /*
       ========================================================
-      TOTAL PEOPLE
+      CREATE GUEST ROW
       ========================================================
     */
 
-    function getPeopleTotal() {
+    function createGuestRow(
+      name = "",
+      type = "adulto"
+    ) {
 
-      const adults =
-        Number(adultsInput.value) || 0;
-
-      const children =
-        Number(childrenInput.value) || 0;
-
-      const babies =
-        Number(babiesInput.value) || 0;
+      const row =
+        document.createElement("div");
 
 
-      return (
-        adults +
-        children +
-        babies
+      row.className =
+        "guest-row";
+
+
+      row.innerHTML = `
+
+        <div class="guest-number">
+        </div>
+
+        <input
+          class="guest-name"
+          type="text"
+          placeholder="Nombre del invitado"
+          value="${escapeHtmlAttribute(name)}"
+          autocomplete="off"
+        >
+
+        <select class="guest-type">
+
+          <option
+            value="adulto"
+            ${type === "adulto" ? "selected" : ""}
+          >
+            Adulto
+          </option>
+
+          <option
+            value="niño"
+            ${type === "niño" ? "selected" : ""}
+          >
+            Niño
+          </option>
+
+          <option
+            value="infante"
+            ${type === "infante" ? "selected" : ""}
+          >
+            Infante
+          </option>
+
+        </select>
+
+        <button
+          class="remove-guest"
+          type="button"
+          aria-label="Eliminar invitado"
+        >
+          ×
+        </button>
+
+      `;
+
+
+      const nameField =
+        row.querySelector(
+          ".guest-name"
+        );
+
+
+      const typeField =
+        row.querySelector(
+          ".guest-type"
+        );
+
+
+      const removeButton =
+        row.querySelector(
+          ".remove-guest"
+        );
+
+
+      nameField.addEventListener(
+        "input",
+        updateGuestSummary
       );
+
+
+      typeField.addEventListener(
+        "change",
+        updateGuestSummary
+      );
+
+
+      removeButton.addEventListener(
+        "click",
+        function() {
+
+          const rows =
+            guestList.querySelectorAll(
+              ".guest-row"
+            );
+
+
+          if (rows.length === 1) {
+
+            alert(
+              "La reservación debe tener al menos un invitado."
+            );
+
+            return;
+
+          }
+
+
+          row.remove();
+
+
+          updateGuestSummary();
+
+        }
+      );
+
+
+      guestList.appendChild(
+        row
+      );
+
+
+      updateGuestSummary();
+
+
+      return row;
 
     }
 
 
     /*
       ========================================================
-      UPDATE SUMMARY
+      ESCAPE ATTRIBUTE
+      ========================================================
+    */
+
+    function escapeHtmlAttribute(value) {
+
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+
+    }
+
+
+    /*
+      ========================================================
+      GET GUESTS
+      ========================================================
+    */
+
+    function getGuests() {
+
+      const rows =
+        guestList.querySelectorAll(
+          ".guest-row"
+        );
+
+
+      const guests =
+        [];
+
+
+      rows.forEach(
+        function(row) {
+
+          const name =
+            row
+              .querySelector(".guest-name")
+              .value
+              .trim();
+
+
+          const type =
+            row
+              .querySelector(".guest-type")
+              .value;
+
+
+          guests.push({
+            name: name,
+            type: type,
+            checkedIn: false,
+            checkedInAt: null
+          });
+
+        }
+      );
+
+
+      return guests;
+
+    }
+
+
+    /*
+      ========================================================
+      UPDATE GUEST SUMMARY
+      ========================================================
+    */
+
+    function updateGuestSummary() {
+
+      const rows =
+        guestList.querySelectorAll(
+          ".guest-row"
+        );
+
+
+      let adults = 0;
+      let children = 0;
+      let babies = 0;
+
+
+      rows.forEach(
+        function(row, index) {
+
+          const numberLabel =
+            row.querySelector(
+              ".guest-number"
+            );
+
+
+          numberLabel.textContent =
+            `Invitado ${index + 1}`;
+
+
+          const type =
+            row.querySelector(
+              ".guest-type"
+            ).value;
+
+
+          if (type === "adulto") {
+
+            adults++;
+
+          }
+
+
+          if (type === "niño") {
+
+            children++;
+
+          }
+
+
+          if (type === "infante") {
+
+            babies++;
+
+          }
+
+        }
+      );
+
+
+      const total =
+        rows.length;
+
+
+      totalGuestsElement.textContent =
+        total;
+
+
+      totalAdultsElement.textContent =
+        adults;
+
+
+      totalChildrenElement.textContent =
+        children;
+
+
+      totalBabiesElement.textContent =
+        babies;
+
+
+      summaryPeople.textContent =
+        total;
+
+
+      guestCountBadge.textContent =
+        total === 1
+          ? "1 invitado"
+          : `${total} invitados`;
+
+    }
+
+
+    /*
+      ========================================================
+      ADD GUEST
+      ========================================================
+    */
+
+    addGuestButton.addEventListener(
+      "click",
+      function() {
+
+        const newRow =
+          createGuestRow();
+
+
+        const nameField =
+          newRow.querySelector(
+            ".guest-name"
+          );
+
+
+        nameField.focus();
+
+      }
+    );
+
+
+    /*
+      ========================================================
+      UPDATE GENERAL SUMMARY
       ========================================================
     */
 
@@ -1522,8 +2083,7 @@
         "No seleccionado";
 
 
-      summaryPeople.textContent =
-        getPeopleTotal();
+      updateGuestSummary();
 
     }
 
@@ -1536,24 +2096,6 @@
 
     reservationType.addEventListener(
       "change",
-      updateSummary
-    );
-
-
-    adultsInput.addEventListener(
-      "input",
-      updateSummary
-    );
-
-
-    childrenInput.addEventListener(
-      "input",
-      updateSummary
-    );
-
-
-    babiesInput.addEventListener(
-      "input",
       updateSummary
     );
 
@@ -1571,18 +2113,21 @@
 
 
       const year =
-        String(now.getFullYear())
-          .slice(-2);
+        String(
+          now.getFullYear()
+        ).slice(-2);
 
 
       const month =
-        String(now.getMonth() + 1)
-          .padStart(2, "0");
+        String(
+          now.getMonth() + 1
+        ).padStart(2, "0");
 
 
       const day =
-        String(now.getDate())
-          .padStart(2, "0");
+        String(
+          now.getDate()
+        ).padStart(2, "0");
 
 
       const random =
@@ -1663,7 +2208,51 @@
 
     /*
       ========================================================
-      SUBMIT
+      VALIDATE GUEST LIST
+      ========================================================
+    */
+
+    function validateGuests(
+      guests
+    ) {
+
+      if (guests.length === 0) {
+
+        alert(
+          "Debes añadir al menos un invitado."
+        );
+
+        return false;
+
+      }
+
+
+      const missingName =
+        guests.find(
+          guest =>
+            !guest.name
+        );
+
+
+      if (missingName) {
+
+        alert(
+          "Todos los invitados deben tener un nombre."
+        );
+
+        return false;
+
+      }
+
+
+      return true;
+
+    }
+
+
+    /*
+      ========================================================
+      FORM SUBMIT
       ========================================================
     */
 
@@ -1674,19 +2263,40 @@
         event.preventDefault();
 
 
-        const totalPeople =
-          getPeopleTotal();
+        const guests =
+          getGuests();
 
 
-        if (totalPeople <= 0) {
-
-          alert(
-            "Debes indicar al menos una persona."
-          );
+        if (
+          !validateGuests(
+            guests
+          )
+        ) {
 
           return;
 
         }
+
+
+        const adults =
+          guests.filter(
+            guest =>
+              guest.type === "adulto"
+          ).length;
+
+
+        const children =
+          guests.filter(
+            guest =>
+              guest.type === "niño"
+          ).length;
+
+
+        const babies =
+          guests.filter(
+            guest =>
+              guest.type === "infante"
+          ).length;
 
 
         const id =
@@ -1712,42 +2322,38 @@
           reservationType:
             reservationType.value,
 
-          adults:
-            Number(
-              adultsInput.value
-            ) || 0,
-
-          children:
-            Number(
-              childrenInput.value
-            ) || 0,
-
-          babies:
-            Number(
-              babiesInput.value
-            ) || 0,
-
-          totalPeople:
-            totalPeople,
-
           notes:
             notesInput.value.trim(),
+
+          guests:
+            guests,
+
+          totalPeople:
+            guests.length,
+
+          adults:
+            adults,
+
+          children:
+            children,
+
+          babies:
+            babies,
+
+          checkedInCount:
+            0,
 
           status:
             "pendiente",
 
-          checkedIn:
-            false,
-
           createdAt:
-            new Date()
-              .toISOString()
+            new Date().toISOString()
 
         };
 
 
         /*
-          Guardar reservación
+          Guardar
         */
 
         const reservations =
@@ -1765,12 +2371,12 @@
 
 
         /*
-          Mostrar confirmación
+          Confirmación
         */
 
         confirmationText.textContent =
 
-          `${reservation.name}, recibimos tu solicitud para ${formatDate(reservation.date)}. La reservación incluye ${reservation.totalPeople} persona(s).`;
+          `${reservation.name}, recibimos tu solicitud para ${formatDate(reservation.date)} con una lista de ${reservation.totalPeople} invitado(s).`;
 
 
         reservationNumber.textContent =
@@ -1784,8 +2390,7 @@
 
 
         /*
-          Llevar pantalla
-          a confirmación
+          Scroll
         */
 
         confirmation.scrollIntoView(
@@ -1797,17 +2402,17 @@
 
 
         /*
-          Limpiar formulario
+          Reset
         */
 
         form.reset();
 
 
-        adultsInput.value = 1;
+        guestList.innerHTML =
+          "";
 
-        childrenInput.value = 0;
 
-        babiesInput.value = 0;
+        createGuestRow();
 
 
         updateSummary();
@@ -1817,8 +2422,13 @@
 
 
     /*
-      Iniciar resumen
+      ========================================================
+      INITIALIZE
+      ========================================================
     */
+
+    createGuestRow();
+
 
     updateSummary();
 
