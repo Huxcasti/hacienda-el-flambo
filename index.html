@@ -55,6 +55,33 @@ button,input,select,textarea{font:inherit} button{cursor:pointer} a{color:inheri
 .card{border-radius:24px;padding:24px}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.field{display:flex;flex-direction:column;gap:7px}.field.full{grid-column:1/-1}
 label{font-size:13px;font-weight:850;color:#3e493c}input,select,textarea{width:100%;border:1.5px solid var(--line);background:#fbfcfa;border-radius:13px;padding:13px 14px;outline:none;color:var(--txt)}
 input:focus,select:focus,textarea:focus{border-color:var(--g);box-shadow:0 0 0 4px rgba(73,109,63,.10)}textarea{min-height:96px;resize:vertical}.hint{font-size:11px;color:var(--muted);line-height:1.45}
+
+.guest-quantity-box{
+  margin-bottom:20px;
+  padding:18px;
+  background:#f7fbf5;
+  border:1px solid var(--line);
+  border-radius:18px;
+}
+.guest-quantity-box label{
+  display:block;
+  margin-bottom:7px;
+}
+.guest-quantity-help{
+  margin-top:7px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+}
+.guest-list-empty{
+  padding:20px;
+  text-align:center;
+  color:var(--muted);
+  background:#fafbf9;
+  border:1px dashed var(--line);
+  border-radius:16px;
+}
+
 .guest-section {
   margin-top: 28px;
   border-top: 1px solid var(--line);
@@ -223,7 +250,7 @@ footer{background:var(--gd);color:#fff;text-align:center;padding:32px 18px calc(
         <div class="service"><div class="ico">🪑</div><strong>Sillas y mesas</strong><p>Preparación del espacio.</p></div>
         <div class="service"><div class="ico">🍽️</div><strong>Catering todo incluido</strong><p>Opciones de alimentos.</p></div>
         <div class="service"><div class="ico">🎶</div><strong>Música y equipo</strong><p>Equipo para la actividad.</p></div>
-        <div class="service"><div class="ico">🎪</div><strong>Casa de brinco, chorrera y carpa</strong><p>Opciones recreativas.</p></div>
+        <div class="service"><div class="ico">🎪</div><strong>Brinco, chorrera y carpa</strong><p>Opciones recreativas.</p></div>
         <div class="service"><div class="ico">🐴</div><strong>Animales de granja</strong><p>Experiencia de finca.</p></div>
         <div class="service"><div class="ico">☕</div><strong>Coffee Bar</strong><p>Estación de café.</p></div>
         <div class="service"><div class="ico">🍿</div><strong>Popcorn y algodón</strong><p>Ideal para actividades familiares.</p></div>
@@ -276,32 +303,61 @@ footer{background:var(--gd);color:#fff;text-align:center;padding:32px 18px calc(
               <div>
                 <h3>👥 Lista de invitados</h3>
                 <p>
-                  Escribe el nombre de cada persona
-                  que estará incluida en la reservación.
+                  Primero indica cuántas personas asistirán.
+                  El sistema abrirá automáticamente un espacio
+                  para escribir el nombre de cada una.
                 </p>
               </div>
-              <div id="guestCountBadge" class="badge">1 invitado</div>
+
+              <div id="guestCountBadge" class="badge">
+                0 invitados
+              </div>
             </div>
 
-            <div id="guestList"></div>
+            <div class="guest-quantity-box">
+              <label for="guestQuantity">
+                ¿Cuántas personas van a asistir? *
+              </label>
 
-            <button id="addGuestButton" class="add-guest" type="button">
-              + Añadir invitado
-            </button>
+              <input
+                id="guestQuantity"
+                type="number"
+                min="1"
+                max="100"
+                inputmode="numeric"
+                placeholder="Ejemplo: 25"
+                required
+              >
+
+              <p class="guest-quantity-help">
+                Cuando escribas la cantidad, aparecerán abajo
+                los espacios para completar cada nombre.
+                Capacidad máxima: 100 personas.
+              </p>
+            </div>
+
+            <div id="guestList">
+              <div class="guest-list-empty" id="guestListEmpty">
+                Indica primero la cantidad de personas.
+              </div>
+            </div>
 
             <div class="guest-summary">
               <div class="guest-stat">
                 <strong id="totalGuests">0</strong>
                 <span>Total</span>
               </div>
+
               <div class="guest-stat">
                 <strong id="totalAdults">0</strong>
                 <span>Adultos</span>
               </div>
+
               <div class="guest-stat">
                 <strong id="totalChildren">0</strong>
                 <span>Niños</span>
               </div>
+
               <div class="guest-stat">
                 <strong id="totalBabies">0</strong>
                 <span>Infantes</span>
@@ -461,9 +517,9 @@ document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{
   b.classList.add("active");document.getElementById(b.dataset.panel).classList.add("active");
 });
 
-/* Guest form — restored to the original list behavior */
+/* Guest form — cantidad automática de invitados */
 const guestList = document.getElementById("guestList");
-const addGuestButton = document.getElementById("addGuestButton");
+const guestQuantityInput = document.getElementById("guestQuantity");
 const guestCountBadge = document.getElementById("guestCountBadge");
 const totalGuestsElement = document.getElementById("totalGuests");
 const totalAdultsElement = document.getElementById("totalAdults");
@@ -516,17 +572,16 @@ function createGuestRow(name = "", type = "adulto") {
   removeButton.addEventListener("click", function() {
     const rows = guestList.querySelectorAll(".guest-row");
 
-    if (rows.length === 1) {
+    if (rows.length <= 1) {
       alert("La reservación debe tener al menos un invitado.");
       return;
     }
 
     row.remove();
+    guestQuantityInput.value = guestList.querySelectorAll(".guest-row").length;
     updateGuestSummary();
   });
 
-  guestList.appendChild(row);
-  updateGuestSummary();
   return row;
 }
 
@@ -557,7 +612,6 @@ function updateGuestSummary() {
     row.querySelector(".guest-number").textContent = `Invitado ${index + 1}`;
 
     const type = row.querySelector(".guest-type").value;
-
     if (type === "adulto") adults++;
     if (type === "niño") children++;
     if (type === "infante") babies++;
@@ -574,17 +628,58 @@ function updateGuestSummary() {
     total === 1 ? "1 invitado" : `${total} invitados`;
 }
 
-addGuestButton.addEventListener("click", function() {
-  if (guestList.querySelectorAll(".guest-row").length >= 100) {
+function syncGuestFields() {
+  let requested = Number(guestQuantityInput.value) || 0;
+
+  if (requested > 100) {
+    requested = 100;
+    guestQuantityInput.value = 100;
     alert("La capacidad máxima del evento es de 100 personas.");
+  }
+
+  requested = Math.max(0, requested);
+
+  const existingRows = Array.from(
+    guestList.querySelectorAll(".guest-row")
+  );
+
+  const savedGuests = existingRows.map(function(row) {
+    return {
+      name: row.querySelector(".guest-name").value,
+      type: row.querySelector(".guest-type").value
+    };
+  });
+
+  guestList.innerHTML = "";
+
+  if (requested === 0) {
+    const empty = document.createElement("div");
+    empty.className = "guest-list-empty";
+    empty.id = "guestListEmpty";
+    empty.textContent = "Indica primero la cantidad de personas.";
+    guestList.appendChild(empty);
+    updateGuestSummary();
     return;
   }
 
-  const newRow = createGuestRow();
-  newRow.querySelector(".guest-name").focus();
-});
+  for (let index = 0; index < requested; index++) {
+    const previous = savedGuests[index] || {
+      name: "",
+      type: "adulto"
+    };
 
-createGuestRow();
+    const row = createGuestRow(
+      previous.name,
+      previous.type
+    );
+
+    guestList.appendChild(row);
+  }
+
+  updateGuestSummary();
+}
+
+guestQuantityInput.addEventListener("input", syncGuestFields);
 
 const dateInput=document.getElementById("resDate");
 function minDate(){const d=new Date(),y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),day=String(d.getDate()).padStart(2,"0");dateInput.min=`${y}-${m}-${day}`}
@@ -593,12 +688,22 @@ minDate();
 document.getElementById("reservationForm").onsubmit=e=>{
   e.preventDefault();
   const guests=getGuests().map(g=>({id:uid("G"),...g}));
+  if(guests.length===0){
+    alert("Indica cuántas personas van a asistir.");
+    guestQuantityInput.focus();
+    return;
+  }
   if(guests.some(g=>!g.name)){alert("Debes escribir el nombre de todos los invitados.");return}
   if(guests.length>100){alert("La capacidad máxima es de 100 personas.");return}
   const r={id:uid("HF"),name:resName.value.trim(),phone:resPhone.value.trim(),email:resEmail.value.trim(),date:resDate.value,type:resType.value,packageId:resPackage.value,notes:resNotes.value.trim(),guests,status:"pendiente",createdAt:new Date().toISOString()};
   const arr=allReservations();arr.unshift(r);saveReservations(arr);
   confirmText.textContent=`${r.name}, recibimos tu solicitud para ${fmt(r.date)} con ${r.guests.length} invitado(s). Número: ${r.id}`;
-  confirmBox.classList.add("show");e.target.reset();guestList.innerHTML="";createGuestRow();minDate();
+  confirmBox.classList.add("show");
+  e.target.reset();
+  guestQuantityInput.value="";
+  guestList.innerHTML='<div class="guest-list-empty" id="guestListEmpty">Indica primero la cantidad de personas.</div>';
+  updateGuestSummary();
+  minDate();
   confirmBox.scrollIntoView({behavior:"smooth",block:"center"});
 };
 
