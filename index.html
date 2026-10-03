@@ -604,6 +604,37 @@
       font-weight: 700;
     }
 
+
+    .availability-status {
+      margin-top: 8px;
+      padding: 11px 13px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.35;
+      border: 1px solid var(--borde);
+      background: #f7f8f6;
+      color: var(--texto-suave);
+    }
+
+    .availability-status.available {
+      background: #eaf5e5;
+      border-color: #b8d5ad;
+      color: var(--verde-oscuro);
+    }
+
+    .availability-status.unavailable {
+      background: var(--rojo-claro);
+      border-color: #efc1c1;
+      color: #9b3030;
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
     /* =========================================================
        SUMMARY
     ========================================================= */
@@ -1032,6 +1063,14 @@
                 type="date"
                 required
               >
+
+              <div
+                id="availabilityStatus"
+                class="availability-status"
+                aria-live="polite"
+              >
+                📅 Selecciona una fecha para verificar disponibilidad.
+              </div>
             </div>
 
             <div class="field full">
@@ -1323,6 +1362,26 @@
     const notesInput =
       document.getElementById("notes");
 
+    const availabilityStatus =
+      document.getElementById("availabilityStatus");
+
+    const submitButton =
+      document.querySelector(".submit-btn");
+
+    /*
+      Fechas bloqueadas manualmente.
+
+      Hasta que conectemos una base de datos central,
+      puedes escribir aquí fechas que Hacienda ya tenga ocupadas.
+
+      Ejemplo:
+      const BLOCKED_DATES = [
+        "2026-10-17",
+        "2026-10-24"
+      ];
+    */
+    const BLOCKED_DATES = [];
+
     const guestList =
       document.getElementById("guestList");
 
@@ -1409,6 +1468,101 @@
       );
 
     }
+
+
+    /*
+      ========================================================
+      DISPONIBILIDAD DE FECHAS
+      ========================================================
+
+      Esta versión comprueba:
+      1. Fechas bloqueadas manualmente en BLOCKED_DATES.
+      2. Reservaciones guardadas en este navegador.
+
+      Al conectar el backend, esta misma comprobación se hará
+      contra la base de datos central para todos los clientes.
+    */
+
+    function getDateAvailability(dateString) {
+
+      if (!dateString) {
+        return {
+          available: null,
+          message:
+            "📅 Selecciona una fecha para verificar disponibilidad."
+        };
+      }
+
+      if (BLOCKED_DATES.includes(dateString)) {
+        return {
+          available: false,
+          message:
+            "❌ Esta fecha no está disponible. Selecciona otra fecha."
+        };
+      }
+
+      const reservations =
+        getReservations();
+
+      const hasConflict =
+        reservations.some(
+          function(reservation) {
+            return (
+              reservation.date === dateString &&
+              reservation.status !== "cancelada"
+            );
+          }
+        );
+
+      if (hasConflict) {
+        return {
+          available: false,
+          message:
+            "❌ Esta fecha ya tiene una reservación registrada. Selecciona otra fecha."
+        };
+      }
+
+      return {
+        available: true,
+        message:
+          "✅ Fecha disponible. Puedes continuar con tu reservación."
+      };
+    }
+
+
+    function updateDateAvailability() {
+
+      const result =
+        getDateAvailability(
+          dateInput.value
+        );
+
+      availabilityStatus.classList.remove(
+        "available",
+        "unavailable"
+      );
+
+      if (result.available === true) {
+        availabilityStatus.classList.add(
+          "available"
+        );
+      }
+
+      if (result.available === false) {
+        availabilityStatus.classList.add(
+          "unavailable"
+        );
+      }
+
+      availabilityStatus.textContent =
+        result.message;
+
+      submitButton.disabled =
+        result.available !== true;
+
+      return result;
+    }
+
 
     function createGuestRow(
       name = "",
@@ -1737,6 +1891,8 @@
 
       updateGuestSummary();
 
+      updateDateAvailability();
+
     }
 
     dateInput.addEventListener(
@@ -1865,6 +2021,24 @@
       function(event) {
 
         event.preventDefault();
+
+        const availability =
+          getDateAvailability(
+            dateInput.value
+          );
+
+        if (availability.available !== true) {
+
+          updateDateAvailability();
+
+          alert(
+            availability.available === false
+              ? "La fecha seleccionada no está disponible. Escoge otra fecha."
+              : "Selecciona una fecha antes de continuar."
+          );
+
+          return;
+        }
 
         const guests =
           getGuests();
