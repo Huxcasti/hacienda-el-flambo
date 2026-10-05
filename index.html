@@ -2,777 +2,227 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#35582f">
-<title>Hacienda El Flambo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Código Hacienda El Flambo</title>
 <style>
-:root{
-  --g:#496d3f;--gd:#2f4c29;--gs:#eef5ea;--cream:#f7f3e8;--w:#fff;
-  --txt:#222820;--muted:#6b7468;--line:#dfe6dc;--red:#bb4747;--redsoft:#fff0f0;
-  --shadow:0 12px 32px rgba(36,57,31,.10);--r:20px;
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  margin: 0;
+  padding: 20px;
+  background: #f7f3e8;
+  color: #222820;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--cream);color:var(--txt)}
-button,input,select,textarea{font:inherit} button{cursor:pointer} a{color:inherit;text-decoration:none}
-.hidden{display:none!important}
-.topbar{position:sticky;top:0;z-index:1000;background:rgba(255,255,255,.95);backdrop-filter:blur(14px);border-bottom:1px solid #0000000d;padding:calc(10px + env(safe-area-inset-top)) 16px 10px}
-.topbar-inner{max-width:1150px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand{display:flex;align-items:center;gap:10px}.brand-icon{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:var(--gs);font-size:24px}
-.brand strong{display:block;color:var(--gd);font-size:16px}.brand span{display:block;color:var(--muted);font-size:11px;margin-top:2px}
-.nav{display:flex;gap:7px}.nav button{border:1px solid var(--line);background:#fff;color:var(--gd);padding:9px 11px;border-radius:11px;font-weight:850;font-size:12px}
-.nav button.active{background:var(--g);color:#fff;border-color:var(--g)}
-.hero{background:linear-gradient(135deg,#2e4d28,#577d4d);color:#fff;padding:62px 18px 70px;text-align:center}
-.hero-inner{max-width:900px;margin:auto}
-.hero-logo{
-  width:min(320px,78vw);
-  max-width:100%;
-  display:block;
-  margin:0 auto 18px;
-  border-radius:22px;
-  box-shadow:0 12px 35px rgba(0,0,0,.18);
-  object-fit:cover;
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
 }
-.hero h1{font-size:clamp(38px,8vw,68px);line-height:1;letter-spacing:-2px}.hero p{max-width:720px;margin:18px auto 0;line-height:1.65;font-size:17px;opacity:.96}
-.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:28px}
-.btn{border:0;border-radius:14px;padding:13px 17px;font-weight:900}.btn:active{transform:scale(.98)}
-.btn-white{background:#fff;color:var(--gd)}.btn-ghost{background:#ffffff22;color:#fff;border:1px solid #ffffff44}
-.btn-green{background:var(--g);color:#fff}.btn-soft{background:var(--gs);color:var(--gd)}.btn-red{background:var(--red);color:#fff}.btn-sm{padding:9px 11px;border-radius:10px;font-size:12px}
-.container{max-width:1100px;margin:auto;padding:40px 18px 70px}.section{margin-bottom:54px}
-.section-title{margin-bottom:20px}.section-title small{display:block;color:var(--g);font-size:12px;font-weight:900;letter-spacing:1.4px;text-transform:uppercase;margin-bottom:6px}
-.section-title h2{font-size:clamp(28px,5vw,36px);letter-spacing:-.8px}.section-title p{color:var(--muted);line-height:1.55;margin-top:8px}
-.ann-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-.ann-card,.card,.package,.service,.contact-card{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
-.ann-card{border-radius:22px;overflow:hidden}.ann-img{width:100%;aspect-ratio:16/9;object-fit:cover;background:#e9efe6;display:block}
-.ann-ph{aspect-ratio:16/9;display:grid;place-items:center;background:linear-gradient(135deg,#dde9d8,#eee5ce);font-size:54px}
-.ann-body{padding:18px}.ann-body h3{color:var(--gd);font-size:21px}.ann-body p{color:var(--muted);line-height:1.5;margin-top:7px}.ann-meta{color:var(--g);font-size:11px;font-weight:850;margin-top:10px}
-.services{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.service{border-radius:18px;padding:17px;min-height:120px;box-shadow:0 7px 20px rgba(39,67,34,.06)}
-.service .ico{font-size:28px;margin-bottom:9px}.service strong{display:block;color:var(--gd);font-size:14px}.service p{font-size:12px;color:var(--muted);line-height:1.4;margin-top:5px}
-.info{background:var(--gd);color:#fff;border-radius:24px;padding:24px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
-.info h3{font-size:24px}.info p{opacity:.86;line-height:1.45;margin-top:5px}.capacity{background:#fff;color:var(--gd);padding:14px 17px;border-radius:15px;font-size:22px;font-weight:900}
-.packages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.package{border-radius:20px;padding:20px}.package h3{color:var(--gd)}.price{font-size:26px;color:var(--g);font-weight:900;margin:10px 0}.package p{color:var(--muted);line-height:1.5;font-size:14px}
-.empty{border:2px dashed #cad8c5;border-radius:18px;padding:28px;text-align:center;color:var(--muted);background:#fbfdf9}
-.card{border-radius:24px;padding:24px}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.field{display:flex;flex-direction:column;gap:7px}.field.full{grid-column:1/-1}
-label{font-size:13px;font-weight:850;color:#3e493c}input,select,textarea{width:100%;border:1.5px solid var(--line);background:#fbfcfa;border-radius:13px;padding:13px 14px;outline:none;color:var(--txt)}
-input:focus,select:focus,textarea:focus{border-color:var(--g);box-shadow:0 0 0 4px rgba(73,109,63,.10)}textarea{min-height:96px;resize:vertical}.hint{font-size:11px;color:var(--muted);line-height:1.45}
-.date-status{margin-top:7px;padding:10px 12px;border-radius:11px;font-size:12px;font-weight:800;display:none}
-.date-status.ok{display:block;background:#eaf5e5;color:#2f6f2b;border:1px solid #b7d4ad}
-.date-status.no{display:block;background:var(--redsoft);color:#9c3636;border:1px solid #efcaca}
-.blocked-date-row{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid var(--line);background:#fff;border-radius:14px;padding:12px 14px}
-.blocked-date-row strong{color:var(--gd);display:block}.blocked-date-row span{font-size:11px;color:var(--muted);display:block;margin-top:3px}
-
-.guest-quantity-box{
-  margin-bottom:20px;
-  padding:18px;
-  background:#f7fbf5;
-  border:1px solid var(--line);
-  border-radius:18px;
+h1 {
+  color: #2f4c29;
+  font-size: 26px;
 }
-.guest-quantity-box label{
-  display:block;
-  margin-bottom:7px;
-}
-.guest-quantity-help{
-  margin-top:7px;
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.45;
-}
-.guest-list-empty{
-  padding:20px;
-  text-align:center;
-  color:var(--muted);
-  background:#fafbf9;
-  border:1px dashed var(--line);
-  border-radius:16px;
-}
-
-.guest-section {
-  margin-top: 28px;
-  border-top: 1px solid var(--line);
-  padding-top: 26px;
-}
-.guest-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 15px;
-  margin-bottom: 18px;
-}
-.guest-head h3 {
-  color: var(--gd);
-  font-size: 21px;
-  margin-bottom: 5px;
-}
-.guest-head p {
-  color: var(--muted);
-  font-size: 13px;
+p {
   line-height: 1.5;
 }
-.badge {
-  flex-shrink: 0;
-  background: var(--gs);
-  color: var(--gd);
-  padding: 8px 12px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 900;
-  white-space: nowrap;
-}
-#guestList {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.guest-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 160px 46px;
-  gap: 10px;
-  align-items: center;
-  padding: 12px;
-  background: #f8faf7;
-  border: 1px solid var(--line);
-  border-radius: 17px;
-}
-.guest-number {
-  grid-column: 1 / -1;
-  font-size: 11px;
-  font-weight: 900;
-  color: var(--g);
-  text-transform: uppercase;
-  letter-spacing: .8px;
-}
-.remove-guest {
-  width: 46px;
-  height: 46px;
+button {
   border: 0;
-  border-radius: 13px;
-  background: var(--redsoft);
-  color: var(--red);
-  font-size: 20px;
-  font-weight: 900;
+  border-radius: 12px;
+  padding: 12px 16px;
+  background: #496d3f;
+  color: white;
+  font-weight: 800;
+  margin-bottom: 14px;
 }
-.add-guest {
-  width: 100%;
-  margin-top: 13px;
-  border: 2px dashed #bdd0b5;
-  border-radius: 15px;
-  padding: 14px;
-  background: #f7fbf5;
-  color: var(--gd);
-  font-weight: 900;
+pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: #fff;
+  border: 1px solid #dfe6dc;
+  border-radius: 16px;
+  padding: 16px;
+  overflow: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  line-height: 1.45;
 }
-.guest-summary {
-  margin-top: 16px;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
-}
-.guest-stat {
-  background: var(--gs);
-  border-radius: 14px;
-  padding: 13px 8px;
-  text-align: center;
-}
-.guest-stat strong {
-  display: block;
-  color: var(--gd);
-  font-size: 20px;
-  margin-bottom: 3px;
-}
-.guest-stat span {
-  color: var(--muted);
-  font-size: 11px;
-  font-weight: 700;
-}
-.confirm{display:none;margin-top:18px;background:#eaf5e5;border:1px solid #b7d4ad;border-radius:18px;padding:18px}.confirm.show{display:block}.confirm h3{color:var(--gd)}.confirm p{color:#51604c;line-height:1.5;margin-top:7px}
-.contacts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.contact-card{border-radius:18px;padding:18px;text-align:center}.contact-card .ico{font-size:29px;margin-bottom:8px}.contact-card strong{display:block;color:var(--gd)}.contact-card span{display:block;color:var(--muted);font-size:13px;margin-top:5px}
-footer{background:var(--gd);color:#fff;text-align:center;padding:32px 18px calc(32px + env(safe-area-inset-bottom))}footer strong{display:block;font-size:18px}footer p{font-size:12px;opacity:.76;margin-top:6px;line-height:1.5}
-
-/* ADMIN */
-.admin{max-width:1200px;margin:auto;padding:28px 16px 70px}.admin-head{background:var(--gd);color:#fff;border-radius:24px;padding:24px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
-.admin-head h1{font-size:28px}.admin-head p{opacity:.8;font-size:13px;margin-top:4px}.proto{background:#fff5cb;color:#665400;padding:9px 11px;border-radius:12px;font-size:11px;font-weight:850}
-.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}.tab{border:1px solid var(--line);background:#fff;color:var(--gd);padding:11px 13px;border-radius:12px;font-weight:900;font-size:12px}.tab.active{background:var(--g);color:#fff;border-color:var(--g)}
-.panel{display:none}.panel.active{display:block}.admin-grid{display:grid;grid-template-columns:380px minmax(0,1fr);gap:16px}.panel-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}.panel-title h2{font-size:22px;color:var(--gd)}
-.list{display:flex;flex-direction:column;gap:10px}.item{border:1px solid var(--line);background:#fff;border-radius:16px;padding:14px;display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.item h4{color:var(--gd)}.item p{font-size:12px;color:var(--muted);line-height:1.45;margin-top:4px}.item-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
-.event-card{border:1px solid var(--line);background:#fff;border-radius:16px;padding:14px;cursor:pointer}.event-card.selected{border:2px solid var(--g);background:#fbfef9}.event-card h4{color:var(--gd)}.event-card p{font-size:12px;color:var(--muted);margin-top:4px}
-.track{height:9px;background:#e9eee7;border-radius:999px;overflow:hidden;margin-top:10px}.bar{height:100%;background:var(--g);width:0}.progress-text{font-size:11px;color:var(--muted);margin-top:5px;font-weight:700}
-.detail-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:14px}.mini-stats{display:flex;gap:8px;flex-wrap:wrap}.mini{background:var(--gs);color:var(--gd);padding:8px 10px;border-radius:11px;font-size:11px;font-weight:900}
-.checkin-list{display:flex;flex-direction:column;gap:9px}.checkin{display:flex;justify-content:space-between;gap:12px;align-items:center;border:1px solid var(--line);background:#fff;border-radius:14px;padding:12px}.checkin.checked{background:#e8f6e5;border-color:#9dca94}.checkin.checked .gname{color:#258236}.gname{font-weight:900}.gtype{font-size:11px;color:var(--muted);margin-top:2px}.ctime{font-size:10px;color:#258236;margin-top:3px}.check-btn{border:0;background:var(--g);color:#fff;border-radius:11px;padding:9px 11px;font-size:11px;font-weight:900;white-space:nowrap}.checkin.checked .check-btn{background:#fff;color:#258236;border:1px solid #9dca94}
-.preview{margin-top:9px;border:1px dashed var(--line);border-radius:14px;overflow:hidden;background:#f7f8f5;min-height:90px;display:grid;place-items:center;color:var(--muted);font-size:12px}.preview img{width:100%;max-height:220px;object-fit:cover}
-.danger{margin-top:18px;border:1px solid #efcaca;background:#fff7f7;border-radius:18px;padding:18px}.danger h3{color:#9c3636}.danger p{color:#7e5b5b;font-size:12px;line-height:1.5;margin:6px 0 12px}
-@media(max-width:900px){.services{grid-template-columns:repeat(2,minmax(0,1fr))}.packages{grid-template-columns:1fr}.admin-grid{grid-template-columns:1fr}.contacts{grid-template-columns:1fr}}
-@media(max-width:720px){.ann-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.guest-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.guest-row{grid-template-columns:minmax(0,1fr) 115px 44px;padding:10px}.brand span{display:none}}
-@media(max-width:430px){.services{grid-template-columns:1fr 1fr}.guest-row{grid-template-columns:minmax(0,1fr) 105px 42px;gap:7px}.guest-row input,.guest-row select{padding:12px 9px;font-size:14px}.remove-guest{width:42px;height:42px}.card{padding:18px}.admin{padding-left:10px;padding-right:10px}}
 </style>
 </head>
 <body>
-
-<header class="topbar">
-  <div class="topbar-inner">
-    <div class="brand">
-      <div class="brand-icon">🌿</div>
-      <div><strong>Hacienda El Flambo</strong><span>Morovis, Puerto Rico</span></div>
-    </div>
-    <div class="nav">
-      <button id="publicNav" class="active" type="button">Página pública</button>
-      <button id="adminNav" type="button">Administrador</button>
-    </div>
-  </div>
-</header>
-
-<div id="publicView">
-  <section class="hero">
-    <div class="hero-inner">
-      <img
-        src="hacienda_flambo.JPG"
-        alt="Hacienda El Flambo"
-        class="hero-logo"
-      >
-      <h1>Hacienda El Flambo</h1>
-      <p>
-        Un espacio privado en Morovis para cumpleaños, bodas, actividades familiares,
-        eventos corporativos, sesiones fotográficas, talleres y mucho más.
-        Tú disfruta. Nosotros nos encargamos de TODO.
-      </p>
-      <div class="actions">
-        <a href="#reservar" class="btn btn-white">Separar mi fecha</a>
-        <a href="https://wa.me/17875141034" target="_blank" rel="noopener" class="btn btn-ghost">WhatsApp</a>
-      </div>
-    </div>
-  </section>
-
-  <main class="container">
-
-    <section class="section">
-      <div class="section-title"><small>Novedades</small><h2>Anuncios y promociones</h2><p>Los anuncios activos desde administración aparecen aquí automáticamente.</p></div>
-      <div id="publicAnnouncements" class="ann-grid"></div>
-    </section>
-
-    <section class="section">
-      <div class="section-title"><small>Todo en un mismo lugar</small><h2>Servicios y experiencias</h2><p>Opciones para disfrutar la actividad sin tener que coordinar cada servicio por separado.</p></div>
-      <div class="services">
-        <div class="service"><div class="ico">🪑</div><strong>Sillas y mesas</strong><p>Preparación del espacio.</p></div>
-        <div class="service"><div class="ico">🍽️</div><strong>Catering todo incluido</strong><p>Opciones de alimentos.</p></div>
-        <div class="service"><div class="ico">🎶</div><strong>Música y equipo</strong><p>Equipo para la actividad.</p></div>
-        <div class="service"><div class="ico">🎪</div><strong>Brinco, chorrera y carpa</strong><p>Opciones recreativas.</p></div>
-        <div class="service"><div class="ico">🐴</div><strong>Animales de granja</strong><p>Experiencia de finca.</p></div>
-        <div class="service"><div class="ico">☕</div><strong>Coffee Bar</strong><p>Estación de café.</p></div>
-        <div class="service"><div class="ico">🍿</div><strong>Popcorn y algodón</strong><p>Ideal para actividades familiares.</p></div>
-        <div class="service"><div class="ico">🍧</div><strong>Piragua y piña colada</strong><p>Opciones refrescantes.</p></div>
-        <div class="service"><div class="ico">🥣</div><strong>Estación de Açaí</strong><p>Estación adicional.</p></div>
-        <div class="service"><div class="ico">🧀</div><strong>Charcutería y dips</strong><p>Opciones para compartir.</p></div>
-        <div class="service"><div class="ico">🌳</div><strong>Casita del Árbol</strong><p>Espacio especial de la Hacienda.</p></div>
-        <div class="service"><div class="ico">📸</div><strong>Fotos y videos</strong><p>Áreas y servicio de fotografía.</p></div>
-        <div class="service"><div class="ico">🛝</div><strong>Áreas recreativas</strong><p>Espacios para disfrutar.</p></div>
-        <div class="service"><div class="ico">🚗</div><strong>Estacionamiento</strong><p>Área para asistentes.</p></div>
-        <div class="service"><div class="ico">🏛️</div><strong>Museo la Abuela</strong><p>Espacio distintivo.</p></div>
-        <div class="service"><div class="ico">📷</div><strong>Sesiones fotográficas</strong><p>Sesiones dentro de la finca.</p></div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="info">
-        <div><h3>Eventos de hasta 100 personas</h3><p>Cumpleaños, bodas, actividades familiares, eventos corporativos, talleres, pasadías y celebraciones privadas.</p></div>
-        <div class="capacity">👥 100 máx.</div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-title"><small>Ofertas</small><h2>Paquetes</h2><p>Los paquetes y precios se pueden añadir luego desde Administración sin tocar el código.</p></div>
-      <div id="publicPackages" class="packages"></div>
-    </section>
-
-    <section id="reservar" class="section">
-      <div class="section-title"><small>Reservaciones</small><h2>Solicita tu fecha</h2><p>Completa los datos de la actividad y crea la lista de invitados. Máximo 100 personas.</p></div>
-      <div class="card">
-        <form id="reservationForm">
-          <div class="form-grid">
-            <div class="field"><label>Nombre de quien reserva *</label><input id="resName" required autocomplete="name" placeholder="Nombre y apellidos"></div>
-            <div class="field"><label>Teléfono *</label><input id="resPhone" required autocomplete="tel" placeholder="787-000-0000"></div>
-            <div class="field"><label>Correo electrónico</label><input id="resEmail" type="email" autocomplete="email" placeholder="correo@ejemplo.com"></div>
-            <div class="field"><label>Fecha deseada *</label><input id="resDate" type="date" required><div id="dateAvailability" class="date-status" aria-live="polite"></div></div>
-            <div class="field">
-              <label>Tipo de actividad *</label>
-              <select id="resType" required>
-                <option value="">Selecciona una opción</option><option>Cumpleaños</option><option>Boda</option><option>Actividad familiar</option>
-                <option>Actividad privada</option><option>Evento corporativo</option><option>Pasadía corporativo</option><option>Sesión fotográfica</option><option>Taller</option><option>Otro</option>
-              </select>
-            </div>
-            <div class="field"><label>Paquete</label><select id="resPackage"><option value="">Sin seleccionar / por definir</option></select></div>
-            <div class="field full"><label>Información adicional</label><textarea id="resNotes" placeholder="Decoración, necesidades especiales, preguntas u otra información..."></textarea></div>
-          </div>
-
-          <section class="guest-section">
-            <div class="guest-head">
-              <div>
-                <h3>👥 Lista de invitados</h3>
-                <p>
-                  Primero indica cuántas personas asistirán.
-                  El sistema abrirá automáticamente un espacio
-                  para escribir el nombre de cada una.
-                </p>
-              </div>
-
-              <div id="guestCountBadge" class="badge">
-                0 invitados
-              </div>
-            </div>
-
-            <div class="guest-quantity-box">
-              <label for="guestQuantity">
-                ¿Cuántas personas van a asistir? *
-              </label>
-
-              <input
-                id="guestQuantity"
-                type="number"
-                min="1"
-                max="100"
-                inputmode="numeric"
-                placeholder="Ejemplo: 25"
-                required
-              >
-
-              <p class="guest-quantity-help">
-                Cuando escribas la cantidad, aparecerán abajo
-                los espacios para completar cada nombre.
-                Capacidad máxima: 100 personas.
-              </p>
-            </div>
-
-            <div id="guestList">
-              <div class="guest-list-empty" id="guestListEmpty">
-                Indica primero la cantidad de personas.
-              </div>
-            </div>
-
-            <div class="guest-summary">
-              <div class="guest-stat">
-                <strong id="totalGuests">0</strong>
-                <span>Total</span>
-              </div>
-
-              <div class="guest-stat">
-                <strong id="totalAdults">0</strong>
-                <span>Adultos</span>
-              </div>
-
-              <div class="guest-stat">
-                <strong id="totalChildren">0</strong>
-                <span>Niños</span>
-              </div>
-
-              <div class="guest-stat">
-                <strong id="totalBabies">0</strong>
-                <span>Infantes</span>
-              </div>
-            </div>
-          </section>
-
-          <button class="btn btn-green" style="width:100%;margin-top:18px" type="submit">Solicitar reservación</button>
-          <p class="hint" style="text-align:center;margin-top:10px">Versión prototipo: los datos se guardan localmente en este navegador.</p>
-        </form>
-        <div id="confirmBox" class="confirm"><h3>✅ Solicitud recibida</h3><p id="confirmText"></p></div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-title"><small>Contacto</small><h2>Habla con Hacienda El Flambo</h2></div>
-      <div class="contacts">
-        <a class="contact-card" href="tel:+17875141034"><div class="ico">📞</div><strong>Llamar</strong><span>(787) 514-1034</span></a>
-        <a class="contact-card" href="https://wa.me/17875141034" target="_blank" rel="noopener"><div class="ico">💬</div><strong>WhatsApp</strong><span>+1 787-514-1034</span></a>
-        <a class="contact-card" href="mailto:haciendaelflambo@gmail.com"><div class="ico">✉️</div><strong>Correo</strong><span>haciendaelflambo@gmail.com</span></a>
-      </div>
-    </section>
-  </main>
-
-  <footer><strong>Hacienda El Flambo</strong><p>Morovis, Puerto Rico · @hacienda_el_flambo · (787) 514-1034</p></footer>
-</div>
-
-<div id="adminView" class="hidden">
-  <main class="admin">
-    <section class="admin-head">
-      <div><h1>Panel Administrativo</h1><p>Anuncios, reservaciones, invitados, check-in y paquetes.</p></div>
-      <div class="proto">PROTOTIPO LOCAL · sin login/backend todavía</div>
-    </section>
-
-    <div class="tabs">
-      <button class="tab active" data-panel="eventsPanel">📅 Eventos e invitados</button>
-      <button class="tab" data-panel="availabilityPanel">🗓️ Disponibilidad</button>
-      <button class="tab" data-panel="annPanel">📣 Anuncios</button>
-      <button class="tab" data-panel="pkgPanel">🎁 Paquetes</button>
-      <button class="tab" data-panel="dataPanel">💾 Datos</button>
-    </div>
-
-    <section id="eventsPanel" class="panel active">
-      <div class="admin-grid">
-        <div class="card">
-          <div class="panel-title"><h2>Reservaciones</h2><span id="resCount" class="badge">0</span></div>
-          <div id="resList" class="list"></div>
-        </div>
-        <div class="card">
-          <div id="noSelected" class="empty">Selecciona una reservación para ver la lista de invitados y registrar las entradas.</div>
-          <div id="eventDetail" class="hidden">
-            <div class="detail-head">
-              <div><h2 id="detailTitle" style="color:var(--gd)">Evento</h2><p id="detailMeta" style="font-size:12px;color:var(--muted);margin-top:5px"></p></div>
-              <div class="mini-stats"><div id="detailCount" class="mini">0 de 0 llegaron</div><button id="deleteReservation" class="btn btn-red btn-sm">Eliminar reservación</button></div>
-            </div>
-            <div class="track" style="margin-bottom:15px"><div id="detailBar" class="bar"></div></div>
-            <div id="checkinList" class="checkin-list"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="availabilityPanel" class="panel">
-      <div class="admin-grid">
-        <div class="card">
-          <div class="panel-title"><h2>Bloquear una fecha</h2></div>
-          <p style="color:var(--muted);line-height:1.55;margin-bottom:14px">Usa esta sección para marcar días que no están disponibles para nuevas solicitudes.</p>
-          <form id="blockedDateForm">
-            <div class="field"><label>Fecha no disponible *</label><input id="blockedDateInput" type="date" required></div>
-            <div class="field" style="margin-top:12px"><label>Motivo</label><input id="blockedDateReason" placeholder="Ej. Evento privado, mantenimiento, cerrado"></div>
-            <button class="btn btn-green" style="width:100%;margin-top:15px">Bloquear fecha</button>
-          </form>
-        </div>
-        <div class="card">
-          <div class="panel-title"><h2>Fechas bloqueadas</h2><span id="blockedDateCount" class="badge">0</span></div>
-          <div id="blockedDateList" class="list"></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="annPanel" class="panel">
-      <div class="admin-grid">
-        <div class="card">
-          <div class="panel-title"><h2>Crear anuncio</h2></div>
-          <form id="annForm">
-            <div class="field"><label>Título *</label><input id="annTitle" required placeholder="Ej. FLAMBOYÁN CERRADO"></div>
-            <div class="field" style="margin-top:12px"><label>Mensaje *</label><textarea id="annText" required placeholder="Ej. Cerrado del 5 al 13 de septiembre..."></textarea></div>
-            <div class="form-grid" style="margin-top:12px">
-              <div class="field"><label>Mostrar desde</label><input id="annStart" type="date"></div>
-              <div class="field"><label>Mostrar hasta</label><input id="annEnd" type="date"></div>
-            </div>
-            <div class="field" style="margin-top:12px"><label>Foto del anuncio</label><input id="annImage" type="file" accept="image/*"><p class="hint">Para este prototipo usa imágenes pequeñas (menos de 1.2 MB).</p><div id="annPreview" class="preview">Sin imagen seleccionada</div></div>
-            <label style="display:flex;align-items:center;gap:8px;margin-top:13px"><input id="annActive" type="checkbox" checked style="width:auto"> Publicar anuncio</label>
-            <button class="btn btn-green" style="width:100%;margin-top:15px">Guardar anuncio</button>
-          </form>
-        </div>
-        <div class="card"><div class="panel-title"><h2>Anuncios guardados</h2><span id="annCount" class="badge">0</span></div><div id="annList" class="list"></div></div>
-      </div>
-    </section>
-
-    <section id="pkgPanel" class="panel">
-      <div class="admin-grid">
-        <div class="card">
-          <div class="panel-title"><h2>Añadir paquete</h2></div>
-          <form id="pkgForm">
-            <div class="field"><label>Nombre *</label><input id="pkgName" required placeholder="Ej. Paquete Familiar"></div>
-            <div class="field" style="margin-top:12px"><label>Precio</label><input id="pkgPrice" placeholder="Ej. $1,250 o Consultar"></div>
-            <div class="field" style="margin-top:12px"><label>Descripción *</label><textarea id="pkgDesc" required placeholder="Qué incluye este paquete..."></textarea></div>
-            <label style="display:flex;align-items:center;gap:8px;margin-top:13px"><input id="pkgActive" type="checkbox" checked style="width:auto"> Mostrar en la página pública</label>
-            <button class="btn btn-green" style="width:100%;margin-top:15px">Guardar paquete</button>
-          </form>
-        </div>
-        <div class="card"><div class="panel-title"><h2>Paquetes guardados</h2><span id="pkgCount" class="badge">0</span></div><div id="pkgList" class="list"></div></div>
-      </div>
-    </section>
-
-    <section id="dataPanel" class="panel">
-      <div class="card">
-        <div class="panel-title"><h2>Respaldo de información</h2></div>
-        <p style="color:var(--muted);line-height:1.6;margin-bottom:14px">Exporta reservaciones, anuncios, paquetes y fechas bloqueadas a un archivo JSON, o importa un respaldo anterior.</p>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button id="exportBtn" class="btn btn-green">Descargar respaldo</button>
-          <label class="btn btn-soft">Importar respaldo <input id="importInput" class="hidden" type="file" accept=".json,application/json"></label>
-        </div>
-        <div class="danger"><h3>Zona de pruebas</h3><p>Esto borra únicamente los datos guardados por este prototipo en este navegador.</p><button id="clearBtn" class="btn btn-red">Borrar datos locales</button></div>
-      </div>
-    </section>
-  </main>
-</div>
-
-<script>
-"use strict";
-
-const K={
-  reservations:"hacienda_el_flambo_reservations",
-  announcements:"hacienda_el_flambo_announcements",
-  packages:"hacienda_el_flambo_packages",
-  blockedDates:"hacienda_el_flambo_blocked_dates"
-};
-const read=k=>{try{return JSON.parse(localStorage.getItem(k))||[]}catch(e){return[]}};
-const write=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
-const uid=p=>p+"-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7);
-const esc=v=>String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
-const fmt=d=>{if(!d)return"Sin fecha";return new Date(d+"T12:00:00").toLocaleDateString("es-PR",{weekday:"long",year:"numeric",month:"long",day:"numeric"})};
-
-function normalizeReservation(r){
-  r.type=r.type||r.reservationType||"Actividad";
-  r.guests=(r.guests||[]).map(g=>({
-    id:g.id||uid("G"),
-    name:g.name||"",
-    type:g.type||"adulto",
-    checkedIn:Boolean(g.checkedIn),
-    checkedInAt:g.checkedInAt||null
-  }));
-  return r;
-}
-function allReservations(){return read(K.reservations).map(normalizeReservation)}
-function saveReservations(v){write(K.reservations,v)}
-
-const publicView=document.getElementById("publicView"),adminView=document.getElementById("adminView");
-const publicNav=document.getElementById("publicNav"),adminNav=document.getElementById("adminNav");
-function showPublic(){
-  publicView.classList.remove("hidden");adminView.classList.add("hidden");
-  publicNav.classList.add("active");adminNav.classList.remove("active");
-  renderPublicAnnouncements();renderPublicPackages();window.scrollTo({top:0,behavior:"smooth"});
-}
-function showAdmin(){
-  publicView.classList.add("hidden");adminView.classList.remove("hidden");
-  publicNav.classList.remove("active");adminNav.classList.add("active");
-  renderReservations();renderBlockedDates();renderAdminAnnouncements();renderAdminPackages();window.scrollTo({top:0,behavior:"smooth"});
-}
-publicNav.onclick=showPublic;adminNav.onclick=showAdmin;
-
-document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{
-  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
-  document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));
-  b.classList.add("active");document.getElementById(b.dataset.panel).classList.add("active");
-});
-
-/* Guest form — cantidad automática de invitados */
-const guestList = document.getElementById("guestList");
-const guestQuantityInput = document.getElementById("guestQuantity");
-const guestCountBadge = document.getElementById("guestCountBadge");
-const totalGuestsElement = document.getElementById("totalGuests");
-const totalAdultsElement = document.getElementById("totalAdults");
-const totalChildrenElement = document.getElementById("totalChildren");
-const totalBabiesElement = document.getElementById("totalBabies");
-
-function escapeHtmlAttribute(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;");
-}
-
-function createGuestRow(name = "", type = "adulto") {
-  const row = document.createElement("div");
-  row.className = "guest-row";
-
-  row.innerHTML = `
-    <div class="guest-number"></div>
-
-    <input
-      class="guest-name"
-      type="text"
-      placeholder="Nombre del invitado"
-      value="${escapeHtmlAttribute(name)}"
-      autocomplete="off"
-    >
-
-    <select class="guest-type">
-      <option value="adulto" ${type === "adulto" ? "selected" : ""}>Adulto</option>
-      <option value="niño" ${type === "niño" ? "selected" : ""}>Niño</option>
-      <option value="infante" ${type === "infante" ? "selected" : ""}>Infante</option>
-    </select>
-
-    <button
-      class="remove-guest"
-      type="button"
-      aria-label="Eliminar invitado"
-    >×</button>
-  `;
-
-  const nameField = row.querySelector(".guest-name");
-  const typeField = row.querySelector(".guest-type");
-  const removeButton = row.querySelector(".remove-guest");
-
-  nameField.addEventListener("input", updateGuestSummary);
-  typeField.addEventListener("change", updateGuestSummary);
-
-  removeButton.addEventListener("click", function() {
-    const rows = guestList.querySelectorAll(".guest-row");
-
-    if (rows.length <= 1) {
-      alert("La reservación debe tener al menos un invitado.");
-      return;
-    }
-
-    row.remove();
-    guestQuantityInput.value = guestList.querySelectorAll(".guest-row").length;
-    updateGuestSummary();
-  });
-
-  return row;
-}
-
-function getGuests() {
-  const rows = guestList.querySelectorAll(".guest-row");
-  const guests = [];
-
-  rows.forEach(function(row) {
-    guests.push({
-      name: row.querySelector(".guest-name").value.trim(),
-      type: row.querySelector(".guest-type").value,
-      checkedIn: false,
-      checkedInAt: null
-    });
-  });
-
-  return guests;
-}
-
-function updateGuestSummary() {
-  const rows = guestList.querySelectorAll(".guest-row");
-
-  let adults = 0;
-  let children = 0;
-  let babies = 0;
-
-  rows.forEach(function(row, index) {
-    row.querySelector(".guest-number").textContent = `Invitado ${index + 1}`;
-
-    const type = row.querySelector(".guest-type").value;
-    if (type === "adulto") adults++;
-    if (type === "niño") children++;
-    if (type === "infante") babies++;
-  });
-
-  const total = rows.length;
-
-  totalGuestsElement.textContent = total;
-  totalAdultsElement.textContent = adults;
-  totalChildrenElement.textContent = children;
-  totalBabiesElement.textContent = babies;
-
-  guestCountBadge.textContent =
-    total === 1 ? "1 invitado" : `${total} invitados`;
-}
-
-function syncGuestFields() {
-  let requested = Number(guestQuantityInput.value) || 0;
-
-  if (requested > 100) {
-    requested = 100;
-    guestQuantityInput.value = 100;
-    alert("La capacidad máxima del evento es de 100 personas.");
-  }
-
-  requested = Math.max(0, requested);
-
-  const existingRows = Array.from(
-    guestList.querySelectorAll(".guest-row")
-  );
-
-  const savedGuests = existingRows.map(function(row) {
-    return {
-      name: row.querySelector(".guest-name").value,
-      type: row.querySelector(".guest-type").value
-    };
-  });
-
-  guestList.innerHTML = "";
-
-  if (requested === 0) {
-    const empty = document.createElement("div");
-    empty.className = "guest-list-empty";
-    empty.id = "guestListEmpty";
-    empty.textContent = "Indica primero la cantidad de personas.";
-    guestList.appendChild(empty);
-    updateGuestSummary();
-    return;
-  }
-
-  for (let index = 0; index < requested; index++) {
-    const previous = savedGuests[index] || {
-      name: "",
-      type: "adulto"
-    };
-
-    const row = createGuestRow(
-      previous.name,
-      previous.type
-    );
-
-    guestList.appendChild(row);
-  }
-
-  updateGuestSummary();
-}
-
-guestQuantityInput.addEventListener("input", syncGuestFields);
-
-const dateInput=document.getElementById("resDate");
-const dateAvailability=document.getElementById("dateAvailability");
-const blockedDateForm=document.getElementById("blockedDateForm");
-const blockedDateInput=document.getElementById("blockedDateInput");
-const blockedDateReason=document.getElementById("blockedDateReason");
-const blockedDateList=document.getElementById("blockedDateList");
-const blockedDateCount=document.getElementById("blockedDateCount");
+<div class="wrap">
+  <h1>Hacienda El Flambo — bloqueo automático de fechas</h1>
+  <p>Este es el código preparado para copiar y pegar en tu index.html.</p>
+  <button onclick="copyCode()">Copiar código</button>
+  <pre id="code">// HACIENDA EL FLAMBO - BLOQUEO AUTOMATICO DE FECHAS
+
+// Reemplaza en tu index.html desde:
+// const dateInput=document.getElementById(&quot;resDate&quot;);
+// hasta justo antes de:
+// /* Events and check-in */
+
+const dateInput=document.getElementById(&quot;resDate&quot;);
+const dateAvailability=document.getElementById(&quot;dateAvailability&quot;);
+const blockedDateForm=document.getElementById(&quot;blockedDateForm&quot;);
+const blockedDateInput=document.getElementById(&quot;blockedDateInput&quot;);
+const blockedDateReason=document.getElementById(&quot;blockedDateReason&quot;);
+const blockedDateList=document.getElementById(&quot;blockedDateList&quot;);
+const blockedDateCount=document.getElementById(&quot;blockedDateCount&quot;);
 
 function todayISO(){
-  const d=new Date(),y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),day=String(d.getDate()).padStart(2,"0");
+  const d=new Date();
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,&quot;0&quot;);
+  const day=String(d.getDate()).padStart(2,&quot;0&quot;);
   return `${y}-${m}-${day}`;
 }
+
 function minDate(){
   const t=todayISO();
   dateInput.min=t;
   blockedDateInput.min=t;
 }
+
 function getBlockedDates(){
   return read(K.blockedDates)
-    .filter(x=>x&&x.date)
-    .sort((a,b)=>a.date.localeCompare(b.date));
+    .filter(x=&gt;x&amp;&amp;x.date)
+    .sort((a,b)=&gt;a.date.localeCompare(b.date));
 }
+
+function getReservationByDate(date){
+  return allReservations().find(r=&gt;r.date===date);
+}
+
+function getDateConflict(date){
+  if(!date)return null;
+
+  const blocked=getBlockedDates().find(x=&gt;x.date===date);
+
+  if(blocked){
+    return {
+      type:&quot;blocked&quot;,
+      reason:blocked.reason||&quot;&quot;
+    };
+  }
+
+  const reservation=getReservationByDate(date);
+
+  if(reservation){
+    return {
+      type:&quot;reservation&quot;,
+      reservation
+    };
+  }
+
+  return null;
+}
+
 function isDateBlocked(date){
-  return getBlockedDates().some(x=>x.date===date);
+  return Boolean(getDateConflict(date));
 }
+
 function updateDateAvailability(){
   const date=dateInput.value;
-  dateAvailability.className="date-status";
-  dateAvailability.textContent="";
+
+  dateAvailability.className=&quot;date-status&quot;;
+  dateAvailability.textContent=&quot;&quot;;
+
   if(!date)return;
-  const blocked=getBlockedDates().find(x=>x.date===date);
-  if(blocked){
-    dateAvailability.classList.add("no");
-    dateAvailability.textContent="Fecha no disponible"+(blocked.reason?": "+blocked.reason:". Elige otra fecha.");
-  }else{
-    dateAvailability.classList.add("ok");
-    dateAvailability.textContent="Fecha disponible para solicitar.";
+
+  const conflict=getDateConflict(date);
+
+  if(conflict){
+    dateAvailability.classList.add(&quot;no&quot;);
+
+    if(conflict.type===&quot;reservation&quot;){
+      dateAvailability.textContent=
+        &quot;Fecha no disponible: ya existe una reservacion para ese dia.&quot;;
+    }else{
+      dateAvailability.textContent=
+        &quot;Fecha no disponible&quot; +
+        (conflict.reason ? &quot;: &quot; + conflict.reason : &quot;. Elige otra fecha.&quot;);
+    }
+
+    return;
   }
+
+  dateAvailability.classList.add(&quot;ok&quot;);
+  dateAvailability.textContent=&quot;Fecha disponible para reservar.&quot;;
 }
-dateInput.addEventListener("change",updateDateAvailability);
+
+dateInput.addEventListener(&quot;change&quot;,updateDateAvailability);
 
 function renderBlockedDates(){
   const arr=getBlockedDates();
+
   blockedDateCount.textContent=arr.length;
+
   if(!arr.length){
-    blockedDateList.innerHTML='<div class="empty">No hay fechas bloqueadas.</div>';
+    blockedDateList.innerHTML=
+      &#x27;&lt;div class=&quot;empty&quot;&gt;No hay fechas bloqueadas.&lt;/div&gt;&#x27;;
     return;
   }
-  blockedDateList.innerHTML=arr.map(x=>`<div class="blocked-date-row"><div><strong>${esc(fmt(x.date))}</strong><span>${esc(x.reason||"Sin motivo")}</span></div><button type="button" class="btn btn-red btn-sm del-blocked-date" data-date="${esc(x.date)}">Liberar</button></div>`).join("");
-  blockedDateList.querySelectorAll(".del-blocked-date").forEach(b=>b.onclick=()=>{
-    write(K.blockedDates,getBlockedDates().filter(x=>x.date!==b.dataset.date));
-    renderBlockedDates();
-    updateDateAvailability();
-  });
+
+  blockedDateList.innerHTML=arr.map(x=&gt;`
+    &lt;div class=&quot;blocked-date-row&quot;&gt;
+      &lt;div&gt;
+        &lt;strong&gt;${esc(fmt(x.date))}&lt;/strong&gt;
+        &lt;span&gt;${esc(x.reason||&quot;Sin motivo&quot;)}&lt;/span&gt;
+      &lt;/div&gt;
+
+      &lt;button
+        type=&quot;button&quot;
+        class=&quot;btn btn-red btn-sm del-blocked-date&quot;
+        data-date=&quot;${esc(x.date)}&quot;
+      &gt;
+        Liberar
+      &lt;/button&gt;
+    &lt;/div&gt;
+  `).join(&quot;&quot;);
+
+  blockedDateList
+    .querySelectorAll(&quot;.del-blocked-date&quot;)
+    .forEach(b=&gt;{
+      b.onclick=()=&gt;{
+        write(
+          K.blockedDates,
+          getBlockedDates().filter(x=&gt;x.date!==b.dataset.date)
+        );
+
+        renderBlockedDates();
+        updateDateAvailability();
+      };
+    });
 }
-blockedDateForm.onsubmit=e=>{
+
+blockedDateForm.onsubmit=e=&gt;{
   e.preventDefault();
+
   const date=blockedDateInput.value;
+
   if(!date)return;
+
   const arr=getBlockedDates();
-  if(arr.some(x=>x.date===date)){
-    alert("Esa fecha ya está bloqueada.");
+
+  if(arr.some(x=&gt;x.date===date)){
+    alert(&quot;Esa fecha ya esta bloqueada.&quot;);
     return;
   }
-  arr.push({date,reason:blockedDateReason.value.trim(),createdAt:new Date().toISOString()});
+
+  if(getReservationByDate(date)){
+    alert(
+      &quot;Esa fecha ya tiene una reservacion. No necesitas bloquearla manualmente.&quot;
+    );
+    return;
+  }
+
+  arr.push({
+    date,
+    reason:blockedDateReason.value.trim(),
+    createdAt:new Date().toISOString()
+  });
+
   write(K.blockedDates,arr);
+
   e.target.reset();
+
   minDate();
   renderBlockedDates();
   updateDateAvailability();
@@ -780,127 +230,136 @@ blockedDateForm.onsubmit=e=>{
 
 minDate();
 
-document.getElementById("reservationForm").onsubmit=e=>{
-  e.preventDefault();
-  if(isDateBlocked(dateInput.value)){
+window.addEventListener(&quot;storage&quot;,event=&gt;{
+  if(
+    event.key===K.reservations ||
+    event.key===K.blockedDates
+  ){
     updateDateAvailability();
-    alert("La fecha seleccionada no está disponible. Elige otra fecha.");
+    renderReservations();
+    renderBlockedDates();
+  }
+});
+
+document.getElementById(&quot;reservationForm&quot;).onsubmit=e=&gt;{
+  e.preventDefault();
+
+  const selectedDate=dateInput.value;
+
+  if(isDateBlocked(selectedDate)){
+    updateDateAvailability();
+    alert(
+      &quot;La fecha seleccionada no esta disponible. Elige otra fecha.&quot;
+    );
     dateInput.focus();
     return;
   }
-  const guests=getGuests().map(g=>({id:uid("G"),...g}));
+
+  const guests=getGuests().map(g=&gt;({
+    id:uid(&quot;G&quot;),
+    ...g
+  }));
+
   if(guests.length===0){
-    alert("Indica cuántas personas van a asistir.");
+    alert(&quot;Indica cuantas personas van a asistir.&quot;);
     guestQuantityInput.focus();
     return;
   }
-  if(guests.some(g=>!g.name)){alert("Debes escribir el nombre de todos los invitados.");return}
-  if(guests.length>100){alert("La capacidad máxima es de 100 personas.");return}
-  const r={id:uid("HF"),name:resName.value.trim(),phone:resPhone.value.trim(),email:resEmail.value.trim(),date:resDate.value,type:resType.value,packageId:resPackage.value,notes:resNotes.value.trim(),guests,status:"pendiente",createdAt:new Date().toISOString()};
-  const arr=allReservations();arr.unshift(r);saveReservations(arr);
-  confirmText.textContent=`${r.name}, recibimos tu solicitud para ${fmt(r.date)} con ${r.guests.length} invitado(s). Número: ${r.id}`;
-  confirmBox.classList.add("show");
+
+  if(guests.some(g=&gt;!g.name)){
+    alert(&quot;Debes escribir el nombre de todos los invitados.&quot;);
+    return;
+  }
+
+  if(guests.length&gt;100){
+    alert(&quot;La capacidad maxima es de 100 personas.&quot;);
+    return;
+  }
+
+  if(isDateBlocked(selectedDate)){
+    updateDateAvailability();
+    alert(
+      &quot;Esa fecha acaba de dejar de estar disponible. Elige otra fecha.&quot;
+    );
+    dateInput.focus();
+    return;
+  }
+
+  const r={
+    id:uid(&quot;HF&quot;),
+    name:resName.value.trim(),
+    phone:resPhone.value.trim(),
+    email:resEmail.value.trim(),
+    date:selectedDate,
+    type:resType.value,
+    packageId:resPackage.value,
+    notes:resNotes.value.trim(),
+    guests,
+    status:&quot;pendiente&quot;,
+    createdAt:new Date().toISOString()
+  };
+
+  const arr=allReservations();
+  arr.unshift(r);
+  saveReservations(arr);
+
+  confirmText.textContent=
+    `${r.name}, recibimos tu reservacion para ${fmt(r.date)} ` +
+    `con ${r.guests.length} invitado(s). ` +
+    `Esa fecha quedo bloqueada en este sistema. Numero: ${r.id}`;
+
+  confirmBox.classList.add(&quot;show&quot;);
+
   e.target.reset();
-  guestQuantityInput.value="";
-  guestList.innerHTML='<div class="guest-list-empty" id="guestListEmpty">Indica primero la cantidad de personas.</div>';
+
+  guestQuantityInput.value=&quot;&quot;;
+
+  guestList.innerHTML=
+    &#x27;&lt;div class=&quot;guest-list-empty&quot; id=&quot;guestListEmpty&quot;&gt;&#x27; +
+    &#x27;Indica primero la cantidad de personas.&#x27; +
+    &#x27;&lt;/div&gt;&#x27;;
+
   updateGuestSummary();
   minDate();
-  dateAvailability.className="date-status";
-  dateAvailability.textContent="";
-  confirmBox.scrollIntoView({behavior:"smooth",block:"center"});
+
+  dateAvailability.className=&quot;date-status&quot;;
+  dateAvailability.textContent=&quot;&quot;;
+
+  confirmBox.scrollIntoView({
+    behavior:&quot;smooth&quot;,
+    block:&quot;center&quot;
+  });
 };
 
-/* Events and check-in */
-let selectedId=null;
-function renderReservations(){
-  const arr=allReservations();resCount.textContent=arr.length;
-  if(!arr.length){resList.innerHTML='<div class="empty">Todavía no hay reservaciones.</div>';selectedId=null;noSelected.classList.remove("hidden");eventDetail.classList.add("hidden");return}
-  resList.innerHTML=arr.map(r=>{
-    const inCount=r.guests.filter(g=>g.checkedIn).length,pct=r.guests.length?Math.round(inCount/r.guests.length*100):0;
-    return `<div class="event-card ${selectedId===r.id?"selected":""}" data-id="${esc(r.id)}"><h4>${esc(r.name)}</h4><p>${esc(r.type)} · ${esc(fmt(r.date))}</p><p>${r.guests.length} invitado(s) · ${esc(r.phone||"")}</p><div class="track"><div class="bar" style="width:${pct}%"></div></div><div class="progress-text">${inCount} de ${r.guests.length} han llegado</div></div>`
-  }).join("");
-  resList.querySelectorAll(".event-card").forEach(c=>c.onclick=()=>{selectedId=c.dataset.id;renderReservations();renderDetail()});
-  if(selectedId)renderDetail();
-}
-function renderDetail(){
-  const r=allReservations().find(x=>x.id===selectedId);
-  if(!r){noSelected.classList.remove("hidden");eventDetail.classList.add("hidden");return}
-  noSelected.classList.add("hidden");eventDetail.classList.remove("hidden");
-  detailTitle.textContent=r.name;detailMeta.textContent=`${r.type} · ${fmt(r.date)} · ${r.phone||""}${r.email?" · "+r.email:""}`;
-  const cnt=r.guests.filter(g=>g.checkedIn).length,pct=r.guests.length?Math.round(cnt/r.guests.length*100):0;
-  detailCount.textContent=`${cnt} de ${r.guests.length} llegaron`;detailBar.style.width=pct+"%";
-  checkinList.innerHTML=r.guests.map(g=>`<div class="checkin ${g.checkedIn?"checked":""}"><div><div class="gname">${esc(g.name)}</div><div class="gtype">${esc(g.type)}</div>${g.checkedInAt?`<div class="ctime">Entrada: ${esc(new Date(g.checkedInAt).toLocaleString("es-PR"))}</div>`:""}</div><button class="check-btn" data-g="${esc(g.id)}">${g.checkedIn?"Desmarcar":"✓ Entró"}</button></div>`).join("");
-  checkinList.querySelectorAll(".check-btn").forEach(b=>b.onclick=()=>toggleCheck(r.id,b.dataset.g));
-}
-function toggleCheck(rid,gid){
-  const arr=allReservations(),r=arr.find(x=>x.id===rid),g=r?.guests.find(x=>x.id===gid);if(!g)return;
-  g.checkedIn=!g.checkedIn;g.checkedInAt=g.checkedIn?new Date().toISOString():null;saveReservations(arr);renderReservations();renderDetail();
-}
-deleteReservation.onclick=()=>{if(!selectedId||!confirm("¿Seguro que deseas eliminar esta reservación completa?"))return;saveReservations(allReservations().filter(r=>r.id!==selectedId));selectedId=null;renderReservations()};
 
-/* Announcements */
-let annImg="";
-annImage.onchange=e=>{
-  const f=e.target.files?.[0];if(!f){annImg="";annPreview.textContent="Sin imagen seleccionada";return}
-  if(f.size>1.2*1024*1024){alert("Usa una imagen menor de 1.2 MB.");e.target.value="";return}
-  const rd=new FileReader();rd.onload=()=>{annImg=rd.result;annPreview.innerHTML=`<img src="${annImg}" alt="Vista previa">`};rd.readAsDataURL(f);
-};
-annForm.onsubmit=e=>{
-  e.preventDefault();const a={id:uid("ANN"),title:annTitle.value.trim(),text:annText.value.trim(),start:annStart.value,end:annEnd.value,image:annImg,active:annActive.checked,createdAt:new Date().toISOString()};
-  const arr=read(K.announcements);arr.unshift(a);write(K.announcements,arr);e.target.reset();annActive.checked=true;annImg="";annPreview.textContent="Sin imagen seleccionada";renderAdminAnnouncements();renderPublicAnnouncements();
-};
-function annVisible(a){
-  if(!a.active)return false;const t=new Date();t.setHours(0,0,0,0);
-  if(a.start&&t<new Date(a.start+"T00:00:00"))return false;if(a.end&&t>new Date(a.end+"T23:59:59"))return false;return true;
-}
-function renderPublicAnnouncements(){
-  const arr=read(K.announcements).filter(annVisible);
-  publicAnnouncements.innerHTML=arr.length?arr.map(a=>`<article class="ann-card">${a.image?`<img class="ann-img" src="${a.image}" alt="${esc(a.title)}">`:`<div class="ann-ph">🌿</div>`}<div class="ann-body"><h3>${esc(a.title)}</h3><p>${esc(a.text)}</p>${a.start||a.end?`<div class="ann-meta">${a.start?"Desde "+esc(fmt(a.start)):""}${a.start&&a.end?" · ":""}${a.end?"Hasta "+esc(fmt(a.end)):""}</div>`:""}</div></article>`).join(""):'<div class="empty" style="grid-column:1/-1">📣 No hay anuncios activos en este momento.</div>';
-}
-function renderAdminAnnouncements(){
-  const arr=read(K.announcements);annCount.textContent=arr.length;
-  if(!arr.length){annList.innerHTML='<div class="empty">Todavía no hay anuncios creados.</div>';return}
-  annList.innerHTML=arr.map(a=>`<div class="item"><div><h4>${esc(a.title)}</h4><p>${esc(a.text)}</p><p><strong>${a.active?"🟢 Publicado":"⚪ Oculto"}</strong></p></div><div class="item-actions"><button class="btn btn-soft btn-sm toggle-ann" data-id="${esc(a.id)}">${a.active?"Ocultar":"Publicar"}</button><button class="btn btn-red btn-sm del-ann" data-id="${esc(a.id)}">Eliminar</button></div></div>`).join("");
-  annList.querySelectorAll(".toggle-ann").forEach(b=>b.onclick=()=>{const x=read(K.announcements),a=x.find(v=>v.id===b.dataset.id);if(a)a.active=!a.active;write(K.announcements,x);renderAdminAnnouncements();renderPublicAnnouncements()});
-  annList.querySelectorAll(".del-ann").forEach(b=>b.onclick=()=>{if(!confirm("¿Eliminar este anuncio?"))return;write(K.announcements,read(K.announcements).filter(a=>a.id!==b.dataset.id));renderAdminAnnouncements();renderPublicAnnouncements()});
-}
+// TAMBIEN REEMPLAZA TU LINEA deleteReservation.onclick=... POR ESTA:
 
-/* Packages */
-pkgForm.onsubmit=e=>{
-  e.preventDefault();const p={id:uid("PKG"),name:pkgName.value.trim(),price:pkgPrice.value.trim(),description:pkgDesc.value.trim(),active:pkgActive.checked,createdAt:new Date().toISOString()};
-  const arr=read(K.packages);arr.unshift(p);write(K.packages,arr);e.target.reset();pkgActive.checked=true;renderAdminPackages();renderPublicPackages();
-};
-function renderPublicPackages(){
-  const arr=read(K.packages).filter(p=>p.active);
-  resPackage.innerHTML='<option value="">Sin seleccionar / por definir</option>'+arr.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}${p.price?" · "+esc(p.price):""}</option>`).join("");
-  publicPackages.innerHTML=arr.length?arr.map(p=>`<article class="package"><h3>${esc(p.name)}</h3><div class="price">${esc(p.price||"Consultar")}</div><p>${esc(p.description)}</p></article>`).join(""):'<div class="empty" style="grid-column:1/-1">🎁 <strong style="display:block;color:var(--gd);margin:6px 0">Paquetes próximamente</strong>Hacienda podrá añadir aquí sus paquetes y precios desde el panel administrativo.</div>';
-}
-function renderAdminPackages(){
-  const arr=read(K.packages);pkgCount.textContent=arr.length;
-  if(!arr.length){pkgList.innerHTML='<div class="empty">Todavía no hay paquetes creados.</div>';return}
-  pkgList.innerHTML=arr.map(p=>`<div class="item"><div><h4>${esc(p.name)}</h4><p>${esc(p.price||"Sin precio")}</p><p>${esc(p.description)}</p><p><strong>${p.active?"🟢 Visible":"⚪ Oculto"}</strong></p></div><div class="item-actions"><button class="btn btn-soft btn-sm toggle-pkg" data-id="${esc(p.id)}">${p.active?"Ocultar":"Mostrar"}</button><button class="btn btn-red btn-sm del-pkg" data-id="${esc(p.id)}">Eliminar</button></div></div>`).join("");
-  pkgList.querySelectorAll(".toggle-pkg").forEach(b=>b.onclick=()=>{const x=read(K.packages),p=x.find(v=>v.id===b.dataset.id);if(p)p.active=!p.active;write(K.packages,x);renderAdminPackages();renderPublicPackages()});
-  pkgList.querySelectorAll(".del-pkg").forEach(b=>b.onclick=()=>{if(!confirm("¿Eliminar este paquete?"))return;write(K.packages,read(K.packages).filter(p=>p.id!==b.dataset.id));renderAdminPackages();renderPublicPackages()});
-}
+deleteReservation.onclick=()=&gt;{
+  if(
+    !selectedId ||
+    !confirm(&quot;Seguro que deseas eliminar esta reservacion completa?&quot;)
+  ){
+    return;
+  }
 
-/* Export / Import */
-exportBtn.onclick=()=>{
-  const data={exportedAt:new Date().toISOString(),reservations:allReservations(),announcements:read(K.announcements),packages:read(K.packages),blockedDates:getBlockedDates()};
-  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");
-  a.href=url;a.download="hacienda-el-flambo-respaldo.json";a.click();URL.revokeObjectURL(url);
-};
-importInput.onchange=e=>{
-  const f=e.target.files?.[0];if(!f)return;const rd=new FileReader();
-  rd.onload=()=>{try{const d=JSON.parse(rd.result);if(!Array.isArray(d.reservations)||!Array.isArray(d.announcements)||!Array.isArray(d.packages))throw new Error();write(K.reservations,d.reservations);write(K.announcements,d.announcements);write(K.packages,d.packages);write(K.blockedDates,Array.isArray(d.blockedDates)?d.blockedDates:[]);alert("Respaldo importado.");renderReservations();renderBlockedDates();renderAdminAnnouncements();renderAdminPackages();renderPublicAnnouncements();renderPublicPackages();updateDateAvailability()}catch{alert("El archivo no parece ser un respaldo válido.")}};
-  rd.readAsText(f);e.target.value="";
-};
-clearBtn.onclick=()=>{
-  if(!confirm("¿Seguro? Esto borrará reservaciones, anuncios, paquetes y fechas bloqueadas guardados en este navegador."))return;
-  localStorage.removeItem(K.reservations);localStorage.removeItem(K.announcements);localStorage.removeItem(K.packages);localStorage.removeItem(K.blockedDates);selectedId=null;
-  renderReservations();renderBlockedDates();renderAdminAnnouncements();renderAdminPackages();renderPublicAnnouncements();renderPublicPackages();updateDateAvailability();
-};
+  saveReservations(
+    allReservations().filter(r=&gt;r.id!==selectedId)
+  );
 
-renderPublicAnnouncements();renderPublicPackages();renderAdminAnnouncements();renderAdminPackages();renderReservations();renderBlockedDates();
+  selectedId=null;
+
+  renderReservations();
+  updateDateAvailability();
+};
+</pre>
+</div>
+<script>
+function copyCode() {
+  const text = document.getElementById('code').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Código copiado.');
+  });
+}
 </script>
 </body>
 </html>
