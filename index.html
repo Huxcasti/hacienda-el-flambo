@@ -55,6 +55,11 @@ button,input,select,textarea{font:inherit} button{cursor:pointer} a{color:inheri
 .card{border-radius:24px;padding:24px}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.field{display:flex;flex-direction:column;gap:7px}.field.full{grid-column:1/-1}
 label{font-size:13px;font-weight:850;color:#3e493c}input,select,textarea{width:100%;border:1.5px solid var(--line);background:#fbfcfa;border-radius:13px;padding:13px 14px;outline:none;color:var(--txt)}
 input:focus,select:focus,textarea:focus{border-color:var(--g);box-shadow:0 0 0 4px rgba(73,109,63,.10)}textarea{min-height:96px;resize:vertical}.hint{font-size:11px;color:var(--muted);line-height:1.45}
+.date-status{margin-top:7px;padding:10px 12px;border-radius:11px;font-size:12px;font-weight:800;display:none}
+.date-status.ok{display:block;background:#eaf5e5;color:#2f6f2b;border:1px solid #b7d4ad}
+.date-status.no{display:block;background:var(--redsoft);color:#9c3636;border:1px solid #efcaca}
+.blocked-date-row{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid var(--line);background:#fff;border-radius:14px;padding:12px 14px}
+.blocked-date-row strong{color:var(--gd);display:block}.blocked-date-row span{font-size:11px;color:var(--muted);display:block;margin-top:3px}
 
 .guest-quantity-box{
   margin-bottom:20px;
@@ -286,7 +291,7 @@ footer{background:var(--gd);color:#fff;text-align:center;padding:32px 18px calc(
             <div class="field"><label>Nombre de quien reserva *</label><input id="resName" required autocomplete="name" placeholder="Nombre y apellidos"></div>
             <div class="field"><label>Teléfono *</label><input id="resPhone" required autocomplete="tel" placeholder="787-000-0000"></div>
             <div class="field"><label>Correo electrónico</label><input id="resEmail" type="email" autocomplete="email" placeholder="correo@ejemplo.com"></div>
-            <div class="field"><label>Fecha deseada *</label><input id="resDate" type="date" required></div>
+            <div class="field"><label>Fecha deseada *</label><input id="resDate" type="date" required><div id="dateAvailability" class="date-status" aria-live="polite"></div></div>
             <div class="field">
               <label>Tipo de actividad *</label>
               <select id="resType" required>
@@ -394,6 +399,7 @@ footer{background:var(--gd);color:#fff;text-align:center;padding:32px 18px calc(
 
     <div class="tabs">
       <button class="tab active" data-panel="eventsPanel">📅 Eventos e invitados</button>
+      <button class="tab" data-panel="availabilityPanel">🗓️ Disponibilidad</button>
       <button class="tab" data-panel="annPanel">📣 Anuncios</button>
       <button class="tab" data-panel="pkgPanel">🎁 Paquetes</button>
       <button class="tab" data-panel="dataPanel">💾 Datos</button>
@@ -415,6 +421,24 @@ footer{background:var(--gd);color:#fff;text-align:center;padding:32px 18px calc(
             <div class="track" style="margin-bottom:15px"><div id="detailBar" class="bar"></div></div>
             <div id="checkinList" class="checkin-list"></div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="availabilityPanel" class="panel">
+      <div class="admin-grid">
+        <div class="card">
+          <div class="panel-title"><h2>Bloquear una fecha</h2></div>
+          <p style="color:var(--muted);line-height:1.55;margin-bottom:14px">Usa esta sección para marcar días que no están disponibles para nuevas solicitudes.</p>
+          <form id="blockedDateForm">
+            <div class="field"><label>Fecha no disponible *</label><input id="blockedDateInput" type="date" required></div>
+            <div class="field" style="margin-top:12px"><label>Motivo</label><input id="blockedDateReason" placeholder="Ej. Evento privado, mantenimiento, cerrado"></div>
+            <button class="btn btn-green" style="width:100%;margin-top:15px">Bloquear fecha</button>
+          </form>
+        </div>
+        <div class="card">
+          <div class="panel-title"><h2>Fechas bloqueadas</h2><span id="blockedDateCount" class="badge">0</span></div>
+          <div id="blockedDateList" class="list"></div>
         </div>
       </div>
     </section>
@@ -458,7 +482,7 @@ footer{background:var(--gd);color:#fff;text-align:center;padding:32px 18px calc(
     <section id="dataPanel" class="panel">
       <div class="card">
         <div class="panel-title"><h2>Respaldo de información</h2></div>
-        <p style="color:var(--muted);line-height:1.6;margin-bottom:14px">Exporta reservaciones, anuncios y paquetes a un archivo JSON, o importa un respaldo anterior.</p>
+        <p style="color:var(--muted);line-height:1.6;margin-bottom:14px">Exporta reservaciones, anuncios, paquetes y fechas bloqueadas a un archivo JSON, o importa un respaldo anterior.</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button id="exportBtn" class="btn btn-green">Descargar respaldo</button>
           <label class="btn btn-soft">Importar respaldo <input id="importInput" class="hidden" type="file" accept=".json,application/json"></label>
@@ -475,7 +499,8 @@ footer{background:var(--gd);color:#fff;text-align:center;padding:32px 18px calc(
 const K={
   reservations:"hacienda_el_flambo_reservations",
   announcements:"hacienda_el_flambo_announcements",
-  packages:"hacienda_el_flambo_packages"
+  packages:"hacienda_el_flambo_packages",
+  blockedDates:"hacienda_el_flambo_blocked_dates"
 };
 const read=k=>{try{return JSON.parse(localStorage.getItem(k))||[]}catch(e){return[]}};
 const write=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
@@ -507,7 +532,7 @@ function showPublic(){
 function showAdmin(){
   publicView.classList.add("hidden");adminView.classList.remove("hidden");
   publicNav.classList.remove("active");adminNav.classList.add("active");
-  renderReservations();renderAdminAnnouncements();renderAdminPackages();window.scrollTo({top:0,behavior:"smooth"});
+  renderReservations();renderBlockedDates();renderAdminAnnouncements();renderAdminPackages();window.scrollTo({top:0,behavior:"smooth"});
 }
 publicNav.onclick=showPublic;adminNav.onclick=showAdmin;
 
@@ -682,11 +707,87 @@ function syncGuestFields() {
 guestQuantityInput.addEventListener("input", syncGuestFields);
 
 const dateInput=document.getElementById("resDate");
-function minDate(){const d=new Date(),y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),day=String(d.getDate()).padStart(2,"0");dateInput.min=`${y}-${m}-${day}`}
+const dateAvailability=document.getElementById("dateAvailability");
+const blockedDateForm=document.getElementById("blockedDateForm");
+const blockedDateInput=document.getElementById("blockedDateInput");
+const blockedDateReason=document.getElementById("blockedDateReason");
+const blockedDateList=document.getElementById("blockedDateList");
+const blockedDateCount=document.getElementById("blockedDateCount");
+
+function todayISO(){
+  const d=new Date(),y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),day=String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+function minDate(){
+  const t=todayISO();
+  dateInput.min=t;
+  blockedDateInput.min=t;
+}
+function getBlockedDates(){
+  return read(K.blockedDates)
+    .filter(x=>x&&x.date)
+    .sort((a,b)=>a.date.localeCompare(b.date));
+}
+function isDateBlocked(date){
+  return getBlockedDates().some(x=>x.date===date);
+}
+function updateDateAvailability(){
+  const date=dateInput.value;
+  dateAvailability.className="date-status";
+  dateAvailability.textContent="";
+  if(!date)return;
+  const blocked=getBlockedDates().find(x=>x.date===date);
+  if(blocked){
+    dateAvailability.classList.add("no");
+    dateAvailability.textContent="Fecha no disponible"+(blocked.reason?": "+blocked.reason:". Elige otra fecha.");
+  }else{
+    dateAvailability.classList.add("ok");
+    dateAvailability.textContent="Fecha disponible para solicitar.";
+  }
+}
+dateInput.addEventListener("change",updateDateAvailability);
+
+function renderBlockedDates(){
+  const arr=getBlockedDates();
+  blockedDateCount.textContent=arr.length;
+  if(!arr.length){
+    blockedDateList.innerHTML='<div class="empty">No hay fechas bloqueadas.</div>';
+    return;
+  }
+  blockedDateList.innerHTML=arr.map(x=>`<div class="blocked-date-row"><div><strong>${esc(fmt(x.date))}</strong><span>${esc(x.reason||"Sin motivo")}</span></div><button type="button" class="btn btn-red btn-sm del-blocked-date" data-date="${esc(x.date)}">Liberar</button></div>`).join("");
+  blockedDateList.querySelectorAll(".del-blocked-date").forEach(b=>b.onclick=()=>{
+    write(K.blockedDates,getBlockedDates().filter(x=>x.date!==b.dataset.date));
+    renderBlockedDates();
+    updateDateAvailability();
+  });
+}
+blockedDateForm.onsubmit=e=>{
+  e.preventDefault();
+  const date=blockedDateInput.value;
+  if(!date)return;
+  const arr=getBlockedDates();
+  if(arr.some(x=>x.date===date)){
+    alert("Esa fecha ya está bloqueada.");
+    return;
+  }
+  arr.push({date,reason:blockedDateReason.value.trim(),createdAt:new Date().toISOString()});
+  write(K.blockedDates,arr);
+  e.target.reset();
+  minDate();
+  renderBlockedDates();
+  updateDateAvailability();
+};
+
 minDate();
 
 document.getElementById("reservationForm").onsubmit=e=>{
   e.preventDefault();
+  if(isDateBlocked(dateInput.value)){
+    updateDateAvailability();
+    alert("La fecha seleccionada no está disponible. Elige otra fecha.");
+    dateInput.focus();
+    return;
+  }
   const guests=getGuests().map(g=>({id:uid("G"),...g}));
   if(guests.length===0){
     alert("Indica cuántas personas van a asistir.");
@@ -704,6 +805,8 @@ document.getElementById("reservationForm").onsubmit=e=>{
   guestList.innerHTML='<div class="guest-list-empty" id="guestListEmpty">Indica primero la cantidad de personas.</div>';
   updateGuestSummary();
   minDate();
+  dateAvailability.className="date-status";
+  dateAvailability.textContent="";
   confirmBox.scrollIntoView({behavior:"smooth",block:"center"});
 };
 
@@ -782,22 +885,22 @@ function renderAdminPackages(){
 
 /* Export / Import */
 exportBtn.onclick=()=>{
-  const data={exportedAt:new Date().toISOString(),reservations:allReservations(),announcements:read(K.announcements),packages:read(K.packages)};
+  const data={exportedAt:new Date().toISOString(),reservations:allReservations(),announcements:read(K.announcements),packages:read(K.packages),blockedDates:getBlockedDates()};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");
   a.href=url;a.download="hacienda-el-flambo-respaldo.json";a.click();URL.revokeObjectURL(url);
 };
 importInput.onchange=e=>{
   const f=e.target.files?.[0];if(!f)return;const rd=new FileReader();
-  rd.onload=()=>{try{const d=JSON.parse(rd.result);if(!Array.isArray(d.reservations)||!Array.isArray(d.announcements)||!Array.isArray(d.packages))throw new Error();write(K.reservations,d.reservations);write(K.announcements,d.announcements);write(K.packages,d.packages);alert("Respaldo importado.");renderReservations();renderAdminAnnouncements();renderAdminPackages();renderPublicAnnouncements();renderPublicPackages()}catch{alert("El archivo no parece ser un respaldo válido.")}};
+  rd.onload=()=>{try{const d=JSON.parse(rd.result);if(!Array.isArray(d.reservations)||!Array.isArray(d.announcements)||!Array.isArray(d.packages))throw new Error();write(K.reservations,d.reservations);write(K.announcements,d.announcements);write(K.packages,d.packages);write(K.blockedDates,Array.isArray(d.blockedDates)?d.blockedDates:[]);alert("Respaldo importado.");renderReservations();renderBlockedDates();renderAdminAnnouncements();renderAdminPackages();renderPublicAnnouncements();renderPublicPackages();updateDateAvailability()}catch{alert("El archivo no parece ser un respaldo válido.")}};
   rd.readAsText(f);e.target.value="";
 };
 clearBtn.onclick=()=>{
-  if(!confirm("¿Seguro? Esto borrará reservaciones, anuncios y paquetes guardados en este navegador."))return;
-  localStorage.removeItem(K.reservations);localStorage.removeItem(K.announcements);localStorage.removeItem(K.packages);selectedId=null;
-  renderReservations();renderAdminAnnouncements();renderAdminPackages();renderPublicAnnouncements();renderPublicPackages();
+  if(!confirm("¿Seguro? Esto borrará reservaciones, anuncios, paquetes y fechas bloqueadas guardados en este navegador."))return;
+  localStorage.removeItem(K.reservations);localStorage.removeItem(K.announcements);localStorage.removeItem(K.packages);localStorage.removeItem(K.blockedDates);selectedId=null;
+  renderReservations();renderBlockedDates();renderAdminAnnouncements();renderAdminPackages();renderPublicAnnouncements();renderPublicPackages();updateDateAvailability();
 };
 
-renderPublicAnnouncements();renderPublicPackages();renderAdminAnnouncements();renderAdminPackages();renderReservations();
+renderPublicAnnouncements();renderPublicPackages();renderAdminAnnouncements();renderAdminPackages();renderReservations();renderBlockedDates();
 </script>
 </body>
 </html>
