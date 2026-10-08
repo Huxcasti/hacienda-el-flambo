@@ -10,7 +10,7 @@
 header{background:linear-gradient(120deg,#173a29,#3c6e47);color:#fff;padding:28px 18px}header>div,main{max-width:1120px;margin:auto}header h1{margin:0 0 7px;font-size:clamp(24px,5vw,33px)}header p{margin:0;color:#dbeddf}
 main{padding:20px 16px 70px}.notice{background:#fff5d8;color:#765a1a;border:1px solid #ead69b;padding:15px;border-radius:12px;line-height:1.5;margin-bottom:18px}.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}.tabs{display:flex;gap:8px;flex-wrap:wrap}.tab,.ghost{background:#fff;border:1px solid var(--line);color:var(--green);border-radius:12px;padding:11px 14px;font-weight:800}.tab.active,.primary{background:var(--green);color:#fff;border:0}.primary{border-radius:12px;padding:12px 17px;font-weight:800}.danger{background:#ffebeb;color:var(--red);border:1px solid #f2d0d0;border-radius:10px;padding:9px 12px;font-weight:700}.small{padding:8px 11px;font-size:13px}
 .panel{display:none}.panel.active{display:block}.card{background:#fff;border:1px solid var(--line);border-radius:19px;padding:21px;box-shadow:0 7px 24px #1a3d2310;margin-bottom:17px}.card h2{color:var(--dark);font-size:21px;margin:0 0 14px}.card h3{margin:0 0 8px;color:var(--green)}.card p{line-height:1.5}.muted{color:var(--gray);font-size:13px}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:17px}.metric{background:#fff;padding:18px;border:1px solid var(--line);border-radius:16px}.metric strong{font-size:29px;display:block;color:var(--green)}.metric span{color:var(--gray);font-size:13px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}label{font-size:13px;font-weight:800;color:var(--green);display:block;margin:0 0 6px}input,textarea,select{width:100%;padding:12px;border-radius:11px;border:1px solid #cbd9ce;background:#fff;min-width:0}textarea{min-height:94px;resize:vertical}.full{grid-column:1/-1}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.entry{padding:14px 0;border-bottom:1px solid var(--line)}.entry:last-child{border-bottom:0}.entry strong{overflow-wrap:anywhere}.tag{display:inline-block;padding:5px 9px;border-radius:100px;font-size:12px;background:#eaf2e9;color:#27583b;font-weight:750}.tag.pending{background:var(--gold);color:#825d12}.tag.approved{background:#e4f6e8;color:#176533}.tag.rejected{background:#ffe6e6;color:#9d3434}.tag.expired{background:#eee;color:#555}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}label{font-size:13px;font-weight:800;color:var(--green);display:block;margin:0 0 6px}input,textarea,select{width:100%;padding:12px;border-radius:11px;border:1px solid #cbd9ce;background:#fff;min-width:0}textarea{min-height:94px;resize:vertical}.full{grid-column:1/-1}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.entry{padding:14px 0;border-bottom:1px solid var(--line)}.entry:last-child{border-bottom:0}.entry strong{overflow-wrap:anywhere}.tag{display:inline-block;padding:5px 9px;border-radius:100px;font-size:12px;background:#eaf2e9;color:#27583b;font-weight:750}.tag.pending{background:var(--gold);color:#825d12}.tag.approved{background:#e4f6e8;color:#176533}.tag.rejected{background:#ffe6e6;color:#9d3434}.tag.expired{background:#eee;color:#555}.tag.cancelled{background:#edf0f3;color:#536475}
 .guestgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:15px}.guest{border:1px solid var(--line);border-radius:12px;padding:13px;text-align:left;background:#f7faf6;display:flex;justify-content:space-between;gap:10px}.guest.checked{background:#d8f4df;border-color:#78bf8b;color:#185c2b;font-weight:850}.guest:disabled{opacity:.65}.progress{height:10px;border-radius:20px;background:#e6eee7;overflow:hidden;margin:11px 0}.progress>div{height:100%;background:#398253}
 .hidden{display:none!important}#toast{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);background:#173d28;color:#fff;border-radius:12px;padding:13px 17px;box-shadow:0 8px 25px #0003;z-index:5;max-width:min(90vw,650px)}.login{max-width:490px;margin:35px auto}.right{margin-left:auto}.wraptext{overflow-wrap:anywhere}
 @media(max-width:700px){.grid,.formgrid,.metrics,.guestgrid{grid-template-columns:1fr}.metric{padding:13px}.card{padding:16px}header{padding:24px 16px}.tabs{width:100%}.tab{flex:1}}
@@ -29,7 +29,7 @@ main{padding:20px 16px 70px}.notice{background:#fff5d8;color:#765a1a;border:1px 
 <div class="bar"><nav class="tabs" aria-label="Secciones"><button type="button" class="tab active" data-tab="reservas">Reservaciones</button><button type="button" class="tab" data-tab="entrada">Entrada</button><button type="button" class="tab" data-tab="fechas">Fechas</button><button type="button" class="tab" data-tab="publicaciones">Anuncios y paquetes</button></nav><button id="logout" class="ghost">Salir</button></div>
 <section class="panel active" id="panel-reservas">
 <div class="metrics"><div class="metric"><strong id="numPending">0</strong><span>Pendientes</span></div><div class="metric"><strong id="numApproved">0</strong><span>Aprobadas</span></div><div class="metric"><strong id="numRejected">0</strong><span>Rechazadas</span></div><div class="metric"><strong id="numBlocked">0</strong><span>Fechas bloqueadas</span></div></div>
-<div class="card"><h2>Solicitudes de actividades</h2><p class="muted">Las solicitudes pendientes caducan a las 48 horas. Puedes aprobarlas o rechazarlas; una reserva aprobada mantiene la fecha ocupada. Se muestran las últimas 200 solicitudes.</p><div class="actions"><button id="refresh" class="ghost small">↻ Actualizar</button><select id="filterReservations" aria-label="Filtrar reservas" style="max-width:240px"><option value="all">Todas</option><option value="pending">Pendientes</option><option value="approved">Aprobadas</option><option value="rejected">Rechazadas</option><option value="expired">Vencidas</option></select></div><div id="reservationList"></div></div>
+<div class="card"><h2>Solicitudes de actividades</h2><p class="muted">Las solicitudes pendientes caducan a las 48 horas. Puedes aprobar, rechazar o cancelar reservaciones. Las cancelaciones conservan el historial y liberan la fecha. Solo las reservaciones marcadas como PRUEBA DEL SISTEMA se pueden eliminar permanentemente. Se muestran las últimas 200 solicitudes.</p><div class="actions"><button id="refresh" class="ghost small">↻ Actualizar</button><select id="filterReservations" aria-label="Filtrar reservas" style="max-width:240px"><option value="all">Todas</option><option value="pending">Pendientes</option><option value="approved">Aprobadas</option><option value="rejected">Rechazadas</option><option value="expired">Vencidas</option><option value="cancelled">Canceladas</option></select></div><div id="reservationList"></div></div>
 </section>
 <section class="panel" id="panel-entrada">
 <div class="card"><h2>🚪 Control de entrada</h2><p class="muted">Selecciona una actividad aprobada. Toca el nombre cuando la persona llegue para marcarlo en verde, o vuelve a tocarlo para corregir la entrada.</p><label for="eventSelect">Actividad</label><select id="eventSelect"></select><div id="eventDetails"></div></div>
@@ -71,7 +71,7 @@ const now = () => Date.now();
 const expired = r => r.status==='pending' && (!r.expires_at || Date.parse(r.expires_at)<=now());
 const actualStatus = r => expired(r)?'expired':r.status;
 let data=initial(),secret='';
-const statusNames={pending:'Pendiente',approved:'Aprobada',rejected:'Rechazada',expired:'Vencida'};
+const statusNames={pending:'Pendiente',approved:'Aprobada',rejected:'Rechazada',expired:'Vencida',cancelled:'Cancelada'};
 let selectedEvent='';
 function notify(msg){const t=$('toast');t.textContent=msg;t.classList.remove('hidden');clearTimeout(notify.timer);notify.timer=setTimeout(()=>t.classList.add('hidden'),4500)}
 async function request(path,options={}){
@@ -161,20 +161,45 @@ function renderReservations(){
  <div class="muted">Organiza: ${esc(r.customer_name)} · ${esc(r.customer_phone)} · ${esc(r.customer_email)}</div>
  <div class="muted">Invitados: ${names.length} · Paquete: ${esc(data.packages.find(p=>p.id===r.package_id)?.title||'Sin especificar')}</div>
  ${r.notes?`<p class="wraptext">${esc(r.notes)}</p>`:''}
- ${status==='pending'?`<p class="muted">Vence: ${esc(new Date(r.expires_at).toLocaleString('es-PR'))}</p><div class="actions"><button class="primary small" data-action="approve" data-id="${id}">✓ Aprobar</button><button class="danger" data-action="reject" data-id="${id}">Rechazar</button></div>`:''}</article>`;
+ ${status==='pending'?`<p class="muted">Vence: ${esc(new Date(r.expires_at).toLocaleString('es-PR'))}</p><div class="actions"><button class="primary small" data-action="approve" data-id="${id}">✓ Aprobar</button><button class="danger" data-action="reject" data-id="${id}">Rechazar</button></div>`:''}
+ ${['pending','approved'].includes(status)?`<div class="actions"><button class="ghost small" data-action="cancel" data-id="${id}">Cancelar reservación</button></div>`:''}
+ ${['cancelled','rejected','expired'].includes(status) && String(r.notes||'').trim().toUpperCase().startsWith('PRUEBA DEL SISTEMA')?`<div class="actions"><button class="danger small" data-action="delete-test" data-id="${id}">Eliminar prueba permanentemente</button></div>`:''}</article>`;
  }).join(''):'<p class="muted">No hay reservaciones en esta categoría.</p>';
 }
 $('reservationList').addEventListener('click',async e=>{
- const b=e.target.closest('button[data-action]');if(!b)return;
- const status=b.dataset.action==='approve'?'approved':'rejected',id=b.dataset.id;
+ const b=e.target.closest('button[data-action]');if(!b||b.disabled)return;
+ const accion=b.dataset.action,id=b.dataset.id;
  const r=data.reservations.find(x=>(x.reservation_id||x.id)===id);
- if(!r||actualStatus(r)!=='pending'){notify('Solicitud ya no pendiente. Actualiza.');return}
- if(!confirm(`${status==='approved'?'¿Aprobar y reservar':'¿Rechazar'} la fecha ${r.date}?`))return;
+ if(!r){notify('La solicitud ya no está en pantalla. Actualiza.');return}
+ const estado=actualStatus(r);
+ let rpc,params,mensaje;
+ if(accion==='approve'||accion==='reject'){
+  if(estado!=='pending'){notify('La solicitud ya no está pendiente. Actualiza.');return}
+  const nuevo=accion==='approve'?'approved':'rejected';
+  if(!confirm(`${nuevo==='approved'?'¿Aprobar y reservar':'¿Rechazar'} la fecha ${r.date} de ${r.customer_name}?`))return;
+  rpc='admin_resolver_reservacion';params={p_reservacion:id,p_estado:nuevo};
+  mensaje=nuevo==='approved'?'Actividad aprobada.':'Actividad rechazada.';
+ }else if(accion==='cancel'){
+  if(!['pending','approved'].includes(estado)){notify('Esta reservación ya no puede cancelarse.');return}
+  const aviso=`¿CANCELAR la reservación de ${r.customer_name} para el ${r.date}? La fecha se liberará y el registro quedará como cancelado. Esta operación no avisa al cliente por correo.`;
+  if(estado==='approved'){
+   if(prompt(aviso+'\n\nPara confirmar escribe CANCELAR:')?.trim().toUpperCase()!=='CANCELAR')return;
+  }else if(!confirm(aviso))return;
+  rpc='admin_cancelar_reservacion';params={p_reservacion:id};
+  mensaje='Reservación cancelada. La fecha quedó liberada, salvo que exista un bloqueo manual.';
+ }else if(accion==='delete-test'){
+  if(!['cancelled','rejected','expired'].includes(estado)||!String(r.notes||'').trim().toUpperCase().startsWith('PRUEBA DEL SISTEMA')){
+   notify('Solo puedes eliminar reservaciones de prueba ya finalizadas.');return;
+  }
+  const aviso=`Se eliminará PARA SIEMPRE la prueba de ${r.customer_name}, fecha ${r.date}, y sus invitados. No se puede recuperar.\n\nEscribe ELIMINAR para confirmar:`;
+  if(prompt(aviso)?.trim().toUpperCase()!=='ELIMINAR')return;
+  rpc='admin_eliminar_reservacion_prueba';params={p_reservacion:id};
+  mensaje='Reservación de prueba eliminada permanentemente.';
+ }else return;
  b.disabled=true;
- try{
-  await adminRpc('admin_resolver_reservacion',{p_reservacion:id,p_estado:status});
-  await refresh();notify(status==='approved'?'Actividad aprobada.':'Actividad rechazada.');
- }catch(err){notify('No se pudo procesar: '+err.message)}finally{b.disabled=false}
+ try{await adminRpc(rpc,params);await refresh();notify(mensaje)}
+ catch(err){notify('No se pudo completar la operación: '+err.message)}
+ finally{b.disabled=false}
 });
 function renderEvents(){
  const approved=data.reservations.filter(r=>r.status==='approved').sort((a,b)=>a.date.localeCompare(b.date));
