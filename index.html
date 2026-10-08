@@ -118,11 +118,43 @@ section{padding:76px 0}.heading{text-align:center;margin-bottom:33px}.heading h2
   .highlights .stat span:not(.stat-icon){font-size:clamp(10px,2.35vw,12px);line-height:1.25}
   .highlights + .experiencias{padding-top:39px}
 }
+
+
+/* Portada despejada: dar protagonismo a la fotografía original. */
+.hero{
+  min-height:650px;
+  background-image:linear-gradient(180deg,rgba(12,33,22,.38) 0%,rgba(12,33,22,.06) 44%,rgba(12,33,22,.35) 100%),url('hacienda_flambo.JPG');
+  background-position:center;background-size:cover;
+}
+.hero .content{
+  min-height:650px;display:flex;flex-direction:column;align-items:center;
+  justify-content:space-between;padding:54px 0 110px;
+}
+.hero .eyebrow{color:#ffe3a2;text-align:center}
+.heroacts{margin-top:auto;justify-content:center;gap:15px}
+.heroacts a{box-shadow:0 6px 24px rgba(0,0,0,.14)}
+.highlights{margin-top:0;z-index:4}
+.highlights .stat{min-height:113px}
+.highlights + .experiencias{padding-top:57px}
+.experience-intro{color:var(--forest)!important;font-size:clamp(16px,2.1vw,20px);line-height:1.7!important;max-width:720px!important;font-weight:550;margin:18px auto 16px!important}
+.experiencias .heading p:not(.experience-intro){margin-top:10px}
+@media(max-width:600px){
+ .hero{min-height:600px;background-image:linear-gradient(180deg,rgba(12,33,22,.34),rgba(12,33,22,.04) 48%,rgba(12,33,22,.32)),url('hacienda_flambo.JPG');background-position:center}
+ .hero .content{min-height:600px;padding:48px 0 120px}
+ .heroacts{margin-top:auto;gap:12px}
+ .heroacts a{width:min(100%,330px);min-height:49px}
+ .highlights{margin-top:0}
+ .highlights .stat,.highlights .stats .stat:last-child{min-height:104px}
+ .highlights + .experiencias{padding-top:47px}
+ .experience-intro{font-size:16px;line-height:1.65!important;margin:16px auto 13px!important}
+}
+@media(max-width:380px){.hero,.hero .content{min-height:570px}.hero .content{padding-bottom:115px}}
+@media(prefers-reduced-motion:reduce){.hero{background-attachment:scroll}}
 </style>
 </head>
 <body>
 <main>
-<div id="inicio" class="hero"><div class="container"><div class="content"><div class="eyebrow">Momentos especiales rodeados de naturaleza</div><h1>Hacienda<br>El Flambo</h1><p>¿Buscas un lugar donde lo tengan todo? Celebra cumpleaños, bodas, actividades privadas y encuentros inolvidables. Tú disfruta. Nosotros nos encargamos de TODO.</p><div class="heroacts"><a class="whitebtn" href="#reservar">🌸 Separar mi fecha</a><a class="outlinebtn" href="#servicios">Conoce la hacienda</a></div></div></div></div>
+<div id="inicio" class="hero"><div class="container"><div class="content"><div class="eyebrow">Momentos especiales rodeados de naturaleza</div><div class="heroacts"><a class="whitebtn" href="#reservar">🌸 Separar mi fecha</a><a class="outlinebtn" href="#servicios">Conoce la hacienda</a></div></div></div></div>
 <div class="container highlights" aria-label="Lo que hace especial a Hacienda El Flambo">
   <div class="stats">
     <div class="stat"><span class="stat-icon" aria-hidden="true">🐐</span><strong>100</strong><span>Personas máximo</span></div>
@@ -130,7 +162,7 @@ section{padding:76px 0}.heading{text-align:center;margin-bottom:33px}.heading h2
     <div class="stat"><span class="stat-icon" aria-hidden="true">🎉</span><strong>Eventos</strong><span>Para todos</span></div>
   </div>
 </div>
-<section id="experiencias" class="experiencias"><div class="container"><div class="heading"><span class="eyebrow">Naturaleza · Momentos · Tradición</span><h2>Vive la experiencia de la hacienda</h2><p>Descubre los animales, los rincones naturales y los espacios donde nacen recuerdos inolvidables.</p></div><div class="experience-grid">
+<section id="experiencias" class="experiencias"><div class="container"><div class="heading"><span class="eyebrow">Naturaleza · Momentos · Tradición</span><h2>Vive la experiencia de la hacienda</h2><p class="experience-intro">¿Buscas un lugar donde lo tengan todo? Celebra cumpleaños, bodas, actividades privadas y encuentros inolvidables. Tú disfruta. Nosotros nos encargamos de TODO.</p><p>Descubre los animales, los rincones naturales y los espacios donde nacen recuerdos inolvidables.</p></div><div class="experience-grid">
 <article class="experience-card"><img src="fotos/animales.webp" alt="Interacción con animales de granja en la hacienda" loading="lazy"><div class="copy"><h3>🐐 Animales de granja</h3><p>Momentos para descubrir y compartir con los animales, rodeados de naturaleza.</p></div></article>
 <article class="experience-card"><img src="fotos/naturaleza.webp" alt="Casita del árbol entre vegetación" loading="lazy"><div class="copy"><h3>🌿 Rincones especiales</h3><p>Áreas verdes, casita del árbol y espacios que invitan a explorar y tomar fotografías.</p></div></article>
 <article class="experience-card"><img src="fotos/celebraciones.webp" alt="Celebración de actividad en la hacienda" loading="lazy"><div class="copy"><h3>🎉 Celebraciones</h3><p>Un escenario campestre para cumpleaños, bodas, reuniones y encuentros especiales.</p></div></article>
