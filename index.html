@@ -157,6 +157,49 @@ section{padding:76px 0}.heading{text-align:center;margin-bottom:33px}.heading h2
  .heroacts{margin-top:auto}
 }
 @media (max-width:380px){.hero .content{padding-bottom:10px}}
+
+/* Ajuste SOLO para computadora y tablet: despejar el nombre de la fotografía.
+   En móviles (600px o menos) no se modifica ningún estilo. */
+@media (min-width: 601px) {
+  .hero { position: relative; overflow: visible; }
+  .heroacts {
+    position: absolute;
+    left: 50%;
+    bottom: -86px;
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: calc(100% - 40px);
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    z-index: 5;
+  }
+  .heroacts a {
+    min-width: 215px;
+    min-height: 58px;
+    padding: 16px 25px;
+    border-radius: 50px;
+    font-size: 16px;
+    white-space: nowrap;
+    text-align: center;
+  }
+  .heroacts .whitebtn {
+    background: #fff;
+    color: var(--forest);
+    border: 1px solid #dce7dd;
+  }
+  .heroacts .outlinebtn {
+    color: var(--forest);
+    background: #fffcf5;
+    border: 1.5px solid var(--forest);
+  }
+  /* Las tarjetas comienzan después de los botones sin taparlos. */
+  .highlights { margin-top: 118px; }
+}
 </style>
 </head>
 <body>
