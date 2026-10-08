@@ -29,7 +29,7 @@ main{padding:20px 16px 70px}.notice{background:#fff5d8;color:#765a1a;border:1px 
 <div class="bar"><nav class="tabs" aria-label="Secciones"><button type="button" class="tab active" data-tab="reservas">Reservaciones</button><button type="button" class="tab" data-tab="entrada">Entrada</button><button type="button" class="tab" data-tab="fechas">Fechas</button><button type="button" class="tab" data-tab="publicaciones">Anuncios y paquetes</button></nav><button id="logout" class="ghost">Salir</button></div>
 <section class="panel active" id="panel-reservas">
 <div class="metrics"><div class="metric"><strong id="numPending">0</strong><span>Pendientes</span></div><div class="metric"><strong id="numApproved">0</strong><span>Aprobadas</span></div><div class="metric"><strong id="numRejected">0</strong><span>Rechazadas</span></div><div class="metric"><strong id="numBlocked">0</strong><span>Fechas bloqueadas</span></div></div>
-<div class="card"><h2>Solicitudes de actividades</h2><p class="muted">Las solicitudes pendientes caducan a las 48 horas. Puedes aprobar, rechazar o cancelar reservaciones. Las cancelaciones conservan el historial y liberan la fecha. Solo las reservaciones marcadas como PRUEBA DEL SISTEMA se pueden eliminar permanentemente. Se muestran las últimas 200 solicitudes.</p><div class="actions"><button id="refresh" class="ghost small">↻ Actualizar</button><select id="filterReservations" aria-label="Filtrar reservas" style="max-width:240px"><option value="all">Todas</option><option value="pending">Pendientes</option><option value="approved">Aprobadas</option><option value="rejected">Rechazadas</option><option value="expired">Vencidas</option><option value="cancelled">Canceladas</option></select></div><div id="reservationList"></div></div>
+<div class="card"><h2>Solicitudes de actividades</h2><p class="muted">Las solicitudes pendientes caducan a las 48 horas. Puedes aprobar, rechazar o cancelar reservaciones. Las cancelaciones liberan la fecha. Si ya no necesitas conservar una reservación cancelada, puedes eliminar definitivamente sus datos y su lista de invitados con una confirmación adicional. Las pruebas rechazadas o vencidas también se pueden eliminar cuando estén marcadas PRUEBA DEL SISTEMA. Se muestran las últimas 200 solicitudes.</p><div class="actions"><button id="refresh" class="ghost small">↻ Actualizar</button><select id="filterReservations" aria-label="Filtrar reservas" style="max-width:240px"><option value="all">Todas</option><option value="pending">Pendientes</option><option value="approved">Aprobadas</option><option value="rejected">Rechazadas</option><option value="expired">Vencidas</option><option value="cancelled">Canceladas</option></select></div><div id="reservationList"></div></div>
 </section>
 <section class="panel" id="panel-entrada">
 <div class="card"><h2>🚪 Control de entrada</h2><p class="muted">Selecciona una actividad aprobada. Toca el nombre cuando la persona llegue para marcarlo en verde, o vuelve a tocarlo para corregir la entrada.</p><label for="eventSelect">Actividad</label><select id="eventSelect"></select><div id="eventDetails"></div></div>
@@ -163,7 +163,8 @@ function renderReservations(){
  ${r.notes?`<p class="wraptext">${esc(r.notes)}</p>`:''}
  ${status==='pending'?`<p class="muted">Vence: ${esc(new Date(r.expires_at).toLocaleString('es-PR'))}</p><div class="actions"><button class="primary small" data-action="approve" data-id="${id}">✓ Aprobar</button><button class="danger" data-action="reject" data-id="${id}">Rechazar</button></div>`:''}
  ${['pending','approved'].includes(status)?`<div class="actions"><button class="ghost small" data-action="cancel" data-id="${id}">Cancelar reservación</button></div>`:''}
- ${['cancelled','rejected','expired'].includes(status) && String(r.notes||'').trim().toUpperCase().startsWith('PRUEBA DEL SISTEMA')?`<div class="actions"><button class="danger small" data-action="delete-test" data-id="${id}">Eliminar prueba permanentemente</button></div>`:''}</article>`;
+ ${status==='cancelled'?`<div class="actions"><button class="danger small" data-action="delete-cancelled" data-id="${id}">Eliminar reservación definitivamente</button></div>`:''}
+ ${['rejected','expired'].includes(status) && String(r.notes||'').trim().toUpperCase().startsWith('PRUEBA DEL SISTEMA')?`<div class="actions"><button class="danger small" data-action="delete-test" data-id="${id}">Eliminar prueba permanentemente</button></div>`:''}</article>`;
  }).join(''):'<p class="muted">No hay reservaciones en esta categoría.</p>';
 }
 $('reservationList').addEventListener('click',async e=>{
@@ -187,8 +188,16 @@ $('reservationList').addEventListener('click',async e=>{
   }else if(!confirm(aviso))return;
   rpc='admin_cancelar_reservacion';params={p_reservacion:id};
   mensaje='Reservación cancelada. La fecha quedó liberada, salvo que exista un bloqueo manual.';
+ }else if(accion==='delete-cancelled'){
+  if(estado!=='cancelled'){
+   notify('Por seguridad, primero tienes que cancelar la reservación.');return;
+  }
+  const aviso=`ATENCIÓN: se eliminará definitivamente la reservación CANCELADA de ${r.customer_name}, para el ${r.date}, junto con sus invitados y datos de contacto en Supabase. Esto no se puede deshacer desde el panel. No se enviará ningún correo al cliente.\n\nPara confirmar, escribe ELIMINAR:`;
+  if(prompt(aviso)?.trim().toUpperCase()!=='ELIMINAR')return;
+  rpc='admin_eliminar_reservacion_cancelada';params={p_reservacion:id};
+  mensaje='Reservación cancelada e invitados eliminados definitivamente de Supabase.';
  }else if(accion==='delete-test'){
-  if(!['cancelled','rejected','expired'].includes(estado)||!String(r.notes||'').trim().toUpperCase().startsWith('PRUEBA DEL SISTEMA')){
+  if(!['rejected','expired'].includes(estado)||!String(r.notes||'').trim().toUpperCase().startsWith('PRUEBA DEL SISTEMA')){
    notify('Solo puedes eliminar reservaciones de prueba ya finalizadas.');return;
   }
   const aviso=`Se eliminará PARA SIEMPRE la prueba de ${r.customer_name}, fecha ${r.date}, y sus invitados. No se puede recuperar.\n\nEscribe ELIMINAR para confirmar:`;
