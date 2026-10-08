@@ -253,11 +253,17 @@ section{padding:76px 0}.heading{text-align:center;margin-bottom:33px}.heading h2
 <div class="field"><label for="customerName">Nombre de quien reserva *</label><input id="customerName" maxlength="120" required autocomplete="name" placeholder="Nombre completo"></div><div class="field"><label for="customerPhone">Teléfono / WhatsApp *</label><input id="customerPhone" type="tel" maxlength="25" required autocomplete="tel" placeholder="787-000-0000"></div><div class="field"><label for="customerEmail">Correo electrónico *</label><input id="customerEmail" type="email" maxlength="150" required autocomplete="email" placeholder="correo@ejemplo.com"></div><div class="field"><label for="eventPackage">Paquete de interés</label><select id="eventPackage"><option value="">Por decidir / personalizado</option></select></div><div class="field full"><label for="eventNotes">Detalles adicionales (opcional)</label><textarea id="eventNotes" maxlength="1500" placeholder="Cuéntanos qué te gustaría para tu actividad…"></textarea></div></div>
 <h3 class="subheading">👥 Lista de invitados</h3><p class="note">Escribe la cantidad total de personas que asistirán, incluyendo al organizador si asistirá. Se generará automáticamente un campo por cada persona. Máximo 100.</p><div class="field"><label for="guestCount">Cantidad total de personas *</label><input type="number" id="guestCount" min="1" max="100" step="1" placeholder="Ejemplo: 35" required></div><div id="guestRows" class="guestrows"></div><p class="note" id="guestCounter" aria-live="polite">0 nombres de 0 personas.</p>
 <div class="notice">Enviar la solicitud <strong>no confirma la reservación</strong>. La dueña de Hacienda El Flambo puede aprobarla o rechazarla. Cuando se apruebe, la fecha quedará reservada. No se solicita pago desde esta página.</div>
+<div class="field full" style="margin:18px 0 14px">
+<label>Verificación de seguridad *</label>
+<div class="cf-turnstile" data-sitekey="0x4AAAAAAFRHS81obFCWhh4D" data-theme="auto" data-action="solicitar-reserva"></div>
+<p class="note" style="margin:7px 0 0">Completa la verificación de seguridad antes de enviar tu solicitud.</p>
+</div>
 <button id="submitBooking" class="submit" type="submit">Enviar solicitud de reservación</button><div id="submitFeedback" role="status" aria-live="polite"></div></form>
 </div></div></section>
 <section id="contacto"><div class="container"><div class="heading"><span class="eyebrow">Estamos para ayudarte</span><h2>Comunícate con nosotros</h2><p>Separa tu fecha con anticipación y consulta los detalles de tu celebración.</p></div><div class="contactgrid"><div class="contact"><span class="emoji">📍</span><strong>Ubicación</strong><p>Morovis, Puerto Rico</p></div><div class="contact"><span class="emoji">💬</span><strong>WhatsApp</strong><p><a href="https://wa.me/17875141034" target="_blank" rel="noopener noreferrer">(787) 514-1034</a></p></div><div class="contact"><span class="emoji">✉️</span><strong>Correo</strong><p><a href="mailto:haciendaelflambo@gmail.com">haciendaelflambo@gmail.com</a></p></div></div></div></section>
 </main><footer><div class="container"><strong>🌿 Hacienda El Flambo</strong>Morovis, Puerto Rico · <a href="https://www.instagram.com/hacienda_el_flambo/" target="_blank" rel="noopener noreferrer">@hacienda_el_flambo</a><p>© <span id="year"></span> Hacienda El Flambo. Todos los derechos reservados.</p></div></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script>
 async function cargarPromocionesReales(){
  const target=document.getElementById('announcementCards');
@@ -292,6 +298,7 @@ const pad=n=>String(n).padStart(2,'0');
 const months=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 let viewDate=new Date();viewDate.setDate(1);
 let calendarDates={};let catalog={announcements:[],packages:[]};let selectedDate='';let isLoading=false;
+let calendarReady=false, calendarRequestId=0, bookingBusy=false;
 const demoRead=()=>{try{return JSON.parse(localStorage.getItem(DEMO_KEY))||{reservations:[],announcements:[],packages:[],blocked:[]}}catch{return {reservations:[],announcements:[],packages:[],blocked:[]}}};
 const demoWrite=o=>localStorage.setItem(DEMO_KEY,JSON.stringify(o));
 function demoCalendar(month){const data=demoRead();const res={};const now=Date.now();for(const d of (data.blocked||[]))if(d.startsWith(month))res[d]='blocked';for(const r of (data.reservations||[])){if(!r.date.startsWith(month)||r.status==='rejected')continue;if(r.status==='pending'&&Date.parse(r.expires_at)<=now)continue;res[r.date]=r.status==='approved'?'approved':'pending'}return {dates:res}}
@@ -306,17 +313,102 @@ $('packageCards').addEventListener('click',e=>{const btn=e.target.closest('[data
 async function loadCatalog(){try{catalog=DEMO?{announcements:demoRead().announcements||[],packages:demoRead().packages||[]}:await api('/api/public/catalog');renderCatalog();await cargarPromocionesReales()}catch(e){$('announcementCards').innerHTML='<div class="empty">No se pudieron cargar los anuncios.</div>';$('packageCards').innerHTML='<div class="empty">No se pudieron cargar los paquetes.</div>'}}
 function dateStatus(date){return calendarDates[date]||'available'}
 function showDateFeedback(msg,type='warn'){$('dateFeedback').className=`status ${type}`;$('dateFeedback').textContent=msg}
-function syncDate(date){selectedDate=date;$('eventDate').value=date;const s=dateStatus(date);if(date<todayLocal()){showDateFeedback('La fecha ya pasó.','error');return false}if(s!=='available'){showDateFeedback(s==='pending'?'Esta fecha tiene una solicitud pendiente.':'Esta fecha no está disponible.','error');return false}showDateFeedback(`¡${new Date(date+'T12:00:00').toLocaleDateString('es-PR',{dateStyle:'long'})} está disponible para solicitar! La aprobación corresponde a la administración.`,'success');return true}
-function renderCalendar(){const y=viewDate.getFullYear(),m=viewDate.getMonth();$('calendarMonth').textContent=`${months[m][0].toUpperCase()+months[m].slice(1)} ${y}`;const root=$('calendarDays');root.innerHTML=['L','M','M','J','V','S','D'].map(a=>`<span class="weekday">${a}</span>`).join('');let offset=(new Date(y,m,1).getDay()+6)%7;for(let i=0;i<offset;i++)root.insertAdjacentHTML('beforeend','<span class="day emptyday"></span>');const n=new Date(y,m+1,0).getDate();for(let d=1;d<=n;d++){const ds=`${y}-${pad(m+1)}-${pad(d)}`,s=ds<todayLocal()?'past':dateStatus(ds);const btn=document.createElement('button');btn.type='button';btn.textContent=d;btn.className=`day ${s==='available'?'':s} ${selectedDate===ds?'selected':''}`;btn.disabled=s!=='available';btn.title=s==='available'?'Disponible':s==='pending'?'Pendiente':s==='approved'?'Reservada':s==='blocked'?'Bloqueada':'Pasada';btn.setAttribute('aria-label',`${ds}: ${btn.title}`);btn.onclick=()=>{syncDate(ds);renderCalendar()};root.append(btn)}$('prevMonth').disabled=(y===new Date().getFullYear()&&m===new Date().getMonth())}
-async function loadCalendar(){const mon=`${viewDate.getFullYear()}-${pad(viewDate.getMonth()+1)}`;try{isLoading=true;const v=DEMO?demoCalendar(mon):await api(`/api/public/calendar?month=${encodeURIComponent(mon)}`);calendarDates=v.dates||{};renderCalendar();if(selectedDate.startsWith(mon))syncDate(selectedDate)}catch(e){calendarDates={};renderCalendar();showDateFeedback('No pudimos verificar disponibilidad. No envíes una solicitud hasta recuperar la conexión.','error');$('submitBooking').disabled=true}finally{isLoading=false}}
-$('prevMonth').onclick=()=>{viewDate.setMonth(viewDate.getMonth()-1);loadCalendar()};$('nextMonth').onclick=()=>{viewDate.setMonth(viewDate.getMonth()+1);loadCalendar()};
-$('eventDate').min=todayLocal();$('eventDate').onchange=async()=>{const d=$('eventDate').value;if(!d)return;if(d.slice(0,7)!==`${viewDate.getFullYear()}-${pad(viewDate.getMonth()+1)}`){viewDate=new Date(d+'T12:00:00');viewDate.setDate(1);await loadCalendar()}const ok=syncDate(d);if(!ok)selectedDate='';renderCalendar()};
+function syncDate(date){
+ if(!calendarReady){showDateFeedback('Estamos verificando las fechas. Espera un momento.','warn');return false}
+ if(date.slice(0,7)!==`${viewDate.getFullYear()}-${pad(viewDate.getMonth()+1)}`){showDateFeedback('Actualiza el calendario para verificar esa fecha.','warn');return false}
+ if(date<todayLocal()){showDateFeedback('La fecha ya pasó.','error');return false}
+ const s=dateStatus(date);
+ if(s!=='available'){showDateFeedback(s==='pending'?'Esta fecha tiene una solicitud pendiente.':'Esta fecha no está disponible.','error');return false}
+ selectedDate=date;$('eventDate').value=date;
+ showDateFeedback(`¡${new Date(date+'T12:00:00').toLocaleDateString('es-PR',{dateStyle:'long'})} está disponible para solicitar! La aprobación corresponde a la administración.`,'success');return true;
+}
+function renderCalendar(){
+ const y=viewDate.getFullYear(),m=viewDate.getMonth();$('calendarMonth').textContent=`${months[m][0].toUpperCase()+months[m].slice(1)} ${y}`;
+ const root=$('calendarDays');root.innerHTML=['L','M','M','J','V','S','D'].map(a=>`<span class="weekday">${a}</span>`).join('');
+ let offset=(new Date(y,m,1).getDay()+6)%7;
+ for(let i=0;i<offset;i++)root.insertAdjacentHTML('beforeend','<span class="day emptyday"></span>');
+ const n=new Date(y,m+1,0).getDate();
+ for(let d=1;d<=n;d++){
+  const ds=`${y}-${pad(m+1)}-${pad(d)}`,s=ds<todayLocal()?'past':!calendarReady?'unavailable':dateStatus(ds);
+  const btn=document.createElement('button');btn.type='button';btn.textContent=d;btn.className=`day ${s==='available'?'':s} ${selectedDate===ds?'selected':''}`;
+  btn.disabled=s!=='available';btn.title=s==='available'?'Disponible':s==='pending'?'Pendiente':s==='approved'?'Reservada':s==='blocked'?'Bloqueada':s==='past'?'Pasada':'Verificando disponibilidad';
+  btn.setAttribute('aria-label',`${ds}: ${btn.title}`);btn.onclick=()=>{syncDate(ds);renderCalendar()};root.append(btn)
+ }
+ $('prevMonth').disabled=(y===new Date().getFullYear()&&m===new Date().getMonth());
+}
+async function loadCalendar(){
+ const mon=`${viewDate.getFullYear()}-${pad(viewDate.getMonth()+1)}`,req=++calendarRequestId;
+ calendarReady=false;isLoading=true;calendarDates={};$('submitBooking').disabled=true;renderCalendar();
+ showDateFeedback('Consultando disponibilidad en Supabase…','warn');
+ try{
+  if(!promoSupabase)throw Error('No se pudo cargar Supabase');
+  const {data,error}=await promoSupabase.rpc('calendario_publico',{p_mes:mon});
+  if(req!==calendarRequestId)return;
+  if(error)throw error;
+  calendarDates=Object.fromEntries((data||[]).map(row=>[row.fecha,row.estado]));
+  calendarReady=true;renderCalendar();
+  if(selectedDate.startsWith(mon))syncDate(selectedDate);
+  else showDateFeedback('Selecciona un día verde del calendario.','warn');
+ }catch(e){
+  if(req!==calendarRequestId)return;
+  calendarReady=false;calendarDates={};renderCalendar();
+  showDateFeedback('No se pudo verificar la disponibilidad. No se permitirán solicitudes hasta recuperar la conexión.','error');
+  console.error('Error consultando calendario:',e);
+ }finally{
+  if(req===calendarRequestId){isLoading=false;$('submitBooking').disabled=bookingBusy||!calendarReady}
+ }
+}
+$('prevMonth').onclick=()=>{viewDate.setMonth(viewDate.getMonth()-1);loadCalendar()};
+$('nextMonth').onclick=()=>{viewDate.setMonth(viewDate.getMonth()+1);loadCalendar()};
+$('eventDate').min=todayLocal();
+$('eventDate').onchange=async()=>{
+ const d=$('eventDate').value;if(!d)return;
+ if(d.slice(0,7)!==`${viewDate.getFullYear()}-${pad(viewDate.getMonth()+1)}`){viewDate=new Date(d+'T12:00:00');viewDate.setDate(1);await loadCalendar()}
+ const ok=syncDate(d);if(!ok)selectedDate='';renderCalendar();
+};
 function buildGuestFields(){const raw=$('guestCount').value;const n=raw===''?0:Number(raw);const root=$('guestRows');if(!Number.isInteger(n)||n<0||n>100){root.innerHTML='';$('guestCounter').textContent='Indica una cantidad válida de 1 a 100.';return}const old=[...root.querySelectorAll('input')].map(x=>x.value);root.innerHTML='';const frag=document.createDocumentFragment();for(let i=0;i<n;i++){const div=document.createElement('div');div.className='guestrow';const label=document.createElement('span');label.textContent=`${i+1}.`;const input=document.createElement('input');input.className='guestName';input.placeholder=`Nombre completo del invitado ${i+1}`;input.maxLength=120;input.required=true;input.autocomplete='off';input.setAttribute('aria-label',`Nombre del invitado ${i+1}`);input.value=old[i]||'';div.append(label,input);frag.append(div)}root.append(frag);updateGuestCounter()}
 function updateGuestCounter(){const fields=[...document.querySelectorAll('.guestName')];$('guestCounter').textContent=`${fields.filter(x=>x.value.trim()).length} nombres de ${fields.length} personas.`}
 $('guestCount').addEventListener('input',buildGuestFields);$('guestRows').addEventListener('input',updateGuestCounter);
 function feedback(text,type){$('submitFeedback').innerHTML='';const el=document.createElement('div');el.className=`status ${type}`;el.textContent=text;$('submitFeedback').append(el)}
-$('bookingForm').addEventListener('submit',async e=>{e.preventDefault();if(isLoading)return;const button=$('submitBooking');const date=$('eventDate').value,count=Number($('guestCount').value),names=[...document.querySelectorAll('.guestName')].map(x=>x.value.trim());if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||date<todayLocal()){feedback('Selecciona una fecha futura válida.','error');return}if(!Number.isInteger(count)||count<1||count>100||names.length!==count||names.some(x=>!x||x.length>120)){feedback('Completa los nombres de todos los invitados (máximo 100).','error');return}if(dateStatus(date)!=='available'){feedback('La fecha ya no está disponible. Escoge otra.','error');return}const data={date,event_type:$('eventType').value,customer_name:$('customerName').value.trim(),customer_phone:$('customerPhone').value.trim(),customer_email:$('customerEmail').value.trim(),package_id:$('eventPackage').value||null,notes:$('eventNotes').value.trim(),guest_count:count,guests:names};if(!data.customer_name||!data.customer_phone||!data.customer_email||!data.event_type){feedback('Completa todos los datos obligatorios.','error');return}button.disabled=true;button.textContent='Enviando solicitud…';try{let result;if(DEMO){const store=demoRead();const statuses=demoCalendar(date.slice(0,7)).dates;if(statuses[date])throw Error('Esta fecha fue solicitada u ocupada.');result={reservation_id:(self.crypto?.randomUUID?.()||String(Date.now())),status:'pending',expires_at:new Date(Date.now()+48*3600*1000).toISOString()};store.reservations=store.reservations||[];store.reservations.push({...data,...result});demoWrite(store)}else{result=await api('/api/public/reservations',{method:'POST',body:JSON.stringify(data)})}feedback(`Solicitud recibida${DEMO?' EN MODO DEMOSTRACIÓN':''}. Número: ${result.reservation_id||'pendiente'}. La fecha queda pendiente hasta que la administración decida (máximo 48 horas). Esto NO es una confirmación de reserva.`,'success');$('bookingForm').reset();$('guestRows').innerHTML='';selectedDate='';updateGuestCounter();await loadCalendar()}catch(err){feedback(`No fue posible enviar la solicitud: ${err.message}. Verifica la disponibilidad antes de reintentar.`,'error');await loadCalendar()}finally{button.disabled=false;button.textContent='Enviar solicitud de reservación'}});
-if(DEMO){$('modeNotice').classList.remove('hidden');$('modeNotice').textContent='⚠️ MODO DEMOSTRACIÓN: esta página no está conectada a un servidor. Las solicitudes se guardan solamente en ESTE navegador. No aceptes reservaciones reales hasta configurar la API y el panel administrativo.'}
+async function enviarReservacion(data,token){
+ const response=await fetch('https://pptrhfrolcndblgrpnhe.supabase.co/functions/v1/crear-reservacion',{
+  method:'POST',
+  headers:{'Content-Type':'application/json','apikey':'sb_publishable_V6HjIiUXMkCp1COM_aUXtA_bd4AsgEe'},
+  body:JSON.stringify({...data,turnstile_token:token}),
+  signal:AbortSignal.timeout(25000)
+ });
+ const result=await response.json().catch(()=>({}));
+ if(!response.ok)throw Error(result.error||`No se pudo enviar la solicitud (HTTP ${response.status})`);
+ if(result.ok!==true||!result.reservation_id)throw Error('Respuesta incompleta del servidor');
+ return result;
+}
+$('bookingForm').addEventListener('submit',async e=>{
+ e.preventDefault();if(isLoading||bookingBusy||!calendarReady){feedback('Espera a que el calendario confirme la disponibilidad.','error');return}
+ const button=$('submitBooking'),date=$('eventDate').value,count=Number($('guestCount').value),names=[...document.querySelectorAll('.guestName')].map(x=>x.value.trim());
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||date<todayLocal()){feedback('Selecciona una fecha futura válida.','error');return}
+ if(!Number.isInteger(count)||count<1||count>100||names.length!==count||names.some(x=>!x||x.length>120)){feedback('Completa los nombres de todos los invitados (máximo 100).','error');return}
+ if(dateStatus(date)!=='available'){feedback('La fecha ya no está disponible. Escoge otra.','error');return}
+ const data={date,event_type:$('eventType').value,customer_name:$('customerName').value.trim(),customer_phone:$('customerPhone').value.trim(),customer_email:$('customerEmail').value.trim(),package_id:$('eventPackage').value||null,notes:$('eventNotes').value.trim(),guest_count:count,guests:names};
+ if(!data.customer_name||!data.customer_phone||!data.customer_email||!data.event_type){feedback('Completa todos los datos obligatorios.','error');return}
+ bookingBusy=true;button.disabled=true;button.textContent='Enviando solicitud…';
+ try{
+  // Reconsultamos la fecha justo antes de enviarla. El backend también valida concurrencia.
+  await loadCalendar();
+  if(!calendarReady||date.slice(0,7)!==`${viewDate.getFullYear()}-${pad(viewDate.getMonth()+1)}`||dateStatus(date)!=='available')throw Error('La fecha no está disponible o no se pudo comprobar');
+  const token=window.turnstile?.getResponse();
+  if(!token)throw Error('Completa la verificación de seguridad de Cloudflare y vuelve a intentar');
+  const result=await enviarReservacion(data,token);
+  feedback(`Solicitud recibida correctamente. Número: ${result.reservation_id}. La fecha estará pendiente de aprobación, hasta un máximo de 48 horas. Esto NO es una confirmación de reserva.`,'success');
+  $('bookingForm').reset();$('guestRows').innerHTML='';selectedDate='';updateGuestCounter();
+  window.turnstile?.reset();await loadCalendar();
+ }catch(err){
+  feedback(`No fue posible enviar la solicitud: ${err.message}. Revisa la disponibilidad y vuelve a intentarlo.`,'error');
+  window.turnstile?.reset();
+  if(calendarReady)await loadCalendar();
+ }finally{bookingBusy=false;button.disabled=!calendarReady;button.textContent='Enviar solicitud de reservación'}
+});
+$('modeNotice').classList.remove('hidden');
+$('modeNotice').textContent='⚠️ SISTEMA EN PRUEBAS: el calendario y las solicitudes ya utilizan Supabase, pero todavía debemos conectar las reservaciones con el panel administrativo. No aceptes ni confirmes eventos reales hasta completar esa conexión. Los paquetes permanecen en demostración.';
 $('year').textContent=new Date().getFullYear();loadCatalog();loadCalendar();
 
 // Galería de fotografías: sin bibliotecas externas
