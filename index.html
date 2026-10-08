@@ -118,49 +118,6 @@ section{padding:76px 0}.heading{text-align:center;margin-bottom:33px}.heading h2
   .highlights .stat span:not(.stat-icon){font-size:clamp(10px,2.35vw,12px);line-height:1.25}
   .highlights + .experiencias{padding-top:39px}
 }
-
-/* Parallax accesible para Safari iOS: el fondo se revela con el scroll. */
-.hero{position:relative;isolation:isolate;overflow:hidden;background:none!important;--flambo-scroll:0px}
-.hero::before{
-  content:"";position:absolute;inset:-115px 0;z-index:-2;pointer-events:none;
-  background:url('hacienda_flambo.JPG') center center/cover no-repeat;
-  transform:translate3d(0,var(--flambo-scroll),0) scale(1.035);
-  will-change:transform;
-}
-.hero::after{
-  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
-  background:linear-gradient(90deg,rgba(12,32,21,.67),rgba(12,32,21,.42)),
-             linear-gradient(180deg,rgba(12,32,21,.15),rgba(12,32,21,.28));
-}
-.hero>.container{position:relative;z-index:1;width:100%}
-@media(max-width:600px){
-  .hero::before{inset:-105px 0;background-position:center center}
-  .hero::after{background:linear-gradient(90deg,rgba(12,32,21,.67),rgba(12,32,21,.49)),linear-gradient(180deg,rgba(12,32,21,.1),rgba(12,32,21,.21))}
-}
-@media(prefers-reduced-motion:reduce){.hero::before{will-change:auto;transform:none!important}}
-
-/* FONDO REAL VISIBLE: una sola capa fotográfica fija en TODA la web.
-   Antes: opacidad 0.13 + crema 0.78 = foto casi invisible. */
-body{position:relative;background:#fbf8ef}
-body::before{
- content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
- background:url('hacienda_flambo.JPG') center center / cover no-repeat;
- opacity:.77;
-}
-body>main{position:relative;z-index:1;background:transparent}
-/* Velo semitransparente: deja apreciar el emblema sin perder legibilidad. */
-body>main>section:not(.band){background:rgba(251,248,239,.43)}
-body>main>section.experiencias{background:rgba(252,250,243,.42)}
-body>main>.highlights{background:transparent}
-body>main>section.band{background:var(--forest)}
-body>footer{position:relative;z-index:1}
-@media(max-width:600px){
- body::before{background-position:50% center;opacity:.80}
- body>main>section:not(.band){background:rgba(251,248,239,.40)}
- body>main>section.experiencias{background:rgba(252,250,243,.40)}
-}
-/* Paneles con fondo blanco para textos, datos e invitados. */
-.experience-card,.tile,.stat,.service,.bookingbox,.contact{background:#fff}
 </style>
 </head>
 <body>
@@ -262,24 +219,6 @@ function closeViewer(){photoViewer.classList.add('hidden');document.body.style.o
 document.getElementById('closePhoto').addEventListener('click',closeViewer);
 photoViewer.addEventListener('click',e=>{if(e.target===photoViewer)closeViewer()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!photoViewer.classList.contains('hidden'))closeViewer()});
-
-// Movimiento de la imagen de portada al desplazarse, sin background-attachment:fixed.
-(() => {
- const hero=document.querySelector('.hero');
- const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
- if(!hero || reduceMotion.matches)return;
- let pending=false;
- function update(){
-   const rect=hero.getBoundingClientRect();
-   const offset=Math.max(0,Math.min(105,-rect.top*0.23));
-   hero.style.setProperty('--flambo-scroll',`${-offset}px`);
-   pending=false;
- }
- function onScroll(){if(!pending){pending=true;requestAnimationFrame(update)}}
- window.addEventListener('scroll',onScroll,{passive:true});
- window.addEventListener('resize',onScroll,{passive:true});
- update();
-})();
 </script>
 </body>
 </html>
