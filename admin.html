@@ -39,48 +39,14 @@ main{padding:20px 16px 70px}.notice{background:#fff5d8;color:#765a1a;border:1px 
 </section>
 <section class="panel" id="panel-publicaciones">
 <div class="card"><h2>🎬 Publicar fotografía o video</h2><p class="muted">Esta sección SÍ funciona con Supabase. Máximo 6 MB por archivo (JPG, PNG, WebP, MP4, WebM). Para videos mayores necesitaremos carga resumible.</p>
-<form id="realPromoForm" class="formgrid"><div class="full"><label for="promoTitulo">Título de promoción</label><input id="promoTitulo" maxlength="120" required></div><div class="full"><label for="promoDescripcion">Descripción</label><textarea id="promoDescripcion" maxlength="1200"></textarea></div><div class="full"><label for="promoArchivo">Imagen o video</label><input id="promoArchivo" type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm" required></div><div class="full"><button class="primary" id="promoSubmit">Publicar en la web</button></div></form></div>
+<form id="realPromoForm" class="formgrid" method="post"><div class="full"><label for="promoTitulo">Título de promoción</label><input id="promoTitulo" maxlength="120" required></div><div class="full"><label for="promoDescripcion">Descripción</label><textarea id="promoDescripcion" maxlength="1200"></textarea></div><div class="full"><label for="promoArchivo">Imagen o video</label><input id="promoArchivo" type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm" required></div><div class="full"><button type="submit" class="primary" id="promoSubmit">Publicar en la web</button></div><p id="promoStatus" class="muted full" role="status" aria-live="polite"></p></form></div>
 <div class="card"><div class="bar"><h2>Promociones publicadas</h2><button type="button" class="ghost small" id="promoReload">Actualizar</button></div><div id="realPromoList"><p class="muted">Cargando…</p></div></div>
 <div class="card"><h2>Paquetes</h2><p class="muted">Los paquetes siguen en modo demostración. No se sincronizan entre dispositivos.</p><form id="packageForm" class="formgrid"><div class="full"><label>Nombre del paquete</label><input name="title" maxlength="100" required></div><div class="full"><label>Descripción</label><textarea name="description" maxlength="1000"></textarea></div><div><label>Precio o texto opcional</label><input name="price_label" maxlength="80"></div><div><label>URL de fotografía (https://)</label><input name="image_url" type="url"></div><div class="full"><button class="primary">Guardar paquete de prueba</button></div></form><div id="packageList"></div></div>
 </section>
 </div>
 </main>
 <div id="toast" class="hidden" role="status" aria-live="polite"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js">
-const escAttr = esc;
-function safeMediaUrl(raw){try{const u=new URL(raw);return u.protocol==='https:'&&u.hostname.endsWith('.supabase.co')?u.href:''}catch{return ''}}
-async function refreshPromos(){
- const target=$('realPromoList');if(!sb)return;
- const {data,error}=await sb.from('promociones').select('id,titulo,descripcion,tipo,archivo_url,creado_en').order('creado_en',{ascending:false});
- if(error){target.textContent='Error de lectura: '+error.message;return}
- target.innerHTML=data.length?data.map(p=>{
- const url=safeMediaUrl(p.archivo_url),preview=url?(p.tipo==='video'?`<video controls playsinline preload="metadata" style="max-width:100%;max-height:200px" src="${escAttr(url)}"></video>`:`<img alt="${escAttr(p.titulo)}" src="${escAttr(url)}" loading="lazy" style="max-width:100%;max-height:200px;object-fit:contain">`):'';
- return `<div class="entry">${preview}<h3>${esc(p.titulo)}</h3><p>${esc(p.descripcion||'')}</p><p class="muted">${esc(new Date(p.creado_en).toLocaleString('es-PR'))}</p><button type="button" class="danger small" data-real-delete="${escAttr(p.id)}">Eliminar publicación y archivo</button></div>`
- }).join(''):'<p class="muted">Todavía no se han publicado promociones.</p>';
-}
-async function invokePromo(body,headers={}){
- const {data:{session}}=await sb.auth.getSession();if(!session)throw Error('Tu sesión venció; vuelve a entrar');
- const response=await fetch(SB_URL+'/functions/v1/gestionar-promociones',{method:'POST',headers:{'Authorization':'Bearer '+session.access_token,'apikey':SB_KEY,...headers},body});
- const payload=await response.json().catch(()=>({}));if(!response.ok)throw Error(payload.error||payload.detalle||`Error ${response.status}`);return payload;
-}
-$('realPromoForm').onsubmit=async e=>{
- e.preventDefault();const file=$('promoArchivo').files[0],button=$('promoSubmit');
- if(!file){notify('Selecciona una foto o video');return}
- if(file.size>6*1024*1024){notify('El archivo supera 6 MB. Comprímelo primero.');return}
- const form=new FormData();form.set('accion','subir');form.set('titulo',$('promoTitulo').value.trim());form.set('descripcion',$('promoDescripcion').value.trim());form.set('archivo',file);
- button.disabled=true;button.textContent='Subiendo…';
- try{await invokePromo(form);e.target.reset();await refreshPromos();notify('Promoción publicada correctamente')}
- catch(err){notify('No se pudo publicar: '+err.message)}finally{button.disabled=false;button.textContent='Publicar en la web'}
-};
-$('promoReload').onclick=refreshPromos;
-$('realPromoList').onclick=async e=>{
- const button=e.target.closest('[data-real-delete]');if(!button)return;
- if(!confirm('¿Eliminar permanentemente esta publicación y su archivo de Supabase?'))return;
- button.disabled=true;
- try{await invokePromo(JSON.stringify({accion:'eliminar',id:button.dataset.realDelete}),{'Content-Type':'application/json'});await refreshPromos();notify('Promoción eliminada de Supabase')}
- catch(err){notify('Error al eliminar: '+err.message);button.disabled=false}
-};
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 'use strict';
 /*
@@ -99,7 +65,7 @@ $('realPromoList').onclick=async e=>{
 const API_BASE = '';
 const SB_URL = 'https://pptrhfrolcndblgrpnhe.supabase.co';
 const SB_KEY = 'sb_publishable_V6HjIiUXMkCp1COM_aUXtA_bd4AsgEe';
-const sb = window.supabase?.createClient(SB_URL, SB_KEY);
+const sb = window.supabase?.createClient(SB_URL, SB_KEY, {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
 const DEMO = !API_BASE.trim();
 const DEMO_KEY = 'flambo_demo_v3';
 const $ = s => document.getElementById(s);
@@ -128,7 +94,7 @@ async function authorize(session){
  const {data,error}=await sb.from('administradores').select('user_id').eq('user_id',session.user.id).maybeSingle();
  if(error||!data)throw Error('La cuenta no está autorizada como administradora');
 }
-async function showPanel(session){await authorize(session);$('loginCard').classList.add('hidden');$('app').classList.remove('hidden');await refresh();await refreshPromos()}
+async function showPanel(session){await authorize(session);$('loginCard').classList.add('hidden');$('app').classList.remove('hidden');await refresh();try{await refreshPromos()}catch(e){console.error('No se pudieron cargar promociones',e);$('realPromoList').textContent='No se pudieron cargar promociones. Usa Actualizar para reintentar.'}}
 $('loginForm').addEventListener('submit',async e=>{
  e.preventDefault();if(!sb){notify('No cargó Supabase. Revisa la conexión.');return}
  const button=e.target.querySelector('button');button.disabled=true;
@@ -238,5 +204,40 @@ for(const id of ['packageList'])$(id).onclick=async e=>{
  await refresh();notify('Publicación actualizada.')}catch(err){notify(err.message)}
 };
 window.addEventListener('storage',e=>{if(DEMO&&e.key===DEMO_KEY&&!$('app').classList.contains('hidden'))refresh()});
+
+/* Promociones reales: se ejecutan DESPUÉS de inicializar Supabase y el panel. */
+const escAttr = esc;
+function safeMediaUrl(raw){try{const u=new URL(raw);return u.protocol==='https:'&&u.hostname.endsWith('.supabase.co')?u.href:''}catch{return ''}}
+async function refreshPromos(){
+ const target=$('realPromoList');if(!sb)return;
+ const {data,error}=await sb.from('promociones').select('id,titulo,descripcion,tipo,archivo_url,creado_en').order('creado_en',{ascending:false});
+ if(error){target.textContent='Error de lectura: '+error.message;return}
+ target.innerHTML=data.length?data.map(p=>{
+ const url=safeMediaUrl(p.archivo_url),preview=url?(p.tipo==='video'?`<video controls playsinline preload="metadata" style="max-width:100%;max-height:200px" src="${escAttr(url)}"></video>`:`<img alt="${escAttr(p.titulo)}" src="${escAttr(url)}" loading="lazy" style="max-width:100%;max-height:200px;object-fit:contain">`):'';
+ return `<div class="entry">${preview}<h3>${esc(p.titulo)}</h3><p>${esc(p.descripcion||'')}</p><p class="muted">${esc(new Date(p.creado_en).toLocaleString('es-PR'))}</p><button type="button" class="danger small" data-real-delete="${escAttr(p.id)}">Eliminar publicación y archivo</button></div>`
+ }).join(''):'<p class="muted">Todavía no se han publicado promociones.</p>';
+}
+async function invokePromo(body,headers={}){
+ const {data:{session}}=await sb.auth.getSession();if(!session)throw Error('Tu sesión venció; vuelve a entrar');
+ const response=await fetch(SB_URL+'/functions/v1/gestionar-promociones',{method:'POST',headers:{'Authorization':'Bearer '+session.access_token,'apikey':SB_KEY,...headers},body});
+ const payload=await response.json().catch(()=>({}));if(!response.ok)throw Error(payload.error||payload.detalle||`Error ${response.status}`);return payload;
+}
+$('realPromoForm').onsubmit=async e=>{
+ e.preventDefault();const file=$('promoArchivo').files[0],button=$('promoSubmit');
+ if(!file){$('promoStatus').textContent='Selecciona una foto o video';notify('Selecciona una foto o video');return}
+ if(file.size>6*1024*1024){$('promoStatus').textContent='El archivo pesa '+(file.size/1048576).toFixed(1)+' MB. El límite actual es 6 MB. Comprímelo antes de publicarlo.';notify('El archivo supera 6 MB. Comprímelo primero.');return}
+ const form=new FormData();form.set('accion','subir');form.set('titulo',$('promoTitulo').value.trim());form.set('descripcion',$('promoDescripcion').value.trim());form.set('archivo',file);
+ $('promoStatus').textContent='Subiendo '+file.name+'… No cierres esta página.';button.disabled=true;button.textContent='Subiendo…';
+ try{await invokePromo(form);e.target.reset();await refreshPromos();$('promoStatus').textContent='Promoción publicada correctamente.';notify('Promoción publicada correctamente')}
+ catch(err){$('promoStatus').textContent='No se pudo publicar: '+err.message;notify('No se pudo publicar: '+err.message)}finally{button.disabled=false;button.textContent='Publicar en la web'}
+};
+$('promoReload').onclick=refreshPromos;
+$('realPromoList').onclick=async e=>{
+ const button=e.target.closest('[data-real-delete]');if(!button)return;
+ if(!confirm('¿Eliminar permanentemente esta publicación y su archivo de Supabase?'))return;
+ button.disabled=true;
+ try{await invokePromo(JSON.stringify({accion:'eliminar',id:button.dataset.realDelete}),{'Content-Type':'application/json'});await refreshPromos();notify('Promoción eliminada de Supabase')}
+ catch(err){notify('Error al eliminar: '+err.message);button.disabled=false}
+};
 </script>
 </body></html>
