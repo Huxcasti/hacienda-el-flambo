@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#21472f">
+<title>Administración | Hacienda El Flambo</title>
+<style>
+:root{--green:#27583b;--dark:#153523;--pale:#eff7ef;--line:#dce7dd;--text:#233126;--gray:#66786a;--gold:#fff0c7;--red:#9d3434}
+*{box-sizing:border-box}body{margin:0;background:#f5f7f3;color:var(--text);font-family:system-ui,-apple-system,Arial,sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}
+header{background:linear-gradient(120deg,#173a29,#3c6e47);color:#fff;padding:28px 18px}header>div,main{max-width:1120px;margin:auto}header h1{margin:0 0 7px;font-size:clamp(24px,5vw,33px)}header p{margin:0;color:#dbeddf}
+main{padding:20px 16px 70px}.notice{background:#fff5d8;color:#765a1a;border:1px solid #ead69b;padding:15px;border-radius:12px;line-height:1.5;margin-bottom:18px}.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}.tabs{display:flex;gap:8px;flex-wrap:wrap}.tab,.ghost{background:#fff;border:1px solid var(--line);color:var(--green);border-radius:12px;padding:11px 14px;font-weight:800}.tab.active,.primary{background:var(--green);color:#fff;border:0}.primary{border-radius:12px;padding:12px 17px;font-weight:800}.danger{background:#ffebeb;color:var(--red);border:1px solid #f2d0d0;border-radius:10px;padding:9px 12px;font-weight:700}.small{padding:8px 11px;font-size:13px}
+.panel{display:none}.panel.active{display:block}.card{background:#fff;border:1px solid var(--line);border-radius:19px;padding:21px;box-shadow:0 7px 24px #1a3d2310;margin-bottom:17px}.card h2{color:var(--dark);font-size:21px;margin:0 0 14px}.card h3{margin:0 0 8px;color:var(--green)}.card p{line-height:1.5}.muted{color:var(--gray);font-size:13px}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:17px}.metric{background:#fff;padding:18px;border:1px solid var(--line);border-radius:16px}.metric strong{font-size:29px;display:block;color:var(--green)}.metric span{color:var(--gray);font-size:13px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}label{font-size:13px;font-weight:800;color:var(--green);display:block;margin:0 0 6px}input,textarea,select{width:100%;padding:12px;border-radius:11px;border:1px solid #cbd9ce;background:#fff;min-width:0}textarea{min-height:94px;resize:vertical}.full{grid-column:1/-1}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.entry{padding:14px 0;border-bottom:1px solid var(--line)}.entry:last-child{border-bottom:0}.entry strong{overflow-wrap:anywhere}.tag{display:inline-block;padding:5px 9px;border-radius:100px;font-size:12px;background:#eaf2e9;color:#27583b;font-weight:750}.tag.pending{background:var(--gold);color:#825d12}.tag.approved{background:#e4f6e8;color:#176533}.tag.rejected{background:#ffe6e6;color:#9d3434}.tag.expired{background:#eee;color:#555}
+.guestgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:15px}.guest{border:1px solid var(--line);border-radius:12px;padding:13px;text-align:left;background:#f7faf6;display:flex;justify-content:space-between;gap:10px}.guest.checked{background:#d8f4df;border-color:#78bf8b;color:#185c2b;font-weight:850}.guest:disabled{opacity:.65}.progress{height:10px;border-radius:20px;background:#e6eee7;overflow:hidden;margin:11px 0}.progress>div{height:100%;background:#398253}
+.hidden{display:none!important}#toast{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);background:#173d28;color:#fff;border-radius:12px;padding:13px 17px;box-shadow:0 8px 25px #0003;z-index:5;max-width:min(90vw,650px)}.login{max-width:490px;margin:35px auto}.right{margin-left:auto}.wraptext{overflow-wrap:anywhere}
+@media(max-width:700px){.grid,.formgrid,.metrics,.guestgrid{grid-template-columns:1fr}.metric{padding:13px}.card{padding:16px}header{padding:24px 16px}.tabs{width:100%}.tab{flex:1}}
+</style>
+</head>
+<body>
+<header><div><h1>🌿 Hacienda El Flambo</h1><p>Panel privado de administración · Morovis, Puerto Rico</p></div></header>
+<main>
+<div class="notice" id="demoNotice"><strong>MODO DEMOSTRACIÓN.</strong> Los datos se guardan solamente en este navegador y pueden verse en el index del mismo origen y navegador. No se sincronizan entre celulares, no tienen protección de acceso real y no deben usarse con datos de clientes reales. Para operar públicamente hace falta un backend seguro.</div>
+<section class="card login" id="loginCard">
+<h2>🔐 Acceso administrativo</h2>
+<p class="muted" id="loginHint">En esta demostración puedes abrir el panel directamente. El acceso real requiere autenticación del servidor.</p>
+<form id="loginForm"><div id="keyField" class="hidden"><label for="adminKey">Clave de administración</label><input id="adminKey" type="password" autocomplete="off"></div><div class="actions"><button class="primary" type="submit">Entrar al panel</button></div></form>
+</section>
+<div id="app" class="hidden">
+<div class="bar"><nav class="tabs" aria-label="Secciones"><button type="button" class="tab active" data-tab="reservas">Reservaciones</button><button type="button" class="tab" data-tab="entrada">Entrada</button><button type="button" class="tab" data-tab="fechas">Fechas</button><button type="button" class="tab" data-tab="publicaciones">Anuncios y paquetes</button></nav><button id="logout" class="ghost">Salir</button></div>
+<section class="panel active" id="panel-reservas">
+<div class="metrics"><div class="metric"><strong id="numPending">0</strong><span>Pendientes</span></div><div class="metric"><strong id="numApproved">0</strong><span>Aprobadas</span></div><div class="metric"><strong id="numRejected">0</strong><span>Rechazadas</span></div><div class="metric"><strong id="numBlocked">0</strong><span>Fechas bloqueadas</span></div></div>
+<div class="card"><h2>Solicitudes de actividades</h2><p class="muted">Las solicitudes pendientes caducan a las 48 horas. Puedes aprobar o rechazar cada solicitud. Aprobar una reserva bloquea su fecha.</p><div class="actions"><button id="refresh" class="ghost small">↻ Actualizar</button><select id="filterReservations" aria-label="Filtrar reservas" style="max-width:240px"><option value="all">Todas</option><option value="pending">Pendientes</option><option value="approved">Aprobadas</option><option value="rejected">Rechazadas</option><option value="expired">Vencidas</option></select></div><div id="reservationList"></div></div>
+</section>
+<section class="panel" id="panel-entrada">
+<div class="card"><h2>🚪 Control de entrada</h2><p class="muted">Selecciona una actividad aprobada. Toca el nombre cuando la persona llegue para marcarlo en verde, o vuelve a tocarlo para corregir la entrada.</p><label for="eventSelect">Actividad</label><select id="eventSelect"></select><div id="eventDetails"></div></div>
+</section>
+<section class="panel" id="panel-fechas">
+<div class="grid"><div class="card"><h2>Bloquear una fecha</h2><form id="blockForm"><label for="blockDate">Fecha</label><input type="date" id="blockDate" required><div style="height:12px"></div><label for="blockReason">Motivo (interno)</label><input id="blockReason" maxlength="200" placeholder="Mantenimiento / evento privado"><div class="actions"><button class="primary">Bloquear fecha</button></div></form></div><div class="card"><h2>Fechas bloqueadas manualmente</h2><div id="blockedList"></div></div></div>
+</section>
+<section class="panel" id="panel-publicaciones">
+<div class="grid"><div class="card"><h2>Crear anuncio</h2><form id="announcementForm" class="formgrid"><div class="full"><label>Título</label><input name="title" maxlength="100" required></div><div class="full"><label>Descripción</label><textarea name="description" maxlength="1000"></textarea></div><div class="full"><label>URL pública de fotografía (https://)</label><input name="image_url" type="url" placeholder="https://..."></div><div class="full"><button class="primary">Publicar anuncio</button></div></form></div><div class="card"><h2>Crear paquete</h2><form id="packageForm" class="formgrid"><div class="full"><label>Nombre del paquete</label><input name="title" maxlength="100" required></div><div class="full"><label>Descripción</label><textarea name="description" maxlength="1000"></textarea></div><div><label>Precio o texto opcional</label><input name="price_label" maxlength="80" placeholder="Consultar precio"></div><div><label>URL de fotografía (https://)</label><input name="image_url" type="url" placeholder="https://..."></div><div class="full"><button class="primary">Crear paquete</button></div></form></div></div>
+<div class="grid"><div class="card"><h2>Anuncios publicados</h2><div id="announcementList"></div></div><div class="card"><h2>Paquetes publicados</h2><div id="packageList"></div></div></div>
+</section>
+</div>
+</main>
+<div id="toast" class="hidden" role="status" aria-live="polite"></div>
+<script>
+'use strict';
+/*
+  MISMO CONFIG QUE index.html
+  Modo demo: API_BASE vacío. localStorage compartido solo bajo mismo origen y navegador.
+  Para producción configura backend HTTPS y endpoints seguros:
+  GET /api/admin/state => {reservations,announcements,packages,blocked}
+  POST /api/admin/reservations/:id/status {status:"approved"|"rejected"}
+  POST /api/admin/reservations/:id/guests/:index {checked_in:boolean}
+  POST /api/admin/blocks {date,reason} ; DELETE /api/admin/blocks/:date
+  POST /api/admin/catalog/:type {title,description,image_url,price_label?,active}
+  PATCH /api/admin/catalog/:type/:id {active} ; DELETE /api/admin/catalog/:type/:id
+  Servidor: autenticar, autorizar, evitar doble aprobación, auditar cambios y
+  sincronizar con API pública. Nunca colocar secretos del backend en HTML público.
+*/
+const API_BASE = '';
+const DEMO = !API_BASE.trim();
+const DEMO_KEY = 'flambo_demo_v3';
+const $ = s => document.getElementById(s);
+const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => crypto.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+const initial = () => ({reservations:[],announcements:[],packages:[],blocked:[]});
+const read = () => {try{return {...initial(),...JSON.parse(localStorage.getItem(DEMO_KEY)||'{}')}}catch{return initial()}};
+const write = data => localStorage.setItem(DEMO_KEY,JSON.stringify(data));
+const now = () => Date.now();
+const expired = r => r.status==='pending' && (!r.expires_at || Date.parse(r.expires_at)<=now());
+const actualStatus = r => expired(r)?'expired':r.status;
+let data=initial(),secret='';
+const statusNames={pending:'Pendiente',approved:'Aprobada',rejected:'Rechazada',expired:'Vencida'};
+let selectedEvent='';
+function notify(msg){const t=$('toast');t.textContent=msg;t.classList.remove('hidden');clearTimeout(notify.timer);notify.timer=setTimeout(()=>t.classList.add('hidden'),4500)}
+async function request(path,options={}){
+ const r=await fetch(API_BASE+path,{...options,headers:{'Content-Type':'application/json','Authorization':'Bearer '+secret,...options.headers}});
+ let v={};try{v=await r.json()}catch{}if(!r.ok)throw Error(v.error||`Error ${r.status}`);return v;
+}
+async function refresh(){
+ try{data=DEMO?read():await request('/api/admin/state');data={...initial(),...data};render()}catch(e){notify('No se pudo actualizar: '+e.message)}
+}
+$('keyField').classList.toggle('hidden',DEMO);$('demoNotice').classList.toggle('hidden',!DEMO);
+$('loginForm').addEventListener('submit',async e=>{
+ e.preventDefault();secret=$('adminKey').value.trim();if(!DEMO&&!secret){notify('Introduce una credencial válida.');return}
+ if(!DEMO){try{await request('/api/admin/state')}catch(e){notify('Acceso no autorizado o conexión fallida.');return}}
+ $('loginCard').classList.add('hidden');$('app').classList.remove('hidden');await refresh();
+});
+$('logout').onclick=()=>{secret='';$('adminKey').value='';$('app').classList.add('hidden');$('loginCard').classList.remove('hidden')};
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{
+ document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));
+ document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id==='panel-'+b.dataset.tab));refresh();
+});
+$('refresh').onclick=refresh;$('filterReservations').onchange=renderReservations;
+function render(){
+ const pending=data.reservations.filter(r=>actualStatus(r)==='pending');
+ $('numPending').textContent=pending.length;$('numApproved').textContent=data.reservations.filter(r=>r.status==='approved').length;
+ $('numRejected').textContent=data.reservations.filter(r=>r.status==='rejected').length;$('numBlocked').textContent=data.blocked.length;
+ renderReservations();renderEvents();renderBlocks();renderCatalog('announcements');renderCatalog('packages');
+}
+function renderReservations(){
+ const f=$('filterReservations').value;
+ const arr=[...data.reservations].sort((a,b)=>b.date.localeCompare(a.date)).filter(r=>f==='all'||actualStatus(r)===f);
+ $('reservationList').innerHTML=arr.length?arr.map(r=>{
+ const status=actualStatus(r),id=esc(r.reservation_id||r.id),names=(r.guests||[]).map(g=>typeof g==='string'?g:g.name).filter(Boolean);
+ return `<article class="entry"><div class="actions" style="margin:0 0 8px"><strong>${esc(r.date)} · ${esc(r.event_type||'Actividad')}</strong><span class="tag ${status}">${statusNames[status]||esc(status)}</span></div>
+ <div class="muted">Organiza: ${esc(r.customer_name)} · ${esc(r.customer_phone)} · ${esc(r.customer_email)}</div>
+ <div class="muted">Invitados: ${names.length} · Paquete: ${esc(data.packages.find(p=>p.id===r.package_id)?.title||'Sin especificar')}</div>
+ ${r.notes?`<p class="wraptext">${esc(r.notes)}</p>`:''}
+ ${status==='pending'?`<p class="muted">Vence: ${esc(new Date(r.expires_at).toLocaleString('es-PR'))}</p><div class="actions"><button class="primary small" data-action="approve" data-id="${id}">✓ Aprobar</button><button class="danger" data-action="reject" data-id="${id}">Rechazar</button></div>`:''}</article>`;
+ }).join(''):'<p class="muted">No hay reservaciones en esta categoría.</p>';
+}
+$('reservationList').addEventListener('click',async e=>{
+ const b=e.target.closest('button[data-action]');if(!b)return;
+ const status=b.dataset.action==='approve'?'approved':'rejected';const id=b.dataset.id;
+ const r=data.reservations.find(x=>(x.reservation_id||x.id)===id);if(!r||actualStatus(r)!=='pending'){notify('Solicitud ya no pendiente.');return}
+ if(!confirm(`${status==='approved'?'¿Aprobar y reservar':'¿Rechazar'} la fecha ${r.date}?`))return;
+ try{
+  if(DEMO){
+   const live=read(),target=live.reservations.find(x=>(x.reservation_id||x.id)===id);
+   if(!target||actualStatus(target)!=='pending')throw Error('Solicitud vencida o procesada');
+   if(status==='approved' && (live.blocked.some(x=>(typeof x==='string'?x:x.date)===target.date)||live.reservations.some(x=>x!==target&&x.status==='approved'&&x.date===target.date)))throw Error('La fecha ya está ocupada');
+   target.status=status;write(live);
+  }else await request(`/api/admin/reservations/${encodeURIComponent(id)}/status`,{method:'POST',body:JSON.stringify({status})});
+  await refresh();notify(status==='approved'?'Actividad aprobada.':'Actividad rechazada.');
+ }catch(err){notify('No se pudo procesar: '+err.message)}
+});
+function renderEvents(){
+ const approved=data.reservations.filter(r=>r.status==='approved').sort((a,b)=>a.date.localeCompare(b.date));
+ const select=$('eventSelect');select.innerHTML=approved.length?approved.map(r=>`<option value="${esc(r.reservation_id||r.id)}">${esc(r.date)} — ${esc(r.customer_name)} (${(r.guests||[]).length})</option>`).join(''):'<option value="">No hay eventos aprobados</option>';
+ if(approved.some(r=>(r.reservation_id||r.id)===selectedEvent))select.value=selectedEvent;
+ else selectedEvent=select.value;
+ renderCheckin();
+}
+$('eventSelect').onchange=e=>{selectedEvent=e.target.value;renderCheckin()};
+function renderCheckin(){
+ const r=data.reservations.find(x=>(x.reservation_id||x.id)===selectedEvent),box=$('eventDetails');
+ if(!r){box.innerHTML='<p class="muted">Aprueba una actividad para habilitar su registro de entrada.</p>';return}
+ const people=r.guests||[],checked=people.filter(g=>typeof g==='object'&&g.checked_in).length,pct=people.length?Math.round(checked/people.length*100):0;
+ box.innerHTML=`<h3 style="margin-top:21px">${esc(r.event_type||'Actividad')} · ${esc(r.date)}</h3><p class="muted">Organiza: ${esc(r.customer_name)}</p><p><strong>${checked} llegaron</strong> · ${people.length-checked} faltan · ${people.length} invitados</p><div class="progress"><div style="width:${pct}%"></div></div><p class="muted">${pct}% de asistencia</p><div class="guestgrid">${people.map((g,i)=>{const name=typeof g==='string'?g:g.name,done=typeof g==='object'&&!!g.checked_in;return `<button class="guest ${done?'checked':''}" data-guest="${i}" type="button"><span>${i+1}. ${esc(name)}</span><span>${done?'✓ Entró':'Pendiente'}</span></button>`}).join('')}</div>`;
+}
+$('eventDetails').onclick=async e=>{
+ const b=e.target.closest('button[data-guest]');if(!b)return;
+ const idx=Number(b.dataset.guest),id=selectedEvent;const r=data.reservations.find(x=>(x.reservation_id||x.id)===id);if(!r||r.status!=='approved')return;
+ const g=r.guests[idx],checked=typeof g==='object'&&!!g.checked_in;
+ try{
+  if(DEMO){const v=read(),t=v.reservations.find(x=>(x.reservation_id||x.id)===id);if(!t||t.status!=='approved')throw Error('Actividad no disponible');const old=t.guests[idx];t.guests[idx]=typeof old==='string'?{name:old,checked_in:!checked}:{...old,checked_in:!checked};write(v)}
+  else await request(`/api/admin/reservations/${encodeURIComponent(id)}/guests/${idx}`,{method:'POST',body:JSON.stringify({checked_in:!checked})});
+  await refresh();
+ }catch(err){notify(err.message)}
+};
+function renderBlocks(){
+ $('blockedList').innerHTML=data.blocked.length?data.blocked.map(x=>{const date=typeof x==='string'?x:x.date,reason=typeof x==='string'?'':x.reason;return `<div class="entry"><strong>${esc(date)}</strong><p class="muted">${esc(reason||'Sin motivo')}</p><button class="danger small" data-unblock="${esc(date)}">Desbloquear</button></div>`}).join(''):'<p class="muted">No hay bloqueos manuales.</p>';
+}
+$('blockForm').onsubmit=async e=>{
+ e.preventDefault();const date=$('blockDate').value,reason=$('blockReason').value.trim();
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){notify('Fecha inválida');return}
+ try{
+  if(DEMO){const v=read();if(v.blocked.some(x=>(typeof x==='string'?x:x.date)===date)||v.reservations.some(r=>r.date===date&&['pending','approved'].includes(actualStatus(r))))throw Error('Fecha ya solicitada, aprobada o bloqueada');v.blocked.push(date);write(v)}
+  else await request('/api/admin/blocks',{method:'POST',body:JSON.stringify({date,reason})});
+  e.target.reset();await refresh();notify('Fecha bloqueada.');
+ }catch(err){notify(err.message)}
+};
+$('blockedList').onclick=async e=>{
+ const b=e.target.closest('[data-unblock]');if(!b||!confirm('¿Desbloquear esta fecha?'))return;
+ const date=b.dataset.unblock;
+ try{if(DEMO){const v=read();v.blocked=v.blocked.filter(x=>(typeof x==='string'?x:x.date)!==date);write(v)}else await request('/api/admin/blocks/'+encodeURIComponent(date),{method:'DELETE'});await refresh();notify('Fecha desbloqueada.')}catch(err){notify(err.message)}
+};
+function validateUrl(str){if(!str)return '';const u=new URL(str);if(u.protocol!=='https:')throw Error('Usa una URL de imagen https://');return u.href}
+for(const [formid,type] of [['announcementForm','announcements'],['packageForm','packages']]){
+ $(formid).onsubmit=async e=>{
+  e.preventDefault();const payload=Object.fromEntries(new FormData(e.target));payload.title=String(payload.title||'').trim();payload.description=String(payload.description||'').trim();
+  if(!payload.title)return;try{payload.image_url=validateUrl(payload.image_url);payload.active=true;
+   if(DEMO){const v=read();v[type].unshift({id:uid(),...payload});write(v)}
+   else await request('/api/admin/catalog/'+type,{method:'POST',body:JSON.stringify(payload)});
+   e.target.reset();await refresh();notify('Publicación guardada.');
+  }catch(err){notify(err.message)}
+ };
+}
+function renderCatalog(type){
+ $(type==='announcements'?'announcementList':'packageList').innerHTML=(data[type]||[]).length?data[type].map(a=>`<div class="entry"><strong>${esc(a.title)}</strong><p class="muted">${esc(a.description)}</p><span class="tag">${a.active!==false?'Visible':'Oculto'}</span><div class="actions"><button class="ghost small" data-type="${type}" data-id="${esc(a.id)}" data-op="toggle">${a.active!==false?'Ocultar':'Mostrar'}</button><button class="danger small" data-type="${type}" data-id="${esc(a.id)}" data-op="delete">Eliminar</button></div></div>`).join(''):'<p class="muted">No hay publicaciones todavía.</p>';
+}
+for(const id of ['announcementList','packageList'])$(id).onclick=async e=>{
+ const b=e.target.closest('[data-op]');if(!b)return;const {type,id:itemid,op}=b.dataset;
+ if(op==='delete'&&!confirm('¿Eliminar esta publicación?'))return;
+ try{if(DEMO){const v=read();const item=v[type].find(x=>x.id===itemid);if(op==='delete')v[type]=v[type].filter(x=>x.id!==itemid);else if(item)item.active=item.active===false;write(v)}
+ else{const base=`/api/admin/catalog/${type}/${encodeURIComponent(itemid)}`;await request(base,{method:op==='delete'?'DELETE':'PATCH',...(op==='toggle'?{body:JSON.stringify({active: data[type].find(x=>x.id===itemid)?.active===false})}:{})})}
+ await refresh();notify('Publicación actualizada.')}catch(err){notify(err.message)}
+};
+window.addEventListener('storage',e=>{if(DEMO&&e.key===DEMO_KEY&&!$('app').classList.contains('hidden'))refresh()});
+</script>
+</body></html>
