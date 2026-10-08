@@ -211,6 +211,9 @@ section{padding:76px 0}.heading{text-align:center;margin-bottom:33px}.heading h2
   .heroacts { left: 14px; top: 58%; width: min(170px, 20vw); }
   .heroacts a { font-size: 12px; min-height: 46px; padding: 8px 5px; }
 }
+
+/* Aviso informativo de reservaciones: sin alerta obsoleta de modo demostracion. */
+#modeNotice.booking-info{background:#eef6ee;border-color:#cbdcc9;color:#285539}
 </style>
 </head>
 <body>
@@ -247,7 +250,7 @@ section{padding:76px 0}.heading{text-align:center;margin-bottom:33px}.heading h2
 <section id="servicios" style="background:#f1f6ee"><div class="container"><div class="heading"><span class="eyebrow">Celebra con nosotros</span><h2>Un lugar donde lo tienes todo</h2><p>Entre flora, animales de granja, espacios para fotografías y muchas amenidades, creamos momentos para recordar.</p></div><div class="servicegrid" id="serviceGrid"></div></div></section>
 <section id="paquetes"><div class="container"><div class="heading"><span class="eyebrow">A tu gusto</span><h2>Paquetes para tu celebración</h2><p>La administración publica los paquetes y sus detalles. La disponibilidad se confirma al aprobar la solicitud.</p></div><div class="cards" id="packageCards"><div class="empty">Cargando paquetes…</div></div></div></section>
 <section class="band" id="reservar"><div class="container"><div class="heading"><span class="eyebrow">Reserva tu experiencia</span><h2>Solicita tu fecha especial</h2><p>Selecciona una fecha disponible, completa los datos de la actividad y envía los nombres de tus invitados.</p></div><div class="bookingbox">
-<div id="modeNotice" class="notice hidden"></div><h3>📅 Verifica disponibilidad</h3><p class="note">Las fechas en amarillo tienen una solicitud pendiente, las rojas ya están reservadas o bloqueadas. Las solicitudes pendientes se mantienen hasta por 48 horas, salvo que la administración decida antes.</p>
+<div id="modeNotice" class="notice booking-info hidden"></div><h3>📅 Verifica disponibilidad</h3><p class="note">Las fechas en amarillo tienen una solicitud pendiente, las rojas ya están reservadas o bloqueadas. Las solicitudes pendientes se mantienen hasta por 48 horas, salvo que la administración decida antes.</p>
 <div class="calendar"><div class="calhead"><button type="button" id="prevMonth" aria-label="Mes anterior">‹</button><strong id="calendarMonth">Calendario</strong><button type="button" id="nextMonth" aria-label="Mes siguiente">›</button></div><div class="days" id="calendarDays"></div><div class="legend"><span><i class="dot" style="background:#d9ecd9"></i>Disponible</span><span><i class="dot" style="background:#ffdf9c"></i>Pendiente</span><span><i class="dot" style="background:#eebaba"></i>Ocupada</span></div><div id="dateFeedback" role="status" aria-live="polite" class="status warn">Selecciona un día verde del calendario.</div></div>
 <form id="bookingForm" autocomplete="on"><div class="formgrid" style="margin-top:25px"><div class="field"><label for="eventDate">Fecha solicitada *</label><input id="eventDate" name="eventDate" type="date" required></div><div class="field"><label for="eventType">Tipo de actividad *</label><select id="eventType" required><option value="">Seleccionar actividad</option><option>Cumpleaños</option><option>Boda</option><option>Actividad familiar</option><option>Evento corporativo</option><option>Taller</option><option>Sesión fotográfica</option><option>Pasadía privado</option><option>Otro</option></select></div>
 <div class="field"><label for="customerName">Nombre de quien reserva *</label><input id="customerName" maxlength="120" required autocomplete="name" placeholder="Nombre completo"></div><div class="field"><label for="customerPhone">Teléfono / WhatsApp *</label><input id="customerPhone" type="tel" maxlength="25" required autocomplete="tel" placeholder="787-000-0000"></div><div class="field"><label for="customerEmail">Correo electrónico *</label><input id="customerEmail" type="email" maxlength="150" required autocomplete="email" placeholder="correo@ejemplo.com"></div><div class="field"><label for="eventPackage">Paquete de interés</label><select id="eventPackage"><option value="">Por decidir / personalizado</option></select></div><div class="field full"><label for="eventNotes">Detalles adicionales (opcional)</label><textarea id="eventNotes" maxlength="1500" placeholder="Cuéntanos qué te gustaría para tu actividad…"></textarea></div></div>
@@ -420,7 +423,7 @@ $('bookingForm').addEventListener('submit',async e=>{
  }finally{bookingBusy=false;button.disabled=!calendarReady;button.textContent='Enviar solicitud de reservación'}
 });
 $('modeNotice').classList.remove('hidden');
-$('modeNotice').textContent='⚠️ SISTEMA EN PRUEBAS: el calendario y las solicitudes ya utilizan Supabase, pero todavía debemos conectar las reservaciones con el panel administrativo. No aceptes ni confirmes eventos reales hasta completar esa conexión. Los paquetes permanecen en demostración.';
+$('modeNotice').textContent='ℹ️ Tu solicitud queda registrada y pendiente de aprobación por la administración. Enviar el formulario no confirma la actividad. Consulta directamente con la hacienda los detalles y precios de los paquetes.';
 $('year').textContent=new Date().getFullYear();loadCatalog();loadCalendar();
 
 // Galería de fotografías: sin bibliotecas externas
