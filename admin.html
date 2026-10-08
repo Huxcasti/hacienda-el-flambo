@@ -19,11 +19,11 @@ main{padding:20px 16px 70px}.notice{background:#fff5d8;color:#765a1a;border:1px 
 <body>
 <header><div><h1>🌿 Hacienda El Flambo</h1><p>Panel privado de administración · Morovis, Puerto Rico</p></div></header>
 <main>
-<div class="notice" id="demoNotice"><strong>MODO DEMOSTRACIÓN.</strong> Los datos se guardan solamente en este navegador y pueden verse en el index del mismo origen y navegador. No se sincronizan entre celulares, no tienen protección de acceso real y no deben usarse con datos de clientes reales. Para operar públicamente hace falta un backend seguro.</div>
+<div class="notice" id="demoNotice"><strong>Atención:</strong> Promociones: conexión real con Supabase. Reservaciones, bloqueo de fechas, invitados y paquetes: demostración local. No utilices estas últimas funciones para eventos reales hasta conectar su backend.</div>
 <section class="card login" id="loginCard">
 <h2>🔐 Acceso administrativo</h2>
-<p class="muted" id="loginHint">En esta demostración puedes abrir el panel directamente. El acceso real requiere autenticación del servidor.</p>
-<form id="loginForm"><div id="keyField" class="hidden"><label for="adminKey">Clave de administración</label><input id="adminKey" type="password" autocomplete="off"></div><div class="actions"><button class="primary" type="submit">Entrar al panel</button></div></form>
+<p class="muted" id="loginHint">Inicia sesión con la cuenta autorizada de la dueña. Solo las promociones se sincronizan con Supabase; las reservaciones, invitados, fechas y paquetes permanecen en demostración.</p>
+<form id="loginForm"><div><label for="adminEmail">Correo electrónico</label><input id="adminEmail" type="email" autocomplete="username" required></div><div style="height:12px"></div><div><label for="adminPassword">Contraseña</label><input id="adminPassword" type="password" autocomplete="current-password" required></div><div class="actions"><button class="primary" type="submit">Entrar al panel</button></div></form>
 </section>
 <div id="app" class="hidden">
 <div class="bar"><nav class="tabs" aria-label="Secciones"><button type="button" class="tab active" data-tab="reservas">Reservaciones</button><button type="button" class="tab" data-tab="entrada">Entrada</button><button type="button" class="tab" data-tab="fechas">Fechas</button><button type="button" class="tab" data-tab="publicaciones">Anuncios y paquetes</button></nav><button id="logout" class="ghost">Salir</button></div>
@@ -38,12 +38,49 @@ main{padding:20px 16px 70px}.notice{background:#fff5d8;color:#765a1a;border:1px 
 <div class="grid"><div class="card"><h2>Bloquear una fecha</h2><form id="blockForm"><label for="blockDate">Fecha</label><input type="date" id="blockDate" required><div style="height:12px"></div><label for="blockReason">Motivo (interno)</label><input id="blockReason" maxlength="200" placeholder="Mantenimiento / evento privado"><div class="actions"><button class="primary">Bloquear fecha</button></div></form></div><div class="card"><h2>Fechas bloqueadas manualmente</h2><div id="blockedList"></div></div></div>
 </section>
 <section class="panel" id="panel-publicaciones">
-<div class="grid"><div class="card"><h2>Crear anuncio</h2><form id="announcementForm" class="formgrid"><div class="full"><label>Título</label><input name="title" maxlength="100" required></div><div class="full"><label>Descripción</label><textarea name="description" maxlength="1000"></textarea></div><div class="full"><label>URL pública de fotografía (https://)</label><input name="image_url" type="url" placeholder="https://..."></div><div class="full"><button class="primary">Publicar anuncio</button></div></form></div><div class="card"><h2>Crear paquete</h2><form id="packageForm" class="formgrid"><div class="full"><label>Nombre del paquete</label><input name="title" maxlength="100" required></div><div class="full"><label>Descripción</label><textarea name="description" maxlength="1000"></textarea></div><div><label>Precio o texto opcional</label><input name="price_label" maxlength="80" placeholder="Consultar precio"></div><div><label>URL de fotografía (https://)</label><input name="image_url" type="url" placeholder="https://..."></div><div class="full"><button class="primary">Crear paquete</button></div></form></div></div>
-<div class="grid"><div class="card"><h2>Anuncios publicados</h2><div id="announcementList"></div></div><div class="card"><h2>Paquetes publicados</h2><div id="packageList"></div></div></div>
+<div class="card"><h2>🎬 Publicar fotografía o video</h2><p class="muted">Esta sección SÍ funciona con Supabase. Máximo 6 MB por archivo (JPG, PNG, WebP, MP4, WebM). Para videos mayores necesitaremos carga resumible.</p>
+<form id="realPromoForm" class="formgrid"><div class="full"><label for="promoTitulo">Título de promoción</label><input id="promoTitulo" maxlength="120" required></div><div class="full"><label for="promoDescripcion">Descripción</label><textarea id="promoDescripcion" maxlength="1200"></textarea></div><div class="full"><label for="promoArchivo">Imagen o video</label><input id="promoArchivo" type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm" required></div><div class="full"><button class="primary" id="promoSubmit">Publicar en la web</button></div></form></div>
+<div class="card"><div class="bar"><h2>Promociones publicadas</h2><button type="button" class="ghost small" id="promoReload">Actualizar</button></div><div id="realPromoList"><p class="muted">Cargando…</p></div></div>
+<div class="card"><h2>Paquetes</h2><p class="muted">Los paquetes siguen en modo demostración. No se sincronizan entre dispositivos.</p><form id="packageForm" class="formgrid"><div class="full"><label>Nombre del paquete</label><input name="title" maxlength="100" required></div><div class="full"><label>Descripción</label><textarea name="description" maxlength="1000"></textarea></div><div><label>Precio o texto opcional</label><input name="price_label" maxlength="80"></div><div><label>URL de fotografía (https://)</label><input name="image_url" type="url"></div><div class="full"><button class="primary">Guardar paquete de prueba</button></div></form><div id="packageList"></div></div>
 </section>
 </div>
 </main>
 <div id="toast" class="hidden" role="status" aria-live="polite"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js">
+const escAttr = esc;
+function safeMediaUrl(raw){try{const u=new URL(raw);return u.protocol==='https:'&&u.hostname.endsWith('.supabase.co')?u.href:''}catch{return ''}}
+async function refreshPromos(){
+ const target=$('realPromoList');if(!sb)return;
+ const {data,error}=await sb.from('promociones').select('id,titulo,descripcion,tipo,archivo_url,creado_en').order('creado_en',{ascending:false});
+ if(error){target.textContent='Error de lectura: '+error.message;return}
+ target.innerHTML=data.length?data.map(p=>{
+ const url=safeMediaUrl(p.archivo_url),preview=url?(p.tipo==='video'?`<video controls playsinline preload="metadata" style="max-width:100%;max-height:200px" src="${escAttr(url)}"></video>`:`<img alt="${escAttr(p.titulo)}" src="${escAttr(url)}" loading="lazy" style="max-width:100%;max-height:200px;object-fit:contain">`):'';
+ return `<div class="entry">${preview}<h3>${esc(p.titulo)}</h3><p>${esc(p.descripcion||'')}</p><p class="muted">${esc(new Date(p.creado_en).toLocaleString('es-PR'))}</p><button type="button" class="danger small" data-real-delete="${escAttr(p.id)}">Eliminar publicación y archivo</button></div>`
+ }).join(''):'<p class="muted">Todavía no se han publicado promociones.</p>';
+}
+async function invokePromo(body,headers={}){
+ const {data:{session}}=await sb.auth.getSession();if(!session)throw Error('Tu sesión venció; vuelve a entrar');
+ const response=await fetch(SB_URL+'/functions/v1/gestionar-promociones',{method:'POST',headers:{'Authorization':'Bearer '+session.access_token,'apikey':SB_KEY,...headers},body});
+ const payload=await response.json().catch(()=>({}));if(!response.ok)throw Error(payload.error||payload.detalle||`Error ${response.status}`);return payload;
+}
+$('realPromoForm').onsubmit=async e=>{
+ e.preventDefault();const file=$('promoArchivo').files[0],button=$('promoSubmit');
+ if(!file){notify('Selecciona una foto o video');return}
+ if(file.size>6*1024*1024){notify('El archivo supera 6 MB. Comprímelo primero.');return}
+ const form=new FormData();form.set('accion','subir');form.set('titulo',$('promoTitulo').value.trim());form.set('descripcion',$('promoDescripcion').value.trim());form.set('archivo',file);
+ button.disabled=true;button.textContent='Subiendo…';
+ try{await invokePromo(form);e.target.reset();await refreshPromos();notify('Promoción publicada correctamente')}
+ catch(err){notify('No se pudo publicar: '+err.message)}finally{button.disabled=false;button.textContent='Publicar en la web'}
+};
+$('promoReload').onclick=refreshPromos;
+$('realPromoList').onclick=async e=>{
+ const button=e.target.closest('[data-real-delete]');if(!button)return;
+ if(!confirm('¿Eliminar permanentemente esta publicación y su archivo de Supabase?'))return;
+ button.disabled=true;
+ try{await invokePromo(JSON.stringify({accion:'eliminar',id:button.dataset.realDelete}),{'Content-Type':'application/json'});await refreshPromos();notify('Promoción eliminada de Supabase')}
+ catch(err){notify('Error al eliminar: '+err.message);button.disabled=false}
+};
+</script>
 <script>
 'use strict';
 /*
@@ -60,6 +97,9 @@ main{padding:20px 16px 70px}.notice{background:#fff5d8;color:#765a1a;border:1px 
   sincronizar con API pública. Nunca colocar secretos del backend en HTML público.
 */
 const API_BASE = '';
+const SB_URL = 'https://pptrhfrolcndblgrpnhe.supabase.co';
+const SB_KEY = 'sb_publishable_V6HjIiUXMkCp1COM_aUXtA_bd4AsgEe';
+const sb = window.supabase?.createClient(SB_URL, SB_KEY);
 const DEMO = !API_BASE.trim();
 const DEMO_KEY = 'flambo_demo_v3';
 const $ = s => document.getElementById(s);
@@ -82,13 +122,21 @@ async function request(path,options={}){
 async function refresh(){
  try{data=DEMO?read():await request('/api/admin/state');data={...initial(),...data};render()}catch(e){notify('No se pudo actualizar: '+e.message)}
 }
-$('keyField').classList.toggle('hidden',DEMO);$('demoNotice').classList.toggle('hidden',!DEMO);
+$('demoNotice').classList.remove('hidden');
+async function authorize(session){
+ if(!session?.user)throw Error('Inicia sesión');
+ const {data,error}=await sb.from('administradores').select('user_id').eq('user_id',session.user.id).maybeSingle();
+ if(error||!data)throw Error('La cuenta no está autorizada como administradora');
+}
+async function showPanel(session){await authorize(session);$('loginCard').classList.add('hidden');$('app').classList.remove('hidden');await refresh();await refreshPromos()}
 $('loginForm').addEventListener('submit',async e=>{
- e.preventDefault();secret=$('adminKey').value.trim();if(!DEMO&&!secret){notify('Introduce una credencial válida.');return}
- if(!DEMO){try{await request('/api/admin/state')}catch(e){notify('Acceso no autorizado o conexión fallida.');return}}
- $('loginCard').classList.add('hidden');$('app').classList.remove('hidden');await refresh();
+ e.preventDefault();if(!sb){notify('No cargó Supabase. Revisa la conexión.');return}
+ const button=e.target.querySelector('button');button.disabled=true;
+ try{const {data,error}=await sb.auth.signInWithPassword({email:$('adminEmail').value.trim(),password:$('adminPassword').value});if(error)throw error;await showPanel(data.session);$('adminPassword').value=''}
+ catch(e){await sb.auth.signOut();notify(e.message)}finally{button.disabled=false}
 });
-$('logout').onclick=()=>{secret='';$('adminKey').value='';$('app').classList.add('hidden');$('loginCard').classList.remove('hidden')};
+$('logout').onclick=async()=>{await sb?.auth.signOut();$('app').classList.add('hidden');$('loginCard').classList.remove('hidden');$('adminPassword').value=''};
+if(sb)sb.auth.getSession().then(async ({data})=>{if(data.session)try{await showPanel(data.session)}catch{await sb.auth.signOut()}});
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{
  document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));
  document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id==='panel-'+b.dataset.tab));refresh();
@@ -98,7 +146,7 @@ function render(){
  const pending=data.reservations.filter(r=>actualStatus(r)==='pending');
  $('numPending').textContent=pending.length;$('numApproved').textContent=data.reservations.filter(r=>r.status==='approved').length;
  $('numRejected').textContent=data.reservations.filter(r=>r.status==='rejected').length;$('numBlocked').textContent=data.blocked.length;
- renderReservations();renderEvents();renderBlocks();renderCatalog('announcements');renderCatalog('packages');
+ renderReservations();renderEvents();renderBlocks();renderCatalog('packages');
 }
 function renderReservations(){
  const f=$('filterReservations').value;
@@ -169,7 +217,7 @@ $('blockedList').onclick=async e=>{
  try{if(DEMO){const v=read();v.blocked=v.blocked.filter(x=>(typeof x==='string'?x:x.date)!==date);write(v)}else await request('/api/admin/blocks/'+encodeURIComponent(date),{method:'DELETE'});await refresh();notify('Fecha desbloqueada.')}catch(err){notify(err.message)}
 };
 function validateUrl(str){if(!str)return '';const u=new URL(str);if(u.protocol!=='https:')throw Error('Usa una URL de imagen https://');return u.href}
-for(const [formid,type] of [['announcementForm','announcements'],['packageForm','packages']]){
+for(const [formid,type] of [['packageForm','packages']]){
  $(formid).onsubmit=async e=>{
   e.preventDefault();const payload=Object.fromEntries(new FormData(e.target));payload.title=String(payload.title||'').trim();payload.description=String(payload.description||'').trim();
   if(!payload.title)return;try{payload.image_url=validateUrl(payload.image_url);payload.active=true;
@@ -180,9 +228,9 @@ for(const [formid,type] of [['announcementForm','announcements'],['packageForm',
  };
 }
 function renderCatalog(type){
- $(type==='announcements'?'announcementList':'packageList').innerHTML=(data[type]||[]).length?data[type].map(a=>`<div class="entry"><strong>${esc(a.title)}</strong><p class="muted">${esc(a.description)}</p><span class="tag">${a.active!==false?'Visible':'Oculto'}</span><div class="actions"><button class="ghost small" data-type="${type}" data-id="${esc(a.id)}" data-op="toggle">${a.active!==false?'Ocultar':'Mostrar'}</button><button class="danger small" data-type="${type}" data-id="${esc(a.id)}" data-op="delete">Eliminar</button></div></div>`).join(''):'<p class="muted">No hay publicaciones todavía.</p>';
+ $(type==='announcements'?'realPromoList':'packageList').innerHTML=(data[type]||[]).length?data[type].map(a=>`<div class="entry"><strong>${esc(a.title)}</strong><p class="muted">${esc(a.description)}</p><span class="tag">${a.active!==false?'Visible':'Oculto'}</span><div class="actions"><button class="ghost small" data-type="${type}" data-id="${esc(a.id)}" data-op="toggle">${a.active!==false?'Ocultar':'Mostrar'}</button><button class="danger small" data-type="${type}" data-id="${esc(a.id)}" data-op="delete">Eliminar</button></div></div>`).join(''):'<p class="muted">No hay publicaciones todavía.</p>';
 }
-for(const id of ['announcementList','packageList'])$(id).onclick=async e=>{
+for(const id of ['packageList'])$(id).onclick=async e=>{
  const b=e.target.closest('[data-op]');if(!b)return;const {type,id:itemid,op}=b.dataset;
  if(op==='delete'&&!confirm('¿Eliminar esta publicación?'))return;
  try{if(DEMO){const v=read();const item=v[type].find(x=>x.id===itemid);if(op==='delete')v[type]=v[type].filter(x=>x.id!==itemid);else if(item)item.active=item.active===false;write(v)}
