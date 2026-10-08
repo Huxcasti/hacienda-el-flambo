@@ -257,7 +257,8 @@ section{padding:76px 0}.heading{text-align:center;margin-bottom:33px}.heading h2
 </div></div></section>
 <section id="contacto"><div class="container"><div class="heading"><span class="eyebrow">Estamos para ayudarte</span><h2>Comunícate con nosotros</h2><p>Separa tu fecha con anticipación y consulta los detalles de tu celebración.</p></div><div class="contactgrid"><div class="contact"><span class="emoji">📍</span><strong>Ubicación</strong><p>Morovis, Puerto Rico</p></div><div class="contact"><span class="emoji">💬</span><strong>WhatsApp</strong><p><a href="https://wa.me/17875141034" target="_blank" rel="noopener noreferrer">(787) 514-1034</a></p></div><div class="contact"><span class="emoji">✉️</span><strong>Correo</strong><p><a href="mailto:haciendaelflambo@gmail.com">haciendaelflambo@gmail.com</a></p></div></div></div></section>
 </main><footer><div class="container"><strong>🌿 Hacienda El Flambo</strong>Morovis, Puerto Rico · <a href="https://www.instagram.com/hacienda_el_flambo/" target="_blank" rel="noopener noreferrer">@hacienda_el_flambo</a><p>© <span id="year"></span> Hacienda El Flambo. Todos los derechos reservados.</p></div></footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
 async function cargarPromocionesReales(){
  const target=document.getElementById('announcementCards');
  if(!promoSupabase){target.innerHTML='<div class="empty">No se pudo cargar Supabase.</div>';return}
