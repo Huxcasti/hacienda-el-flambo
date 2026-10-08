@@ -139,25 +139,28 @@ section{padding:76px 0}.heading{text-align:center;margin-bottom:33px}.heading h2
 }
 @media(prefers-reduced-motion:reduce){.hero::before{will-change:auto;transform:none!important}}
 
-/* Identidad de la hacienda visible sutilmente tras las secciones al hacer scroll.
-   Capa FIJA independiente del contenido; iOS Safari sin background-attachment:fixed. */
+/* FONDO REAL VISIBLE: una sola capa fotográfica fija en TODA la web.
+   Antes: opacidad 0.13 + crema 0.78 = foto casi invisible. */
 body{position:relative;background:#fbf8ef}
 body::before{
  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
- background-image:url('hacienda_flambo.JPG');
- background-repeat:no-repeat;background-size:cover;background-position:center center;
- opacity:.15;
+ background:url('hacienda_flambo.JPG') center center / cover no-repeat;
+ opacity:.77;
 }
 body>main{position:relative;z-index:1;background:transparent}
-/* Las tarjetas y formularios mantienen fondos sólidos y legibles. */
-body>main>section:not(.band){background:rgba(251,248,239,.75)}
-body>main>section.experiencias{background:rgba(252,250,243,.76)}
+/* Velo semitransparente: deja apreciar el emblema sin perder legibilidad. */
+body>main>section:not(.band){background:rgba(251,248,239,.43)}
+body>main>section.experiencias{background:rgba(252,250,243,.42)}
 body>main>.highlights{background:transparent}
+body>main>section.band{background:var(--forest)}
 body>footer{position:relative;z-index:1}
 @media(max-width:600px){
- body::before{background-position:50% center;opacity:.13}
- body>main>section:not(.band){background:rgba(251,248,239,.78)}
+ body::before{background-position:50% center;opacity:.80}
+ body>main>section:not(.band){background:rgba(251,248,239,.40)}
+ body>main>section.experiencias{background:rgba(252,250,243,.40)}
 }
+/* Paneles con fondo blanco para textos, datos e invitados. */
+.experience-card,.tile,.stat,.service,.bookingbox,.contact{background:#fff}
 </style>
 </head>
 <body>
