@@ -374,7 +374,7 @@ body:not(:has(#app.hidden)) .admin-header-logo {
 <main>
 <div class="notice" id="demoNotice"><strong>Estado:</strong> Promociones, solicitudes, fechas bloqueadas y registro de entrada: conexión real con Supabase. Los paquetes siguen en demostración. No confirmes eventos reales hasta completar las pruebas del sistema.</div>
 <section class="card login" id="loginCard">
-<div class="login-brand"><img class="login-logo" src="logo_login_admin.png" alt="Hacienda El Flambo" decoding="async"></div>
+<div class="login-brand"><img class="login-logo" src="logo_login_admin.JPG" alt="Hacienda El Flambo" decoding="async"></div>
 <h2>PANEL ADMINISTRATIVO</h2>
 <form id="loginForm">
   <div class="login-field">
@@ -435,7 +435,7 @@ body:not(:has(#app.hidden)) .admin-header-logo {
 <section class="panel" id="panel-publicaciones">
 <div class="card"><h2>🎬 Publicar fotografía o video</h2><p class="muted">Esta sección SÍ funciona con Supabase. Máximo 6 MB por archivo (JPG, PNG, WebP, MP4, WebM). Para videos mayores necesitaremos carga resumible.</p>
 <form id="realPromoForm" class="formgrid" method="post"><div class="full"><label for="promoTitulo">Título de promoción</label><input id="promoTitulo" maxlength="120" required></div><div class="full"><label for="promoDescripcion">Descripción</label><textarea id="promoDescripcion" maxlength="1200"></textarea></div><div class="full"><label for="promoArchivo">Imagen o video</label><input id="promoArchivo" type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm" required></div><div class="full"><button type="submit" class="primary" id="promoSubmit">Publicar en la web</button></div><p id="promoStatus" class="muted full" role="status" aria-live="polite"></p></form></div>
-<div class="card"><div class="bar"><h2>Promociones publicadas</h2><button type="button" class="ghost small" id="promoReload">Actualizar</button></div><div id="realPromoList"><p class="muted">Cargando…</p></div></div>
+<div class="card"><div class="bar"><h2>Promociones publicadas</h2><button type="button" class="ghost small" id="promoReload">Actualizar</button></div><div id="realPromoList"><p class="muted">Cargando...</p></div></div>
 <div class="card"><h2>Paquetes</h2><p class="muted">Los paquetes siguen en modo demostración. No se sincronizan entre dispositivos.</p><form id="packageForm" class="formgrid"><div class="full"><label>Nombre del paquete</label><input name="title" maxlength="100" required></div><div class="full"><label>Descripción</label><textarea name="description" maxlength="1000"></textarea></div><div><label>Precio o texto opcional</label><input name="price_label" maxlength="80"></div><div><label>URL de fotografía (https://)</label><input name="image_url" type="url"></div><div class="full"><button class="primary">Guardar paquete de prueba</button></div></form><div id="packageList"></div></div>
 </section>
     </div>
@@ -710,7 +710,7 @@ $('realPromoForm').onsubmit=async e=>{
  if(!file){$('promoStatus').textContent='Selecciona una foto o video';notify('Selecciona una foto o video');return}
  if(file.size>6*1024*1024){$('promoStatus').textContent='El archivo pesa '+(file.size/1048576).toFixed(1)+' MB. El límite actual es 6 MB. Comprímelo antes de publicarlo.';notify('El archivo supera 6 MB. Comprímelo primero.');return}
  const form=new FormData();form.set('accion','subir');form.set('titulo',$('promoTitulo').value.trim());form.set('descripcion',$('promoDescripcion').value.trim());form.set('archivo',file);
- $('promoStatus').textContent='Subiendo '+file.name+'… No cierres esta página.';button.disabled=true;button.textContent='Subiendo…';
+ $('promoStatus').textContent='Subiendo '+file.name+'... No cierres esta página.';button.disabled=true;button.textContent='Subiendo...';
  try{await invokePromo(form);e.target.reset();await refreshPromos();$('promoStatus').textContent='Promoción publicada correctamente.';notify('Promoción publicada correctamente')}
  catch(err){$('promoStatus').textContent='No se pudo publicar: '+err.message;notify('No se pudo publicar: '+err.message)}finally{button.disabled=false;button.textContent='Publicar en la web'}
 };
