@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -185,187 +184,241 @@ body:has(#app.hidden) #loginCard {
 @media(max-width:480px){#loginCard{padding:27px 19px 31px!important}#loginCard .login-logo{max-height:155px}#loginCard .login-field input{height:57px;min-height:57px;font-size:16px}#loginCard .login-submit{height:60px;min-height:60px;font-size:18px!important}#loginCard .login-bottom{align-items:flex-start}#loginCard .forgot-link{font-size:12px}#loginCard .remember-label{font-size:13px}}
 
 
-/* ===== HACIENDA EL FLAMBO: DASHBOARD PREMIUM ===== */
-body:not(:has(#app.hidden)){background:#f5f4ef;color:#253a30}
-body:not(:has(#app.hidden))>header{display:none}
-body:not(:has(#app.hidden))>main{max-width:none;padding:0}
-body:not(:has(#app.hidden)) #demoNotice{display:none}
-#app{width:100%;min-height:100vh}
-.admin-shell{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:100vh}
-.admin-sidebar{background:linear-gradient(180deg,#17392c 0%,#10291f 100%);color:#e9e7db;padding:25px 16px;display:flex;flex-direction:column;gap:14px;position:sticky;top:0;height:100vh;box-shadow:5px 0 28px #0b271218}
-.sidebar-brand{text-align:center;border-bottom:1px solid #ffffff22;padding:6px 6px 24px}
-.sidebar-brand img{display:block;width:160px;height:110px;object-fit:contain;margin:0 auto 8px}
-.sidebar-brand span{display:block;font-size:10px;letter-spacing:.27em;color:#d7bb7d;font-weight:800}
-.sidebar-label{color:#b8bda9;font-size:10px;letter-spacing:.16em;font-weight:800;padding:15px 12px 0}
-.admin-sidebar .tabs{display:flex;flex-direction:column;gap:7px}
-.admin-sidebar .tab{display:flex;align-items:center;text-align:left;gap:13px;width:100%;background:transparent;color:#e5ebdf;border:1px solid transparent;border-radius:12px;padding:14px 15px;font-weight:650;font-size:14px}
-.admin-sidebar .tab span{font-size:20px;width:22px;text-align:center;color:#d6bf83}
-.admin-sidebar .tab.active,.admin-sidebar .tab:hover{background:#d9bc7b;color:#163829;border-color:#e9cf96}
-.admin-sidebar .tab.active span,.admin-sidebar .tab:hover span{color:#163829}
-.sidebar-footer{margin-top:auto;border-top:1px solid #ffffff20;padding:18px 12px 5px;color:#e9d3a5;font-size:12px;line-height:1.7}
-.sidebar-footer small{color:#bdcdbd}
-.admin-workspace{min-width:0}
-.admin-topbar{background:#fff;border-bottom:1px solid #e7e9e0;padding:29px clamp(20px,3vw,48px);display:flex;align-items:center;justify-content:space-between;gap:20px}
-.admin-eyebrow{font-size:10px;font-weight:800;letter-spacing:.15em;color:#8c7a55;margin-bottom:9px}
-.admin-topbar h1{font-family:Georgia,serif;color:#1a4431;font-size:clamp(25px,3vw,35px);line-height:1.2;margin:0 0 7px}
-.admin-topbar p{font-size:13px;color:#758178;margin:0}
-.admin-topbar #logout.logout-btn{margin:0;flex-shrink:0;background:#fff;color:#355746;border:1px solid #d8e3d9;border-radius:11px;padding:12px 17px;box-shadow:none}
-.admin-content{padding:26px clamp(16px,3vw,46px) 65px;max-width:1500px;margin:auto}
-.admin-content .card,.admin-content .metric{border:1px solid #e4e9df;border-radius:17px;box-shadow:0 7px 25px #193b2010;background:#fff}
-.admin-content .card{padding:24px}
-.admin-content .card h2{font-family:Georgia,serif;font-size:22px;color:#244b37}
-.admin-content .metrics{grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-bottom:22px}
-.admin-content .metric{position:relative;padding:22px 20px;min-height:116px;border-top:3px solid #d6bb80}
-.admin-content .metric strong{font-family:Georgia,serif;font-size:35px;color:#224e38}
-.admin-content .metric span{font-size:12px;font-weight:700;color:#748075}
-.admin-content .entry{padding:18px 0}
-.admin-content .primary{background:#285b40;border-radius:10px}
-.admin-content .primary:hover{background:#1a4730}
-.admin-content .ghost{border-radius:10px}
-.admin-mobile-menu{display:none}
-@media(max-width:1050px){.admin-shell{grid-template-columns:210px minmax(0,1fr)}.admin-content .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.sidebar-brand img{width:140px}}
-@media(max-width:760px){
- .admin-shell{display:block}
- .admin-sidebar{display:none}
- .admin-topbar{padding:22px 18px;align-items:flex-start;gap:12px}
- .admin-topbar h1{font-size:25px}
- .admin-topbar p{font-size:12px}
- .admin-topbar #logout.logout-btn{font-size:12px;padding:10px;white-space:nowrap}
- .admin-mobile-menu{display:block;background:#fff;padding:12px 14px 16px;border-bottom:1px solid #e7e9e0}
- .admin-mobile-label{font-size:10px;font-weight:800;letter-spacing:.13em;color:#8c7a55;margin-bottom:9px}
- .admin-mobile-menu .tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;width:100%}
- .admin-mobile-menu .tab{min-width:0;white-space:normal;font-size:11px;padding:10px 3px;border-radius:9px;text-align:center;line-height:1.3;background:#f1f5ef;border:1px solid #e5eae2;color:#32543c}
- .admin-mobile-menu .tab.active{background:#285b40;color:#fff;border-color:#285b40}
- .admin-content{padding:17px 13px 40px}
- .admin-content .metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
- .admin-content .metric{min-height:100px;padding:14px}
- .admin-content .metric strong{font-size:29px}
- .admin-content .card{padding:16px}
+/* ===========================================================
+   HACIENDA EL FLAMBO — PANEL ADMINISTRATIVO REDISEÑADO
+   Conserva el login y toda la integración funcional existente.
+   =========================================================== */
+body:not(:has(#app.hidden)) {
+  background:#f5f5ef;
+  color:#243e2f;
 }
-@media(max-width:370px){.admin-topbar{flex-wrap:wrap}.admin-topbar #logout.logout-btn{margin-left:auto}}
+body:not(:has(#app.hidden)) > header,
+body:not(:has(#app.hidden)) #demoNotice { display:none!important; }
+body:not(:has(#app.hidden)) > main { width:100%;max-width:none;padding:0; }
+#app { width:100%;min-height:100vh;min-height:100dvh; }
 
+/* Navegación lateral en computadoras */
+.admin-shell { display:grid;grid-template-columns:246px minmax(0,1fr);min-height:100vh; }
+.admin-sidebar {
+  position:sticky;top:0;height:100vh;display:flex;flex-direction:column;
+  padding:24px 14px 22px;
+  background:linear-gradient(170deg,#173d2b 0%,#102b20 65%,#0d261c 100%);
+  box-shadow:6px 0 24px rgba(16,43,32,.09);color:#f2ebd8;
+  z-index:2;
+}
+.sidebar-brand { padding:3px 6px 24px;text-align:center;border-bottom:1px solid rgba(230,208,164,.17); }
+.sidebar-brand img { display:block;width:175px;height:122px;object-fit:contain;margin:0 auto 8px; }
+.sidebar-brand span { display:block;font-size:10px;font-weight:800;letter-spacing:.22em;color:#dcbf80; }
+.sidebar-label { font-size:10px;letter-spacing:.18em;color:#9db9a9;font-weight:800;padding:22px 14px 10px; }
+.admin-sidebar .tabs { display:flex;flex-direction:column;gap:7px; }
+.admin-sidebar .tab {
+  display:flex;align-items:center;justify-content:flex-start;text-align:left;
+  width:100%;gap:13px;padding:14px 15px;
+  border-radius:12px;border:1px solid transparent;background:transparent;
+  color:#dce7dd;font-size:13px;font-weight:700;transition:background .18s,color .18s;
+}
+.admin-sidebar .tab span { display:grid;place-items:center;width:24px;height:24px;font-size:20px;color:#d5bb80; }
+.admin-sidebar .tab.active { background:linear-gradient(110deg,#f0d59a,#dbb973);color:#1e3d2b;box-shadow:0 6px 18px #060f0a2b; }
+.admin-sidebar .tab.active span { color:#1e3d2b; }
+.admin-sidebar .tab:not(.active):hover { background:#ffffff12;color:#fff; }
+.sidebar-footer { margin-top:auto;padding:19px 12px 0;border-top:1px solid #ffffff23;color:#e0cd9f;font-size:12px;line-height:1.7; }
+.sidebar-footer small { color:#9ab8a7; }
+.admin-workspace { min-width:0; }
 
-/* ===== Dashboard: encabezado elegante, centrado y responsive ===== */
-body:not(:has(#app.hidden)) .admin-topbar {
-  background: linear-gradient(180deg, #fffdf8 0%, #f7f3ea 100%);
-  border-bottom: 1px solid #ece5d6;
-  padding: 43px 22px 33px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 17px;
-  text-align: center;
+/* Cabecera a todo lo ancho: el logo ya no tiene una caja independiente. */
+.admin-topbar {
+  position:relative;isolation:isolate;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:12px;text-align:center;padding:24px 24px 23px;
+  background:linear-gradient(135deg,#102c20 0%,#1b4933 55%,#123525 100%);
+  border-bottom:3px solid #d7b579;
+  box-shadow:0 8px 24px rgba(14,42,29,.11);
+  color:#faf3e6;
 }
-body:not(:has(#app.hidden)) .admin-topbar > div {
-  width: 100%;
-  max-width: 760px;
-  margin-inline: auto;
+.admin-topbar::before,
+.admin-topbar::after {
+  content:"";position:absolute;z-index:-1;pointer-events:none;border-radius:50%;
 }
-body:not(:has(#app.hidden)) .admin-eyebrow {
-  font-size: 11px;
-  font-weight: 850;
-  letter-spacing: .17em;
-  color: #9b8353;
-  margin-bottom: 12px;
-  text-transform: uppercase;
+.admin-topbar::before {width:430px;height:430px;top:-260px;right:-130px;border:1px solid rgba(234,205,141,.22);box-shadow:0 0 0 65px rgba(234,205,141,.025),0 0 0 140px rgba(234,205,141,.025)}
+.admin-topbar::after {width:360px;height:360px;bottom:-310px;left:-145px;border:1px solid rgba(234,205,141,.20);box-shadow:0 0 0 66px rgba(234,205,141,.026)}
+.admin-heading { width:100%;max-width:730px;display:flex;flex-direction:column;align-items:center;gap:8px; }
+.admin-eyebrow { display:block;font-size:10px;font-weight:800;letter-spacing:.24em;color:#d8c18f; }
+.admin-header-logo-frame { width:100%;max-width:360px;display:flex;align-items:center;justify-content:center;padding:0;margin:0 auto; }
+.admin-header-logo { width:min(100%,285px);height:auto;max-height:125px;object-fit:contain;display:block;filter:drop-shadow(0 5px 15px rgba(0,0,0,.14)); }
+.admin-topbar p {max-width:470px;font-size:13px;line-height:1.55;color:#dfebde;margin:0;}
+.admin-topbar #logout.logout-btn {
+  order:initial;margin:4px auto 0;padding:9px 17px;display:inline-flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.075);border:1px solid rgba(238,210,155,.42);
+  border-radius:100px;color:#f9e8c8;font-size:12px;font-weight:700;
+  box-shadow:none;transition:background .18s,transform .18s;white-space:nowrap;
 }
-body:not(:has(#app.hidden)) .admin-topbar h1 {
-  font-family: Georgia, 'Times New Roman', serif;
-  color: #1d4a35;
-  font-size: clamp(30px, 4.4vw, 47px);
-  line-height: 1.13;
-  margin: 0 0 13px;
-  text-wrap: balance;
+.admin-topbar #logout.logout-btn:hover { background:rgba(255,255,255,.17);transform:translateY(-1px); }
+.admin-topbar #logout.logout-btn:focus-visible { outline:3px solid #edcd8e;outline-offset:3px; }
+
+/* Área de contenido */
+.admin-content {width:100%;max-width:1350px;margin:0 auto;padding:30px clamp(19px,3vw,42px) 80px;}
+.section-heading {margin:0 0 19px;}
+.section-kicker {display:block;color:#aa8951;font-size:10px;font-weight:850;letter-spacing:.19em;margin-bottom:7px;}
+.section-heading h2 {font:700 clamp(23px,2.5vw,30px)/1.2 Georgia,serif;color:#203f2d;margin:0 0 7px;}
+.section-heading p {font-size:13px;color:#768577;line-height:1.55;margin:0;}
+
+/* Resumen: tarjetas con iconos, jerarquía y acentos consistentes */
+.admin-content .metrics {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:0 0 26px;}
+.admin-content .metric {
+  position:relative;display:flex;flex-direction:column;justify-content:space-between;
+  gap:12px;min-height:158px;padding:18px;
+  background:#fff;border:1px solid #e5e9e0;border-radius:17px;
+  box-shadow:0 7px 27px rgba(32,64,39,.055);border-top:3px solid #d8ba7f;
 }
-body:not(:has(#app.hidden)) .admin-topbar p {
-  font-size: clamp(14px, 1.5vw, 17px);
-  color: #718176;
-  margin: 0 auto;
-  line-height: 1.5;
-  max-width: 600px;
+.metric-top {display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.metric-icon {width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:#f7eed9;color:#a67b35;}
+.metric-icon svg {width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.admin-content .metric span.metric-note {font-size:10px;color:#9b9f95;font-weight:700;}
+.admin-content .metric strong {display:block;font-size:34px;line-height:1;font-family:Georgia,serif;color:#234b34;}
+.admin-content .metric .metric-label {display:block;margin-top:6px;color:#667669;font-size:12px;font-weight:700;}
+.admin-content .metric:nth-child(2) {border-top-color:#7bb995;}
+.admin-content .metric:nth-child(2) .metric-icon {background:#e8f5eb;color:#40835a;}
+.admin-content .metric:nth-child(3) {border-top-color:#e2ac9b;}
+.admin-content .metric:nth-child(3) .metric-icon {background:#fff0e9;color:#b66d52;}
+.admin-content .metric:nth-child(4) {border-top-color:#a3b5d1;}
+.admin-content .metric:nth-child(4) .metric-icon {background:#edf2f9;color:#647b9b;}
+
+/* Secciones, formularios y botones */
+.admin-content .card {
+  background:#fff;border:1px solid #e5e9e0;border-radius:18px;
+  padding:25px;box-shadow:0 8px 28px rgba(25,61,37,.055);margin-bottom:20px;
 }
-body:not(:has(#app.hidden)) .admin-topbar #logout.logout-btn {
-  order: initial;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin: 7px auto 0;
-  flex-shrink: 0;
-  background: #fff;
-  color: #264a37;
-  border: 1px solid #d8dfd1;
-  border-radius: 13px;
-  padding: 12px 22px;
-  font-size: 15px;
-  font-weight: 800;
-  box-shadow: 0 8px 24px rgba(0,0,0,.06);
-  transition: transform .2s ease, box-shadow .2s ease;
+.admin-content .card h2 {color:#264b35;font-family:Georgia,serif;font-size:22px;margin:0 0 9px;}
+.admin-content .card h3 {color:#27583b;}
+.admin-content .card p.muted {line-height:1.65;color:#748277;}
+.admin-content .card label {color:#345b42;font-size:12px;}
+.admin-content input:not([type="checkbox"]),
+.admin-content select,.admin-content textarea {
+  border-color:#d9e1d8;background:#fbfcf9;border-radius:11px;
+  color:#2b4132;min-height:45px;
 }
-body:not(:has(#app.hidden)) .admin-topbar #logout.logout-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 26px rgba(0,0,0,.08);
+.admin-content input:focus-visible,.admin-content select:focus-visible,.admin-content textarea:focus-visible {outline:2px solid #d8b575;outline-offset:1px;}
+.admin-content .primary {background:#285b40;color:#fff;border-radius:10px;box-shadow:0 4px 10px #234d3616;}
+.admin-content .primary:hover {background:#1a4730;}
+.admin-content .ghost {border:1px solid #d9e5da;background:#f8fbf7;color:#315b42;border-radius:10px;}
+.admin-content .ghost:hover {background:#eff7f0;}
+.admin-content .danger {border-radius:10px;}
+.admin-content .actions {gap:9px;}
+
+/* Solicitudes: resumen compacto y controles claros */
+.reservations-card { padding:0!important;overflow:hidden; }
+.reservations-card-header {padding:24px 25px 15px;border-bottom:1px solid #edf0e9;}
+.reservations-card-header h2 {margin:0 0 5px!important;}
+.reservations-card-header p {margin:0;font-size:12px;color:#7a8679;}
+.reservations-toolbar { display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:17px 25px;background:#fcfcf9; }
+.reservations-toolbar .actions {margin:0;align-items:center;}
+.reservations-toolbar #filterReservations {width:220px;max-width:100%!important;margin:0;}
+.reservations-toolbar #refresh {min-height:45px;padding:11px 16px;}
+.reservations-help {margin:0 25px 18px;border:1px solid #e9e9dc;background:#f9f8f0;border-radius:10px;color:#687564;}
+.reservations-help summary {cursor:pointer;padding:12px 15px;font-size:12px;font-weight:750;color:#657662;}
+.reservations-help p {margin:0;padding:0 15px 14px;font-size:12px;line-height:1.6;}
+#reservationList {padding:0 25px 24px;}
+.reservation-item {
+  background:#fff;border:1px solid #e2e9df!important;
+  border-radius:14px;padding:17px!important;margin:0 0 12px!important;
+  box-shadow:0 3px 14px #1d43280b;
 }
-body:not(:has(#app.hidden)) .admin-content {
-  width: 100%;
-  max-width: 1250px;
+.reservation-item:last-child {margin-bottom:0!important;border-bottom:1px solid #e2e9df!important;}
+.reservation-head {display:flex;align-items:center;gap:11px;margin-bottom:14px;}
+.reservation-symbol {width:42px;height:42px;flex:0 0 42px;display:grid;place-items:center;border-radius:12px;background:#eef5ed;color:#3e8053;}
+.reservation-symbol svg {width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.reservation-title {flex:1;min-width:0;}
+.reservation-date {display:block;font-size:11px;color:#9b854e;font-weight:750;letter-spacing:.02em;margin-bottom:3px;}
+.reservation-title strong {display:block;font-family:Georgia,serif;font-size:17px;color:#284b35;line-height:1.25;word-wrap:break-word;}
+.reservation-head .tag {align-self:flex-start;white-space:nowrap;flex-shrink:0;font-size:11px;padding:7px 10px;}
+.reservation-details {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;background:#fafbf8;border:1px solid #eef0eb;border-radius:11px;padding:12px;}
+.reservation-detail {min-width:0;}
+.reservation-detail span {display:block;font-size:10px;font-weight:800;letter-spacing:.05em;color:#8a968a;margin-bottom:4px;text-transform:uppercase;}
+.reservation-detail strong {display:block;font-weight:650;font-size:12px;color:#42594a;overflow-wrap:anywhere;line-height:1.45;}
+.reservation-notes {background:#fcf9ef;border-left:3px solid #d8ba7f;border-radius:5px;padding:10px 12px;color:#596658;font-size:12px;line-height:1.5;margin:12px 0 0;overflow-wrap:anywhere;}
+.reservation-expiration {margin:11px 0 0;font-size:12px;color:#976d35;font-weight:700;}
+.reservation-actions {display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-top:15px;}
+.reservation-actions button {font-size:12px;min-height:39px;}
+#reservationList > p.muted {margin:16px 0 5px;text-align:center;padding:23px 15px;border:1px dashed #d4dfd1;border-radius:12px;background:#fafbf8;}
+.tag.pending {background:#fff3d6;color:#9a6f26;}
+.tag.approved {background:#e4f4e9;color:#286942;}
+.tag.rejected {background:#fce9e5;color:#a14c43;}
+.tag.expired {background:#f0eee9;color:#6d6b65;}
+.tag.cancelled {background:#edf0f3;color:#596777;}
+
+/* Check-in y listas */
+.admin-content .guest {border-color:#dee8dc;border-radius:12px;background:#fbfcf9;min-height:52px;align-items:center;}
+.admin-content .guest.checked {border-color:#83c49a;background:#e1f5e6;color:#235d37;}
+.admin-content .progress {height:9px;}
+.admin-content .grid {gap:17px;}
+.admin-content .formgrid {gap:14px;}
+
+/* Navegación horizontal con buena área táctil en teléfonos */
+.admin-mobile-menu {display:none;}
+@media (max-width:1050px) and (min-width:761px) {
+  .admin-shell {grid-template-columns:207px minmax(0,1fr);}
+  .sidebar-brand img {width:145px;}
+  .admin-content .metrics {grid-template-columns:repeat(2,minmax(0,1fr));}
 }
 @media (max-width:760px) {
-  body:not(:has(#app.hidden)) .admin-topbar {
-    padding: 30px 17px 25px;
-    gap: 13px;
+  .admin-shell {display:block;}
+  .admin-sidebar {display:none;}
+  .admin-topbar {padding:18px 16px 20px;gap:9px;}
+  .admin-eyebrow {font-size:9px;letter-spacing:.20em;}
+  .admin-heading {gap:5px;}
+  .admin-header-logo-frame {max-width:230px;}
+  .admin-header-logo {max-width:210px;max-height:95px;}
+  .admin-topbar p {font-size:12px;line-height:1.5;max-width:340px;}
+  .admin-topbar #logout.logout-btn {width:auto;max-width:none;margin-top:6px;min-height:35px;padding:8px 18px;font-size:12px;}
+  .admin-mobile-menu {display:block;padding:13px 12px 14px;background:#fff;border-bottom:1px solid #e8ede5;}
+  .admin-mobile-label {font-size:10px;letter-spacing:.14em;font-weight:850;color:#998454;text-align:center;margin-bottom:10px;}
+  .admin-mobile-menu .tabs {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;width:100%;}
+  .admin-mobile-menu .tab {
+    min-width:0;min-height:47px;padding:8px 3px;font-size:11px;line-height:1.25;
+    border-radius:11px;border:1px solid #e3eae0;background:#f5f8f3;color:#41604c;
+    font-weight:750;text-align:center;white-space:normal;display:grid;place-items:center;
   }
-  body:not(:has(#app.hidden)) .admin-topbar h1 {font-size: clamp(29px, 8vw, 41px);}
-  body:not(:has(#app.hidden)) .admin-topbar p {font-size: 14px;}
-  body:not(:has(#app.hidden)) .admin-eyebrow {font-size: 10px;letter-spacing: .12em;}
-  body:not(:has(#app.hidden)) .admin-topbar #logout.logout-btn {
-    width: min(100%, 310px);
-    padding: 12px 18px;
-    font-size: 15px;
-    margin: 6px auto 0;
-  }
-  body:not(:has(#app.hidden)) .admin-mobile-menu {text-align: center;}
-  body:not(:has(#app.hidden)) .admin-mobile-label {margin-bottom: 11px;}
+  .admin-mobile-menu .tab.active {background:#285b40;border-color:#285b40;color:#fff;box-shadow:0 4px 12px #285b4025;}
+  .admin-content {padding:20px 14px 55px;}
+  .section-heading {text-align:center;margin-bottom:17px;}
+  .section-heading h2 {font-size:23px;}
+  .section-heading p {font-size:12px;}
+  .admin-content .metrics {grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:22px;}
+  .admin-content .metric {padding:14px;min-height:132px;border-radius:14px;gap:7px;}
+  .metric-icon {width:34px;height:34px;border-radius:10px;}
+  .metric-icon svg {width:18px;height:18px;}
+  .admin-content .metric span.metric-note {font-size:9px;}
+  .admin-content .metric strong {font-size:30px;}
+  .admin-content .metric .metric-label {font-size:11px;}
+  .admin-content .card {padding:17px;border-radius:15px;}
+  .admin-content .card h2 {font-size:20px;}
+  .reservations-card {padding:0!important;}
+  .reservations-card-header {padding:19px 17px 13px;text-align:center;}
+  .reservations-toolbar {padding:12px 15px;gap:9px;}
+  .reservations-toolbar .actions {display:grid;grid-template-columns:1fr 1fr;width:100%;gap:9px;}
+  .reservations-toolbar #refresh,.reservations-toolbar #filterReservations {width:100%;max-width:none!important;min-width:0;min-height:44px;font-size:12px;}
+  .reservations-help {margin:0 15px 16px;}
+  #reservationList {padding:0 15px 20px;}
+  .reservation-item {padding:14px!important;}
+  .reservation-head {gap:9px;align-items:flex-start;}
+  .reservation-symbol {width:36px;height:36px;flex-basis:36px;}
+  .reservation-symbol svg {width:19px;height:19px;}
+  .reservation-title strong {font-size:15px;}
+  .reservation-head .tag {font-size:10px;padding:6px 8px;}
+  .reservation-details {grid-template-columns:1fr;gap:10px;}
+  .reservation-actions button {flex:1 1 auto;}
+  .admin-content .grid,.admin-content .formgrid,.admin-content .guestgrid {grid-template-columns:1fr;}
+  .admin-content .actions {gap:8px;}
 }
 @media (max-width:370px) {
-  body:not(:has(#app.hidden)) .admin-topbar #logout.logout-btn {margin-inline:auto;}
+  .admin-mobile-menu .tab {font-size:10px;}
+  .admin-content {padding-inline:10px;}
+  .admin-content .metric {padding:12px;}
+  .reservation-head {flex-wrap:wrap;}
+  .reservation-head .tag {margin-left:auto;}
 }
 @media (prefers-reduced-motion:reduce) {
-  body:not(:has(#app.hidden)) .admin-topbar #logout.logout-btn {transition:none;}
-}
-
-
-/* Logo del inicio de sesión en lugar del título del panel. */
-body:not(:has(#app.hidden)) .admin-header-logo-frame {
-  width: min(100%, 420px);
-  margin: 0 auto 16px;
-  padding: 13px 24px;
-  border-radius: 22px;
-  background: linear-gradient(155deg, #173b2b, #0d291e);
-  border: 1px solid rgba(201,164,92,.48);
-  box-shadow: 0 10px 27px rgba(21,51,34,.14);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-body:not(:has(#app.hidden)) .admin-header-logo {
-  display: block;
-  width: min(100%, 310px);
-  height: auto;
-  max-height: 190px;
-  object-fit: contain;
-}
-@media (max-width: 760px) {
-  body:not(:has(#app.hidden)) .admin-header-logo-frame {
-    width: min(100%, 340px);
-    margin-bottom: 12px;
-    padding: 9px 17px;
-    border-radius: 17px;
-  }
-  body:not(:has(#app.hidden)) .admin-header-logo {
-    width: min(100%, 258px);
-    max-height: 155px;
-  }
+  .admin-sidebar .tab,.admin-topbar #logout.logout-btn {transition:none;}
 }
 
 </style>
@@ -375,7 +428,7 @@ body:not(:has(#app.hidden)) .admin-header-logo {
 <main>
 <div class="notice" id="demoNotice"><strong>Estado:</strong> Promociones, solicitudes, fechas bloqueadas y registro de entrada: conexión real con Supabase. Los paquetes siguen en demostración. No confirmes eventos reales hasta completar las pruebas del sistema.</div>
 <section class="card login" id="loginCard">
-<div class="login-brand"><img class="login-logo" src="logo_login_admin.JPG" alt="Hacienda El Flambo" decoding="async"></div>
+<div class="login-brand"><img class="login-logo" src="logo_login_admin.PNG" alt="Hacienda El Flambo" decoding="async"></div>
 <h2>PANEL ADMINISTRATIVO</h2>
 <form id="loginForm">
   <div class="login-field">
@@ -401,7 +454,7 @@ body:not(:has(#app.hidden)) .admin-header-logo {
 <div id="app" class="hidden">
 <div class="admin-shell">
   <aside class="admin-sidebar" aria-label="Navegación administrativa">
-    <div class="sidebar-brand"><img src="logo_login_admin.JPG" alt="Hacienda El Flambo"><span>ADMINISTRACIÓN</span></div>
+    <div class="sidebar-brand"><img src="logo_login_admin.PNG" alt="Hacienda El Flambo"><span>ADMINISTRACIÓN</span></div>
     <div class="sidebar-label">MENÚ PRINCIPAL</div>
     <nav class="tabs" aria-label="Secciones">
       <button type="button" class="tab active" data-tab="reservas"><span aria-hidden="true">▦</span> Reservaciones</button>
@@ -413,7 +466,11 @@ body:not(:has(#app.hidden)) .admin-header-logo {
   </aside>
   <div class="admin-workspace">
     <div class="admin-topbar">
-      <div class="admin-heading"><div class="admin-header-logo-frame"><img class="admin-header-logo" src="logo_login_admin.JPG" alt="Hacienda El Flambo" decoding="async"></div><p>Gestiona las actividades y operaciones de la hacienda.</p></div>
+      <div class="admin-heading">
+        <span class="admin-eyebrow">ÁREA PRIVADA · MOROVIS, PUERTO RICO</span>
+        <div class="admin-header-logo-frame"><img class="admin-header-logo" src="logo_login_admin.PNG" alt="Hacienda El Flambo" decoding="async"></div>
+        <p>Gestiona tus reservaciones, invitados y actividades desde un solo lugar.</p>
+      </div>
       <button id="logout" class="ghost logout-btn" type="button" aria-label="Cerrar sesión">↪ Cerrar sesión</button>
     </div>
     <div class="admin-mobile-menu"><div class="admin-mobile-label">Navegación</div><nav class="tabs" aria-label="Secciones móviles">
@@ -424,8 +481,23 @@ body:not(:has(#app.hidden)) .admin-header-logo {
     </nav></div>
     <div class="admin-content">
 <section class="panel active" id="panel-reservas">
-<div class="metrics"><div class="metric"><strong id="numPending">0</strong><span>Pendientes</span></div><div class="metric"><strong id="numApproved">0</strong><span>Aprobadas</span></div><div class="metric"><strong id="numRejected">0</strong><span>Rechazadas</span></div><div class="metric"><strong id="numBlocked">0</strong><span>Fechas bloqueadas</span></div></div>
-<div class="card"><h2>Solicitudes de actividades</h2><p class="muted">Las solicitudes pendientes caducan a las 48 horas. Puedes aprobar, rechazar o cancelar reservaciones. Las cancelaciones liberan la fecha. Si ya no necesitas conservar una reservación cancelada, puedes eliminar definitivamente sus datos y su lista de invitados con una confirmación adicional. Las pruebas rechazadas o vencidas también se pueden eliminar cuando estén marcadas PRUEBA DEL SISTEMA. Se muestran las últimas 200 solicitudes.</p><div class="actions"><button id="refresh" class="ghost small">↻ Actualizar</button><select id="filterReservations" aria-label="Filtrar reservas" style="max-width:240px"><option value="all">Todas</option><option value="pending">Pendientes</option><option value="approved">Aprobadas</option><option value="rejected">Rechazadas</option><option value="expired">Vencidas</option><option value="cancelled">Canceladas</option></select></div><div id="reservationList"></div></div>
+<div class="section-heading">
+  <span class="section-kicker">VISTA GENERAL</span>
+  <h2>Resumen de actividades</h2>
+  <p>Consulta rápidamente el estado de las solicitudes y las fechas de la hacienda.</p>
+</div>
+<div class="metrics" aria-label="Resumen de reservaciones">
+  <div class="metric"><div class="metric-top"><div class="metric-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><span class="metric-note">POR REVISAR</span></div><div><strong id="numPending">0</strong><span class="metric-label">Pendientes</span></div></div>
+  <div class="metric"><div class="metric-top"><div class="metric-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg></div><span class="metric-note">CONFIRMADAS</span></div><div><strong id="numApproved">0</strong><span class="metric-label">Aprobadas</span></div></div>
+  <div class="metric"><div class="metric-top"><div class="metric-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m9 9 6 6m0-6-6 6"/></svg></div><span class="metric-note">NO APROBADAS</span></div><div><strong id="numRejected">0</strong><span class="metric-label">Rechazadas</span></div></div>
+  <div class="metric"><div class="metric-top"><div class="metric-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18m-12 4 6 4m0-4-6 4"/></svg></div><span class="metric-note">NO DISPONIBLES</span></div><div><strong id="numBlocked">0</strong><span class="metric-label">Fechas bloqueadas</span></div></div>
+</div>
+<div class="card reservations-card">
+  <div class="reservations-card-header"><h2>Solicitudes de actividades</h2><p>Revisa y administra las reservaciones recibidas.</p></div>
+  <div class="reservations-toolbar"><div class="actions"><button id="refresh" class="ghost small" type="button">↻ Actualizar</button><select id="filterReservations" aria-label="Filtrar reservaciones"><option value="all">Todas</option><option value="pending">Pendientes</option><option value="approved">Aprobadas</option><option value="rejected">Rechazadas</option><option value="expired">Vencidas</option><option value="cancelled">Canceladas</option></select></div></div>
+  <details class="reservations-help"><summary>Información sobre las reservaciones y sus estados</summary><p>Las solicitudes pendientes caducan a las 48 horas. Puedes aprobar, rechazar o cancelar reservaciones. Las cancelaciones liberan la fecha. Si ya no necesitas conservar una reservación cancelada, puedes eliminar definitivamente sus datos y su lista de invitados con una confirmación adicional. Las pruebas rechazadas o vencidas también se pueden eliminar cuando estén marcadas PRUEBA DEL SISTEMA. Se muestran las últimas 200 solicitudes.</p></details>
+  <div id="reservationList"></div>
+</div>
 </section>
 <section class="panel" id="panel-entrada">
 <div class="card"><h2>🚪 Control de entrada</h2><p class="muted">Selecciona una actividad aprobada. Toca el nombre cuando la persona llegue para marcarlo en verde, o vuelve a tocarlo para corregir la entrada.</p><label for="eventSelect">Actividad</label><select id="eventSelect"></select><div id="eventDetails"></div></div>
@@ -436,7 +508,7 @@ body:not(:has(#app.hidden)) .admin-header-logo {
 <section class="panel" id="panel-publicaciones">
 <div class="card"><h2>🎬 Publicar fotografía o video</h2><p class="muted">Esta sección SÍ funciona con Supabase. Máximo 6 MB por archivo (JPG, PNG, WebP, MP4, WebM). Para videos mayores necesitaremos carga resumible.</p>
 <form id="realPromoForm" class="formgrid" method="post"><div class="full"><label for="promoTitulo">Título de promoción</label><input id="promoTitulo" maxlength="120" required></div><div class="full"><label for="promoDescripcion">Descripción</label><textarea id="promoDescripcion" maxlength="1200"></textarea></div><div class="full"><label for="promoArchivo">Imagen o video</label><input id="promoArchivo" type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm" required></div><div class="full"><button type="submit" class="primary" id="promoSubmit">Publicar en la web</button></div><p id="promoStatus" class="muted full" role="status" aria-live="polite"></p></form></div>
-<div class="card"><div class="bar"><h2>Promociones publicadas</h2><button type="button" class="ghost small" id="promoReload">Actualizar</button></div><div id="realPromoList"><p class="muted">Cargando...</p></div></div>
+<div class="card"><div class="bar"><h2>Promociones publicadas</h2><button type="button" class="ghost small" id="promoReload">Actualizar</button></div><div id="realPromoList"><p class="muted">Cargando…</p></div></div>
 <div class="card"><h2>Paquetes</h2><p class="muted">Los paquetes siguen en modo demostración. No se sincronizan entre dispositivos.</p><form id="packageForm" class="formgrid"><div class="full"><label>Nombre del paquete</label><input name="title" maxlength="100" required></div><div class="full"><label>Descripción</label><textarea name="description" maxlength="1000"></textarea></div><div><label>Precio o texto opcional</label><input name="price_label" maxlength="80"></div><div><label>URL de fotografía (https://)</label><input name="image_url" type="url"></div><div class="full"><button class="primary">Guardar paquete de prueba</button></div></form><div id="packageList"></div></div>
 </section>
     </div>
@@ -569,14 +641,24 @@ function renderReservations(){
  const arr=[...data.reservations].sort((a,b)=>b.date.localeCompare(a.date)).filter(r=>f==='all'||actualStatus(r)===f);
  $('reservationList').innerHTML=arr.length?arr.map(r=>{
  const status=actualStatus(r),id=esc(r.reservation_id||r.id),names=(r.guests||[]).map(g=>typeof g==='string'?g:g.name).filter(Boolean);
- return `<article class="entry"><div class="actions" style="margin:0 0 8px"><strong>${esc(r.date)} · ${esc(r.event_type||'Actividad')}</strong><span class="tag ${status}">${statusNames[status]||esc(status)}</span></div>
- <div class="muted">Organiza: ${esc(r.customer_name)} · ${esc(r.customer_phone)} · ${esc(r.customer_email)}</div>
- <div class="muted">Invitados: ${names.length} · Paquete: ${esc(data.packages.find(p=>p.id===r.package_id)?.title||'Sin especificar')}</div>
- ${r.notes?`<p class="wraptext">${esc(r.notes)}</p>`:''}
- ${status==='pending'?`<p class="muted">Vence: ${esc(new Date(r.expires_at).toLocaleString('es-PR'))}</p><div class="actions"><button class="primary small" data-action="approve" data-id="${id}">✓ Aprobar</button><button class="danger" data-action="reject" data-id="${id}">Rechazar</button></div>`:''}
- ${['pending','approved'].includes(status)?`<div class="actions"><button class="ghost small" data-action="cancel" data-id="${id}">Cancelar reservación</button></div>`:''}
- ${status==='cancelled'?`<div class="actions"><button class="danger small" data-action="delete-cancelled" data-id="${id}">Eliminar reservación definitivamente</button></div>`:''}
- ${['rejected','expired'].includes(status) && String(r.notes||'').trim().toUpperCase().startsWith('PRUEBA DEL SISTEMA')?`<div class="actions"><button class="danger small" data-action="delete-test" data-id="${id}">Eliminar prueba permanentemente</button></div>`:''}</article>`;
+ return `<article class="entry reservation-item">
+   <div class="reservation-head">
+     <div class="reservation-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18"/></svg></div>
+     <div class="reservation-title"><span class="reservation-date">${esc(r.date)}</span><strong>${esc(r.event_type||'Actividad')}</strong></div>
+     <span class="tag ${status}">${statusNames[status]||esc(status)}</span>
+   </div>
+   <div class="reservation-details">
+     <div class="reservation-detail"><span>Responsable</span><strong>${esc(r.customer_name||'No indicado')}</strong></div>
+     <div class="reservation-detail"><span>Teléfono</span><strong>${esc(r.customer_phone||'No indicado')}</strong></div>
+     <div class="reservation-detail"><span>Correo</span><strong>${esc(r.customer_email||'No indicado')}</strong></div>
+     <div class="reservation-detail"><span>Invitados · Paquete</span><strong>${names.length} · ${esc(data.packages.find(p=>p.id===r.package_id)?.title||'Sin especificar')}</strong></div>
+   </div>
+   ${r.notes?`<p class="reservation-notes">${esc(r.notes)}</p>`:''}
+   ${status==='pending'?`<p class="reservation-expiration">Vence: ${esc(new Date(r.expires_at).toLocaleString('es-PR'))}</p><div class="reservation-actions"><button class="primary small" data-action="approve" data-id="${id}">✓ Aprobar</button><button class="danger" data-action="reject" data-id="${id}">Rechazar</button></div>`:''}
+   ${['pending','approved'].includes(status)?`<div class="reservation-actions"><button class="ghost small" data-action="cancel" data-id="${id}">Cancelar reservación</button></div>`:''}
+   ${status==='cancelled'?`<div class="reservation-actions"><button class="danger small" data-action="delete-cancelled" data-id="${id}">Eliminar reservación definitivamente</button></div>`:''}
+   ${['rejected','expired'].includes(status) && String(r.notes||'').trim().toUpperCase().startsWith('PRUEBA DEL SISTEMA')?`<div class="reservation-actions"><button class="danger small" data-action="delete-test" data-id="${id}">Eliminar prueba permanentemente</button></div>`:''}
+ </article>`;
  }).join(''):'<p class="muted">No hay reservaciones en esta categoría.</p>';
 }
 $('reservationList').addEventListener('click',async e=>{
@@ -711,7 +793,7 @@ $('realPromoForm').onsubmit=async e=>{
  if(!file){$('promoStatus').textContent='Selecciona una foto o video';notify('Selecciona una foto o video');return}
  if(file.size>6*1024*1024){$('promoStatus').textContent='El archivo pesa '+(file.size/1048576).toFixed(1)+' MB. El límite actual es 6 MB. Comprímelo antes de publicarlo.';notify('El archivo supera 6 MB. Comprímelo primero.');return}
  const form=new FormData();form.set('accion','subir');form.set('titulo',$('promoTitulo').value.trim());form.set('descripcion',$('promoDescripcion').value.trim());form.set('archivo',file);
- $('promoStatus').textContent='Subiendo '+file.name+'... No cierres esta página.';button.disabled=true;button.textContent='Subiendo...';
+ $('promoStatus').textContent='Subiendo '+file.name+'… No cierres esta página.';button.disabled=true;button.textContent='Subiendo…';
  try{await invokePromo(form);e.target.reset();await refreshPromos();$('promoStatus').textContent='Promoción publicada correctamente.';notify('Promoción publicada correctamente')}
  catch(err){$('promoStatus').textContent='No se pudo publicar: '+err.message;notify('No se pudo publicar: '+err.message)}finally{button.disabled=false;button.textContent='Publicar en la web'}
 };
@@ -725,4 +807,3 @@ $('realPromoList').onclick=async e=>{
 };
 </script>
 </body></html>
-				
