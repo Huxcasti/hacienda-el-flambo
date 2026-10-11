@@ -153,10 +153,6 @@ body:has(#app.hidden) #loginCard {
 .login-brand-caption{font-size:10px;letter-spacing:.25em;color:#e3d5b1}
 #loginCard h2{font-family:system-ui,-apple-system,Arial,sans-serif;font-size:19px;color:#fff7df;font-weight:700;margin-bottom:10px}
 #loginCard #loginHint{margin:0 0 25px;color:#e1e5d9}
-#logout.logout-btn{margin-left:auto;white-space:nowrap;background:linear-gradient(135deg,#f4dc9d,#c99a48);color:#173523;border:1px solid #c99a48;box-shadow:0 4px 12px #15352318;font-weight:800}
-#logout.logout-btn:hover{filter:brightness(1.06)}
-#logout.logout-btn:focus-visible{outline:3px solid #c99a48;outline-offset:3px}
-@media(max-width:700px){#app>.bar{align-items:flex-start}#app>.bar .tabs{order:2}#logout.logout-btn{order:1;margin-left:auto}}
 
 
 /* Login Hacienda El Flambo: reproducción del diseño de referencia */
@@ -252,15 +248,6 @@ body:not(:has(#app.hidden)) > main { width:100%;max-width:none;padding:0; }
 .admin-header-logo-frame { width:100%;max-width:360px;display:flex;align-items:center;justify-content:center;padding:0;margin:0 auto; }
 .admin-header-logo { width:min(100%,285px);height:auto;max-height:126px;object-fit:contain;display:block;filter:drop-shadow(0 6px 15px rgba(0,0,0,.48)); }
 .admin-topbar p {max-width:470px;font-size:13px;line-height:1.6;color:#fff7e9;margin:0;text-shadow:0 2px 8px rgba(0,0,0,.62);}
-.admin-topbar #logout.logout-btn {
-  order:initial;margin:5px auto 0;padding:10px 19px;display:inline-flex;align-items:center;justify-content:center;
-  background:rgba(15,31,22,.50);border:1px solid rgba(244,215,157,.68);
-  border-radius:100px;color:#fff4db;font-size:12px;font-weight:800;
-  box-shadow:0 6px 17px rgba(0,0,0,.17);transition:background .18s,transform .18s;white-space:nowrap;
-  backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);
-}
-.admin-topbar #logout.logout-btn:hover { background:rgba(21,45,30,.72);transform:translateY(-1px); }
-.admin-topbar #logout.logout-btn:focus-visible { outline:3px solid #edcd8e;outline-offset:3px; }
 
 /* Área de contenido */
 .admin-content {width:100%;max-width:1350px;margin:0 auto;padding:30px clamp(19px,3vw,42px) 80px;}
@@ -376,7 +363,6 @@ body:not(:has(#app.hidden)) > main { width:100%;max-width:none;padding:0; }
   .admin-header-logo-frame {max-width:230px;}
   .admin-header-logo {max-width:210px;max-height:95px;}
   .admin-topbar p {font-size:12px;line-height:1.5;max-width:340px;}
-  .admin-topbar #logout.logout-btn {width:auto;max-width:none;margin-top:6px;min-height:35px;padding:8px 18px;font-size:12px;}
   .admin-mobile-menu {display:block;padding:13px 12px 14px;background:#fff;border-bottom:1px solid #e8ede5;}
   .admin-mobile-label {font-size:10px;letter-spacing:.14em;font-weight:850;color:#998454;text-align:center;margin-bottom:10px;}
   .admin-mobile-menu .tabs {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;width:100%;}
@@ -425,7 +411,38 @@ body:not(:has(#app.hidden)) > main { width:100%;max-width:none;padding:0; }
   .reservation-head .tag {margin-left:auto;}
 }
 @media (prefers-reduced-motion:reduce) {
-  .admin-sidebar .tab,.admin-topbar #logout.logout-btn {transition:none;}
+  .admin-sidebar .tab,.logout-btn {transition:none;}
+}
+
+
+/* Cerrar sesión discreto: fuera del encabezado fotográfico */
+.sidebar-footer {display:flex;flex-direction:column;gap:16px;}
+.sidebar-footnote {color:#e0cd9f;font-size:12px;line-height:1.7;padding:0 5px;}
+.sidebar-footnote small {color:#9ab8a7;}
+.admin-sidebar .sidebar-logout {
+  width:100%;display:flex;align-items:center;justify-content:flex-start;gap:12px;
+  padding:13px 14px;margin:0;background:rgba(255,255,255,.055);
+  border:1px solid rgba(234,213,168,.25);border-radius:12px;
+  color:#eee4d3;font-size:13px;font-weight:750;box-shadow:none;
+  transition:background .2s,border-color .2s;
+}
+.admin-sidebar .sidebar-logout:hover {background:rgba(228,190,117,.16);border-color:rgba(234,213,168,.64);color:#fff;}
+.admin-sidebar .sidebar-logout svg {color:#dfbf83;flex-shrink:0;}
+.admin-mobile-toolbar {display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;}
+.admin-mobile-toolbar .admin-mobile-label {margin-bottom:0;text-align:left;padding-left:4px;}
+.admin-mobile-menu .mobile-logout {
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-height:37px;padding:8px 12px;margin:0;
+  font-size:12px;font-weight:750;line-height:1;
+  background:#fff;color:#365541;border:1px solid #d9e2d6;
+  border-radius:10px;box-shadow:0 2px 7px rgba(16,43,32,.035);
+  transition:background .2s,border-color .2s;
+}
+.admin-mobile-menu .mobile-logout:hover {background:#f0f5ed;border-color:#b6c8b7;}
+.logout-btn:focus-visible {outline:3px solid #d8b673;outline-offset:3px;}
+@media(max-width:760px){
+  .admin-topbar {padding-bottom:22px;}
+  .admin-mobile-menu {padding-top:12px;}
 }
 
 </style>
@@ -469,7 +486,13 @@ body:not(:has(#app.hidden)) > main { width:100%;max-width:none;padding:0; }
       <button type="button" class="tab" data-tab="fechas"><span aria-hidden="true">▤</span> Fechas</button>
       <button type="button" class="tab" data-tab="publicaciones"><span aria-hidden="true">✦</span> Publicaciones</button>
     </nav>
-    <div class="sidebar-footer">Hacienda El Flambo<br><small>Morovis, Puerto Rico</small></div>
+    <div class="sidebar-footer">
+      <button id="logout" class="ghost logout-btn sidebar-logout" type="button" aria-label="Cerrar sesión">
+        <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+        <span>Cerrar sesión</span>
+      </button>
+      <div class="sidebar-footnote">Hacienda El Flambo<br><small>Morovis, Puerto Rico</small></div>
+    </div>
   </aside>
   <div class="admin-workspace">
     <div class="admin-topbar">
@@ -478,9 +501,16 @@ body:not(:has(#app.hidden)) > main { width:100%;max-width:none;padding:0; }
         <div class="admin-header-logo-frame"><img class="admin-header-logo" src="logo_login_admin.JPG" alt="Hacienda El Flambo" decoding="async"></div>
         <p>Gestiona tus reservaciones, invitados y actividades desde un solo lugar.</p>
       </div>
-      <button id="logout" class="ghost logout-btn" type="button" aria-label="Cerrar sesión">↪ Cerrar sesión</button>
     </div>
-    <div class="admin-mobile-menu"><div class="admin-mobile-label">Navegación</div><nav class="tabs" aria-label="Secciones móviles">
+    <div class="admin-mobile-menu">
+      <div class="admin-mobile-toolbar">
+        <div class="admin-mobile-label">Navegación</div>
+        <button id="logoutMobile" class="ghost logout-btn mobile-logout" type="button" aria-label="Cerrar sesión">
+          <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+          <span>Salir</span>
+        </button>
+      </div>
+      <nav class="tabs" aria-label="Secciones móviles">
       <button type="button" class="tab active" data-tab="reservas">▦ Reservas</button>
       <button type="button" class="tab" data-tab="entrada">♧ Entrada</button>
       <button type="button" class="tab" data-tab="fechas">▤ Fechas</button>
@@ -630,7 +660,7 @@ $('loginForm').addEventListener('submit',async e=>{
  try{const {data,error}=await sb.auth.signInWithPassword({email:$('adminEmail').value.trim(),password:$('adminPassword').value});if(error)throw error;await showPanel(data.session);try{if($('rememberEmail').checked)localStorage.setItem(REMEMBER_EMAIL_KEY,$('adminEmail').value.trim());else localStorage.removeItem(REMEMBER_EMAIL_KEY)}catch{}$('adminPassword').value=''}
  catch(e){await sb.auth.signOut();notify(e.message)}finally{button.disabled=false}
 });
-$('logout').onclick=async()=>{await sb?.auth.signOut();$('app').classList.add('hidden');$('loginCard').classList.remove('hidden');$('adminPassword').value=''};
+document.querySelectorAll('.logout-btn').forEach(btn=>btn.addEventListener('click',async()=>{await sb?.auth.signOut();$('app').classList.add('hidden');$('loginCard').classList.remove('hidden');$('adminPassword').value=''}));
 if(sb)sb.auth.getSession().then(async ({data})=>{if(data.session)try{await showPanel(data.session)}catch{await sb.auth.signOut()}});
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{
  document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x.dataset.tab===b.dataset.tab));
