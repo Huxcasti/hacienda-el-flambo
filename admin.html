@@ -145,6 +145,8 @@ body:has(#app.hidden) #loginCard {
 
 
 /* Acabados del acceso premium y botón para cerrar sesión */
+#loginCard .login-logo{display:block;width:min(100%,310px);height:auto;max-height:235px;object-fit:contain;margin:0 auto;filter:drop-shadow(0 5px 14px rgba(0,0,0,.24))}
+@media(max-width:600px){#loginCard .login-logo{width:min(100%,270px);max-height:205px}}
 .login-brand{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:23px}
 .login-leaf{color:#e9c783;font-size:30px;line-height:1}
 .login-brand-name{font-family:Georgia,serif;font-size:clamp(24px,5vw,32px);font-weight:bold;letter-spacing:.025em;color:#f2d89a;text-shadow:0 2px 12px #0008}
@@ -163,7 +165,7 @@ body:has(#app.hidden) #loginCard {
 <main>
 <div class="notice" id="demoNotice"><strong>Estado:</strong> Promociones, solicitudes, fechas bloqueadas y registro de entrada: conexión real con Supabase. Los paquetes siguen en demostración. No confirmes eventos reales hasta completar las pruebas del sistema.</div>
 <section class="card login" id="loginCard">
-<div class="login-brand"><span class="login-leaf" aria-hidden="true">✦</span><span class="login-brand-name">Hacienda El Flambo</span><span class="login-brand-caption">MOROVIS · PUERTO RICO</span></div><h2>Acceso administrativo</h2>
+<div class="login-brand"><img class="login-logo" src="logo_login_admin.PNG" alt="Hacienda El Flambo" decoding="async"></div><h2>Acceso administrativo</h2>
 <p class="muted" id="loginHint">Bienvenida al área privada. Ingresa tus credenciales para administrar la hacienda.</p>
 <form id="loginForm"><div><label for="adminEmail">Correo electrónico</label><input id="adminEmail" type="email" autocomplete="username" required></div><div style="height:12px"></div><div><label for="adminPassword">Contraseña</label><input id="adminPassword" type="password" autocomplete="current-password" required></div><div class="actions"><button class="primary" type="submit">Entrar al panel</button></div></form>
 </section>
