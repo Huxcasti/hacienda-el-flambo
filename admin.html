@@ -158,6 +158,31 @@ body:has(#app.hidden) #loginCard {
 #logout.logout-btn:focus-visible{outline:3px solid #c99a48;outline-offset:3px}
 @media(max-width:700px){#app>.bar{align-items:flex-start}#app>.bar .tabs{order:2}#logout.logout-btn{order:1;margin-left:auto}}
 
+
+/* Login Hacienda El Flambo: reproducción del diseño de referencia */
+#loginCard{max-width:620px!important;padding:35px clamp(22px,5vw,52px) 42px!important;border:1px solid #b89058!important;background:rgba(35,24,15,.90)!important;box-shadow:0 24px 75px #0009!important;border-radius:25px!important}
+#loginCard .login-brand{margin:0 auto 8px}
+#loginCard .login-logo{display:block;max-width:min(100%,315px);max-height:190px;object-fit:contain;margin:0 auto}
+#loginCard h2{color:#edc184!important;font-family:system-ui,-apple-system,sans-serif!important;font-weight:500!important;letter-spacing:.13em;font-size:clamp(15px,3vw,22px)!important;text-align:center;margin:0 0 30px!important}
+#loginCard form{display:flex;flex-direction:column;gap:16px}
+#loginCard .login-field{position:relative;display:flex;align-items:center}
+#loginCard .login-field>svg{position:absolute;left:18px;width:24px;height:24px;fill:none;stroke:#f5f0e9;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;z-index:1}
+#loginCard .login-field input{width:100%;height:64px;min-height:64px;padding:14px 55px 14px 58px!important;border:1px solid #6e6051!important;border-radius:13px!important;background:rgba(255,255,255,.09)!important;color:#fff!important;font-size:18px;box-shadow:inset 0 1px 5px #0003}
+#loginCard .login-field input::placeholder{color:#c7c0b9;opacity:1}
+#loginCard .login-field input:focus{outline:2px solid #e4b56f!important;outline-offset:1px}
+#loginCard .password-toggle{position:absolute;right:12px;width:42px;height:42px;padding:9px;border:0;background:transparent;color:#e7e1d9;display:grid;place-items:center}
+#loginCard .password-toggle svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+#loginCard .password-toggle[aria-pressed=true] .eye-slash{display:none}
+#loginCard .login-submit{height:65px;min-height:65px;margin-top:7px!important;border-radius:12px!important;background:linear-gradient(100deg,#d5a15d,#f4c985 48%,#d4a15d)!important;color:#23180f!important;font-size:21px!important;font-weight:750!important;box-shadow:0 5px 18px #0005!important}
+#loginCard .login-submit span{font-size:29px;vertical-align:-1px;margin-left:7px}
+#loginCard .login-bottom{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:8px}
+#loginCard .remember-label{display:flex;align-items:center;gap:9px;margin:0;color:#fff!important;font-size:15px;font-weight:650;cursor:pointer;white-space:nowrap}
+#loginCard .remember-label input{width:20px;height:20px;accent-color:#e7b66e;cursor:pointer}
+#loginCard .forgot-link{padding:6px 0;background:transparent;border:0;color:#e8b779;text-decoration:underline;text-underline-offset:3px;font-size:14px;text-align:right}
+#loginCard .forgot-link:hover{color:#ffe2b1}
+#loginCard .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:480px){#loginCard{padding:27px 19px 31px!important}#loginCard .login-logo{max-height:155px}#loginCard .login-field input{height:57px;min-height:57px;font-size:16px}#loginCard .login-submit{height:60px;min-height:60px;font-size:18px!important}#loginCard .login-bottom{align-items:flex-start}#loginCard .forgot-link{font-size:12px}#loginCard .remember-label{font-size:13px}}
+
 </style>
 </head>
 <body>
@@ -165,9 +190,28 @@ body:has(#app.hidden) #loginCard {
 <main>
 <div class="notice" id="demoNotice"><strong>Estado:</strong> Promociones, solicitudes, fechas bloqueadas y registro de entrada: conexión real con Supabase. Los paquetes siguen en demostración. No confirmes eventos reales hasta completar las pruebas del sistema.</div>
 <section class="card login" id="loginCard">
-<div class="login-brand"><img class="login-logo" src="logo_login_admin.PNG" alt="Hacienda El Flambo" decoding="async"></div><h2>Acceso administrativo</h2>
-<p class="muted" id="loginHint">Bienvenida al área privada. Ingresa tus credenciales para administrar la hacienda.</p>
-<form id="loginForm"><div><label for="adminEmail">Correo electrónico</label><input id="adminEmail" type="email" autocomplete="username" required></div><div style="height:12px"></div><div><label for="adminPassword">Contraseña</label><input id="adminPassword" type="password" autocomplete="current-password" required></div><div class="actions"><button class="primary" type="submit">Entrar al panel</button></div></form>
+<div class="login-brand"><img class="login-logo" src="logo_login_admin.PNG" alt="Hacienda El Flambo" decoding="async"></div>
+<h2>PANEL ADMINISTRATIVO</h2>
+<form id="loginForm">
+  <div class="login-field">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 7 9-7"/></svg>
+    <label class="sr-only" for="adminEmail">Correo electrónico</label>
+    <input id="adminEmail" type="email" autocomplete="username" placeholder="Correo electrónico" required>
+  </div>
+  <div class="login-field password-field">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+    <label class="sr-only" for="adminPassword">Contraseña</label>
+    <input id="adminPassword" type="password" autocomplete="current-password" placeholder="Contraseña" required>
+    <button type="button" class="password-toggle" id="togglePassword" aria-label="Mostrar contraseña" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6Z"/><circle cx="12" cy="12" r="3"/><path class="eye-slash" d="M3 3 21 21"/></svg>
+    </button>
+  </div>
+  <button class="primary login-submit" type="submit">Iniciar Sesión <span aria-hidden="true">→</span></button>
+  <div class="login-bottom">
+    <label class="remember-label" for="rememberEmail"><input type="checkbox" id="rememberEmail" checked> <span>Recordarme</span></label>
+    <button type="button" class="forgot-link" id="forgotPassword">¿Olvidaste tu contraseña?</button>
+  </div>
+</form>
 </section>
 <div id="app" class="hidden">
 <div class="bar"><nav class="tabs" aria-label="Secciones"><button type="button" class="tab active" data-tab="reservas">Reservaciones</button><button type="button" class="tab" data-tab="entrada">Entrada</button><button type="button" class="tab" data-tab="fechas">Fechas</button><button type="button" class="tab" data-tab="publicaciones">Anuncios y paquetes</button></nav><button id="logout" class="ghost logout-btn" type="button" aria-label="Cerrar sesión">🚪 Cerrar sesión</button></div>
@@ -277,10 +321,23 @@ async function authorize(session){
  if(error||!data)throw Error('La cuenta no está autorizada como administradora');
 }
 async function showPanel(session){await authorize(session);$('loginCard').classList.add('hidden');$('app').classList.remove('hidden');await refresh();try{await refreshPromos()}catch(e){console.error('No se pudieron cargar promociones',e);$('realPromoList').textContent='No se pudieron cargar promociones. Usa Actualizar para reintentar.'}}
+
+// Controles visuales del login: ver contraseña, recordar correo y recuperación.
+const REMEMBER_EMAIL_KEY='flambo_admin_remember_email';
+try{const saved=localStorage.getItem(REMEMBER_EMAIL_KEY);if(saved){$('adminEmail').value=saved;$('rememberEmail').checked=true}else{$('rememberEmail').checked=false}}catch{}
+$('togglePassword').addEventListener('click',()=>{const input=$('adminPassword');const visible=input.type==='password';input.type=visible?'text':'password';$('togglePassword').setAttribute('aria-pressed',String(visible));$('togglePassword').setAttribute('aria-label',visible?'Ocultar contraseña':'Mostrar contraseña')});
+$('forgotPassword').addEventListener('click',async()=>{
+ if(!sb){notify('No se pudo conectar a Supabase.');return}
+ const email=$('adminEmail').value.trim();if(!email){notify('Escribe tu correo electrónico primero.');$('adminEmail').focus();return}
+ const button=$('forgotPassword');button.disabled=true;
+ try{const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});if(error)throw error;notify('Si la cuenta existe, recibirás instrucciones para restablecer la contraseña.');}
+ catch(err){notify('No se pudo solicitar la recuperación: '+err.message)}finally{button.disabled=false}
+});
+
 $('loginForm').addEventListener('submit',async e=>{
  e.preventDefault();if(!sb){notify('No cargó Supabase. Revisa la conexión.');return}
  const button=e.target.querySelector('button');button.disabled=true;
- try{const {data,error}=await sb.auth.signInWithPassword({email:$('adminEmail').value.trim(),password:$('adminPassword').value});if(error)throw error;await showPanel(data.session);$('adminPassword').value=''}
+ try{const {data,error}=await sb.auth.signInWithPassword({email:$('adminEmail').value.trim(),password:$('adminPassword').value});if(error)throw error;await showPanel(data.session);try{if($('rememberEmail').checked)localStorage.setItem(REMEMBER_EMAIL_KEY,$('adminEmail').value.trim());else localStorage.removeItem(REMEMBER_EMAIL_KEY)}catch{}$('adminPassword').value=''}
  catch(e){await sb.auth.signOut();notify(e.message)}finally{button.disabled=false}
 });
 $('logout').onclick=async()=>{await sb?.auth.signOut();$('app').classList.add('hidden');$('loginCard').classList.remove('hidden');$('adminPassword').value=''};
