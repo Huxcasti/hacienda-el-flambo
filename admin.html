@@ -445,6 +445,55 @@ body:not(:has(#app.hidden)) > main { width:100%;max-width:none;padding:0; }
   .admin-mobile-menu {padding-top:12px;}
 }
 
+
+/* Paquetes: precio numérico y selección real de archivos desde el dispositivo. */
+.package-card .formgrid {gap:17px;}
+.package-price-field {position:relative;}
+.package-price-field .package-currency {
+ position:absolute;left:15px;top:50%;transform:translateY(-50%);
+ color:#255c3c;font-size:18px;font-weight:850;pointer-events:none;
+}
+.admin-content .package-price-field input {
+ padding-left:37px;font-size:17px;font-weight:750;min-height:52px;
+ font-variant-numeric:tabular-nums;
+}
+.package-field-hint {display:block;margin-top:7px;font-size:11px;color:#7b887c;line-height:1.5;}
+.package-upload-area {
+ padding:18px;border:1.5px dashed #b9cdb8;border-radius:15px;
+ background:linear-gradient(150deg,#fafdf9,#f5f8f3);
+ display:flex;flex-direction:column;align-items:center;gap:9px;text-align:center;
+}
+.package-file-input {
+ position:absolute!important;width:1px!important;height:1px!important;
+ padding:0!important;margin:-1px!important;overflow:hidden!important;
+ clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;
+}
+.package-upload-button {
+ display:inline-flex!important;align-items:center;justify-content:center;gap:9px;
+ margin:0!important;padding:12px 20px;border-radius:11px;
+ background:#285b40;color:white!important;font-size:14px!important;font-weight:800;
+ cursor:pointer;min-height:47px;box-shadow:0 5px 15px #24472b19;
+}
+.package-upload-button:hover {background:#1c4931;}
+.package-file-input:focus-visible + .package-upload-button {outline:3px solid #d9b46b;outline-offset:3px;}
+.package-upload-note {max-width:410px;color:#758575;font-size:12px;line-height:1.55;}
+.package-upload-status {color:#3b634c;font-size:12px;font-weight:700;overflow-wrap:anywhere;}
+.package-photo-preview {display:flex;flex-direction:column;align-items:center;gap:11px;width:100%;padding-top:7px;}
+.package-photo-preview img {display:block;max-width:min(100%,300px);max-height:210px;object-fit:contain;border-radius:13px;border:1px solid #dce8d9;box-shadow:0 6px 18px #17462718;}
+.package-save {width:100%;min-height:47px;}
+.package-list {margin-top:20px;}
+.package-list-entry {display:flex;gap:17px;align-items:flex-start;}
+.package-list-photo {width:104px;height:104px;flex-shrink:0;object-fit:cover;border:1px solid #e0e9dc;border-radius:11px;}
+.package-list-details {min-width:0;flex:1;}
+.package-list-details strong {display:block;color:#244833;font-size:15px;}
+.package-list-details p {margin:7px 0 11px;}
+.package-list-price {display:block;font-size:20px;color:#25623f;font-weight:850;margin-bottom:10px;}
+@media(max-width:760px){
+ .package-card .formgrid {grid-template-columns:1fr;}
+ .package-upload-area {padding:17px 12px;}
+ .package-list-entry {flex-direction:column;}
+ .package-list-photo {width:100%;height:175px;object-fit:cover;}
+}
 </style>
 </head>
 <body>
@@ -546,7 +595,30 @@ body:not(:has(#app.hidden)) > main { width:100%;max-width:none;padding:0; }
 <div class="card"><h2>🎬 Publicar fotografía o video</h2><p class="muted">Esta sección SÍ funciona con Supabase. Máximo 6 MB por archivo (JPG, PNG, WebP, MP4, WebM). Para videos mayores necesitaremos carga resumible.</p>
 <form id="realPromoForm" class="formgrid" method="post"><div class="full"><label for="promoTitulo">Título de promoción</label><input id="promoTitulo" maxlength="120" required></div><div class="full"><label for="promoDescripcion">Descripción</label><textarea id="promoDescripcion" maxlength="1200"></textarea></div><div class="full"><label for="promoArchivo">Imagen o video</label><input id="promoArchivo" type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm" required></div><div class="full"><button type="submit" class="primary" id="promoSubmit">Publicar en la web</button></div><p id="promoStatus" class="muted full" role="status" aria-live="polite"></p></form></div>
 <div class="card"><div class="bar"><h2>Promociones publicadas</h2><button type="button" class="ghost small" id="promoReload">Actualizar</button></div><div id="realPromoList"><p class="muted">Cargando…</p></div></div>
-<div class="card"><h2>Paquetes</h2><p class="muted">Los paquetes siguen en modo demostración. No se sincronizan entre dispositivos.</p><form id="packageForm" class="formgrid"><div class="full"><label>Nombre del paquete</label><input name="title" maxlength="100" required></div><div class="full"><label>Descripción</label><textarea name="description" maxlength="1000"></textarea></div><div><label>Precio o texto opcional</label><input name="price_label" maxlength="80"></div><div><label>URL de fotografía (https://)</label><input name="image_url" type="url"></div><div class="full"><button class="primary">Guardar paquete de prueba</button></div></form><div id="packageList"></div></div>
+<div class="card package-card">
+  <h2>🎁 Paquetes</h2>
+  <p class="muted">Los paquetes siguen en modo demostración y se guardan solo en este navegador. Todavía no se sincronizan con Supabase ni con otros dispositivos.</p>
+  <form id="packageForm" class="formgrid">
+    <div class="full"><label for="packageTitle">Nombre del paquete</label><input id="packageTitle" name="title" maxlength="100" placeholder="Ej. Cumpleaños en la hacienda" required></div>
+    <div class="full"><label for="packageDescription">Descripción</label><textarea id="packageDescription" name="description" maxlength="1000" placeholder="¿Qué incluye este paquete?"></textarea></div>
+    <div class="full"><label for="packagePrice">Precio (opcional)</label>
+      <div class="package-price-field"><span class="package-currency" aria-hidden="true">$</span><input id="packagePrice" name="price_label" type="text" inputmode="decimal" enterkeyhint="done" autocomplete="off" maxlength="12" placeholder="0.00" aria-describedby="packagePriceHint"></div>
+      <small class="package-field-hint" id="packagePriceHint">Al tocar este campo en el iPhone aparece el teclado numérico. Usa punto o coma para los centavos.</small>
+    </div>
+    <div class="full package-photo-field">
+      <label for="packagePhotoFile">Fotografía del paquete</label>
+      <div class="package-upload-area">
+        <input id="packagePhotoFile" type="file" accept="image/*,.heic,.heif" class="package-file-input" aria-describedby="packagePhotoHint packagePhotoStatus">
+        <label for="packagePhotoFile" class="package-upload-button"><span aria-hidden="true">📁</span> Agregar archivo</label>
+        <span class="package-upload-note" id="packagePhotoHint">Selecciona una foto de tu iPhone o computadora. Se optimiza para guardarla en este navegador.</span>
+        <span id="packagePhotoStatus" class="package-upload-status" role="status" aria-live="polite">Ninguna fotografía seleccionada.</span>
+        <div id="packagePhotoPreview" class="package-photo-preview hidden"><img id="packagePhotoPreviewImage" alt="Vista previa de la fotografía del paquete"><button id="packageRemovePhoto" class="ghost small" type="button">Quitar fotografía</button></div>
+      </div>
+    </div>
+    <div class="full"><button class="primary package-save" id="packageSaveButton" type="submit">Guardar paquete de prueba</button></div>
+  </form>
+  <div id="packageList" class="package-list"></div>
+</div>
 </section>
     </div>
   </div>
@@ -785,19 +857,113 @@ $('blockedList').onclick=async e=>{
  try{await adminRpc('admin_desbloquear_fecha',{p_fecha:date});await refresh();notify('Fecha desbloqueada en Supabase.')}
  catch(err){notify('Error al desbloquear: '+err.message);b.disabled=false}
 };
-function validateUrl(str){if(!str)return '';const u=new URL(str);if(u.protocol!=='https:')throw Error('Usa una URL de imagen https://');return u.href}
-for(const [formid,type] of [['packageForm','packages']]){
- $(formid).onsubmit=async e=>{
-  e.preventDefault();const payload=Object.fromEntries(new FormData(e.target));payload.title=String(payload.title||'').trim();payload.description=String(payload.description||'').trim();
-  if(!payload.title)return;try{payload.image_url=validateUrl(payload.image_url);payload.active=true;
-   if(DEMO){const v=read();v[type].unshift({id:uid(),...payload});write(v)}
-   else await request('/api/admin/catalog/'+type,{method:'POST',body:JSON.stringify(payload)});
-   e.target.reset();await refresh();notify('Publicación guardada.');
-  }catch(err){notify(err.message)}
- };
+// Paquetes en demostración: fotografías comprimidas en el almacenamiento local del navegador.
+// Para compartir paquetes entre dispositivos hará falta un backend de paquetes en Supabase.
+const packagePhotoInput=$('packagePhotoFile');
+const packagePhotoStatus=$('packagePhotoStatus');
+let packagePreviewObjectUrl=null;
+function clearPackagePhotoPreview(){
+ if(packagePreviewObjectUrl){URL.revokeObjectURL(packagePreviewObjectUrl);packagePreviewObjectUrl=null}
+ packagePhotoInput.value='';
+ $('packagePhotoPreviewImage').removeAttribute('src');
+ $('packagePhotoPreview').classList.add('hidden');
+ packagePhotoStatus.textContent='Ninguna fotografía seleccionada.';
 }
+$('packageRemovePhoto').onclick=clearPackagePhotoPreview;
+packagePhotoInput.addEventListener('change',()=>{
+ const file=packagePhotoInput.files?.[0];
+ if(packagePreviewObjectUrl){URL.revokeObjectURL(packagePreviewObjectUrl);packagePreviewObjectUrl=null}
+ if(!file){clearPackagePhotoPreview();return}
+ if(!(file.type.startsWith('image/')||/\.(jpe?g|png|webp|heic|heif)$/i.test(file.name))){
+  clearPackagePhotoPreview();notify('Selecciona una fotografía válida.');return;
+ }
+ if(file.size>12*1024*1024){clearPackagePhotoPreview();notify('La fotografía supera 12 MB. Selecciona una más pequeña.');return}
+ packagePreviewObjectUrl=URL.createObjectURL(file);
+ $('packagePhotoPreviewImage').src=packagePreviewObjectUrl;
+ $('packagePhotoPreview').classList.remove('hidden');
+ packagePhotoStatus.textContent='Seleccionada: '+file.name;
+});
+function compressPackageImage(file){
+ return new Promise((resolve,reject)=>{
+  const reader=new Image();
+  const objectUrl=URL.createObjectURL(file);
+  reader.onload=()=>{
+   URL.revokeObjectURL(objectUrl);
+   try{
+    let scale=Math.min(1,900/Math.max(reader.naturalWidth,reader.naturalHeight));
+    let result='';
+    for(let attempt=0;attempt<5;attempt++){
+     const canvas=document.createElement('canvas');
+     canvas.width=Math.max(1,Math.round(reader.naturalWidth*scale));
+     canvas.height=Math.max(1,Math.round(reader.naturalHeight*scale));
+     const context=canvas.getContext('2d');
+     if(!context)throw Error('No se pudo procesar la fotografía en este navegador.');
+     context.fillStyle='#ffffff';context.fillRect(0,0,canvas.width,canvas.height);
+     context.drawImage(reader,0,0,canvas.width,canvas.height);
+     result=canvas.toDataURL('image/jpeg',Math.max(.58,.79-attempt*.045));
+     if(result.length<=450000)break;
+     scale*=.79;
+    }
+    if(!result.startsWith('data:image/jpeg;base64,')||result.length>600000)
+      throw Error('La fotografía es demasiado grande para guardar localmente. Intenta otra.');
+    resolve(result);
+   }catch(e){reject(e)}
+  };
+  reader.onerror=()=>{URL.revokeObjectURL(objectUrl);reject(Error('No se pudo abrir esta imagen. Prueba con una foto JPG o PNG.'))};
+  reader.src=objectUrl;
+ });
+}
+function packagePriceLabel(raw){
+ const text=String(raw||'').trim();
+ if(!text)return '';
+ const number=Number(text.replace(',','.'));
+ if(!Number.isFinite(number)||number<0||number>999999.99||!/^\d+(?:[.,]\d{1,2})?$/.test(text))
+   throw Error('Escribe un precio válido en números (ejemplo: 250 o 250.50).');
+ return number.toFixed(2);
+}
+function packagePhotoUrl(a){
+ // Datos locales convertidos a JPEG o fotos https anteriores, nunca scripts.
+ if(typeof a.image_data_url==='string'&&/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(a.image_data_url))return a.image_data_url;
+ if(typeof a.image_url==='string')try{const u=new URL(a.image_url);if(u.protocol==='https:')return u.href}catch{}
+ return '';
+}
+$('packageForm').onsubmit=async e=>{
+ e.preventDefault();
+ const formEl=e.currentTarget;
+ const button=$('packageSaveButton');
+ const payload=Object.fromEntries(new FormData(formEl));
+ payload.title=String(payload.title||'').trim();
+ payload.description=String(payload.description||'').trim();
+ if(!payload.title){notify('Escribe el nombre del paquete.');return}
+ button.disabled=true;button.textContent='Guardando…';
+ try{
+  payload.price_label=packagePriceLabel(payload.price_label);
+  payload.active=true;
+  const file=packagePhotoInput.files?.[0];
+  if(file)payload.image_data_url=await compressPackageImage(file);
+  if(DEMO){
+   const v=read();v.packages.unshift({id:uid(),...payload});
+   try{write(v)}catch(err){throw Error('No hay suficiente espacio local para esta foto. Elige una imagen más pequeña o elimina paquetes de prueba antiguos.')}
+  }else await request('/api/admin/catalog/packages',{method:'POST',body:JSON.stringify(payload)});
+  formEl.reset();clearPackagePhotoPreview();
+  await refresh();notify('Paquete de prueba guardado en este dispositivo.');
+ }catch(err){notify('No se pudo guardar: '+err.message)}
+ finally{button.disabled=false;button.textContent='Guardar paquete de prueba'}
+};
 function renderCatalog(type){
- $(type==='announcements'?'realPromoList':'packageList').innerHTML=(data[type]||[]).length?data[type].map(a=>`<div class="entry"><strong>${esc(a.title)}</strong><p class="muted">${esc(a.description)}</p><span class="tag">${a.active!==false?'Visible':'Oculto'}</span><div class="actions"><button class="ghost small" data-type="${type}" data-id="${esc(a.id)}" data-op="toggle">${a.active!==false?'Ocultar':'Mostrar'}</button><button class="danger small" data-type="${type}" data-id="${esc(a.id)}" data-op="delete">Eliminar</button></div></div>`).join(''):'<p class="muted">No hay publicaciones todavía.</p>';
+ $(type==='announcements'?'realPromoList':'packageList').innerHTML=(data[type]||[]).length?data[type].map(a=>{
+  const photo=type==='packages'?packagePhotoUrl(a):'';
+  const photoMarkup=photo?`<img class="package-list-photo" src="${esc(photo)}" alt="Fotografía de ${esc(a.title)}" loading="lazy">`:'';
+  let price='';
+  if(type==='packages'&&a.price_label){
+   const original=String(a.price_label);
+   const numeric=Number(original.replace(',','.'));
+   price=Number.isFinite(numeric)&&/^\d+(?:[.,]\d{1,2})?$/.test(original)
+    ?`<span class="package-list-price">$${numeric.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`
+    :`<span class="package-list-price">${esc(original)}</span>`;
+  }
+  return `<div class="entry package-list-entry">${photoMarkup}<div class="package-list-details"><strong>${esc(a.title)}</strong><p class="muted">${esc(a.description)}</p>${price}<span class="tag">${a.active!==false?'Visible':'Oculto'}</span><div class="actions"><button class="ghost small" data-type="${type}" data-id="${esc(a.id)}" data-op="toggle">${a.active!==false?'Ocultar':'Mostrar'}</button><button class="danger small" data-type="${type}" data-id="${esc(a.id)}" data-op="delete">Eliminar</button></div></div></div>`;
+ }).join(''):'<p class="muted">No hay paquetes guardados todavía.</p>';
 }
 for(const id of ['packageList'])$(id).onclick=async e=>{
  const b=e.target.closest('[data-op]');if(!b)return;const {type,id:itemid,op}=b.dataset;
