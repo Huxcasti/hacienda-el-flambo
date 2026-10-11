@@ -14,6 +14,135 @@ main{padding:20px 16px 70px}.notice{background:#fff5d8;color:#765a1a;border:1px 
 .guestgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:15px}.guest{border:1px solid var(--line);border-radius:12px;padding:13px;text-align:left;background:#f7faf6;display:flex;justify-content:space-between;gap:10px}.guest.checked{background:#d8f4df;border-color:#78bf8b;color:#185c2b;font-weight:850}.guest:disabled{opacity:.65}.progress{height:10px;border-radius:20px;background:#e6eee7;overflow:hidden;margin:11px 0}.progress>div{height:100%;background:#398253}
 .hidden{display:none!important}#toast{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);background:#173d28;color:#fff;border-radius:12px;padding:13px 17px;box-shadow:0 8px 25px #0003;z-index:5;max-width:min(90vw,650px)}.login{max-width:490px;margin:35px auto}.right{margin-left:auto}.wraptext{overflow-wrap:anywhere}
 @media(max-width:700px){.grid,.formgrid,.metrics,.guestgrid{grid-template-columns:1fr}.metric{padding:13px}.card{padding:16px}header{padding:24px 16px}.tabs{width:100%}.tab{flex:1}}
+
+/* HACIENDA EL FLAMBO — LOGIN PREMIUM */
+
+body:has(#app.hidden) {
+  background:
+    linear-gradient(135deg, rgba(7, 24, 17, .55),
+                           rgba(7, 24, 17, .20)),
+    url("fondo_admin.png") center center / cover
+    no-repeat fixed;
+  min-height: 100vh;
+}
+
+/* Ocultar elementos del panel mientras se inicia sesión */
+body:has(#app.hidden) > header,
+body:has(#app.hidden) #demoNotice {
+  display: none !important;
+}
+
+/* Centrar el acceso en la pantalla */
+body:has(#app.hidden) main {
+  min-height: 100vh;
+  min-height: 100dvh;
+  max-width: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 35px 18px;
+}
+
+/* Tarjeta elegante */
+body:has(#app.hidden) #loginCard {
+  width: 100%;
+  max-width: 440px;
+  margin: 0;
+  padding: 42px 34px;
+  border-radius: 25px;
+  border: 1px solid rgba(235, 202, 129, .45);
+  background: rgba(12, 33, 25, .83);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 25px 80px rgba(0,0,0,.45);
+  color: #fff;
+  text-align: center;
+}
+
+/* Título dorado */
+#loginCard h2 {
+  font-family: Georgia, serif;
+  font-size: clamp(27px, 5vw, 35px);
+  line-height: 1.2;
+  color: #e9c783;
+  margin: 0 0 15px;
+  text-shadow: 0 2px 12px rgba(0,0,0,.3);
+}
+
+#loginCard #loginHint {
+  color: #e1e5d9;
+  font-size: 13px;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+/* Campos */
+#loginCard form {
+  text-align: left;
+}
+
+#loginCard label {
+  color: #f2e4c2;
+  font-size: 13px;
+  margin-bottom: 9px;
+}
+
+#loginCard input {
+  background: rgba(255,255,255,.94);
+  color: #193625;
+  border: 1px solid #d8c69a;
+  border-radius: 12px;
+  padding: 15px;
+  min-height: 52px;
+}
+
+#loginCard input:focus {
+  outline: none;
+  border-color: #e9c783;
+  box-shadow: 0 0 0 3px rgba(233,199,131,.25);
+}
+
+/* Botón dorado */
+#loginCard .actions {
+  margin-top: 25px;
+}
+
+#loginCard .primary {
+  width: 100%;
+  min-height: 53px;
+  background: linear-gradient(135deg, #f4dc9d, #c99a48);
+  color: #193322;
+  font-size: 15px;
+  font-weight: 900;
+  border-radius: 13px;
+  border: none;
+  box-shadow: 0 8px 22px rgba(0,0,0,.2);
+  transition: transform .2s, filter .2s;
+}
+
+#loginCard .primary:hover {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+}
+
+/* Ajustes iPhone */
+@media(max-width:600px) {
+  body:has(#app.hidden) {
+    background-attachment: scroll;
+  }
+
+  body:has(#app.hidden) #loginCard {
+    padding: 35px 23px;
+    border-radius: 22px;
+  }
+}
+
+@media(prefers-reduced-motion:reduce) {
+  #loginCard .primary {
+    transition: none;
+  }
+}
+
 </style>
 </head>
 <body>
