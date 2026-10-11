@@ -143,6 +143,19 @@ body:has(#app.hidden) #loginCard {
   }
 }
 
+
+/* Acabados del acceso premium y botón para cerrar sesión */
+.login-brand{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:23px}
+.login-leaf{color:#e9c783;font-size:30px;line-height:1}
+.login-brand-name{font-family:Georgia,serif;font-size:clamp(24px,5vw,32px);font-weight:bold;letter-spacing:.025em;color:#f2d89a;text-shadow:0 2px 12px #0008}
+.login-brand-caption{font-size:10px;letter-spacing:.25em;color:#e3d5b1}
+#loginCard h2{font-family:system-ui,-apple-system,Arial,sans-serif;font-size:19px;color:#fff7df;font-weight:700;margin-bottom:10px}
+#loginCard #loginHint{margin:0 0 25px;color:#e1e5d9}
+#logout.logout-btn{margin-left:auto;white-space:nowrap;background:linear-gradient(135deg,#f4dc9d,#c99a48);color:#173523;border:1px solid #c99a48;box-shadow:0 4px 12px #15352318;font-weight:800}
+#logout.logout-btn:hover{filter:brightness(1.06)}
+#logout.logout-btn:focus-visible{outline:3px solid #c99a48;outline-offset:3px}
+@media(max-width:700px){#app>.bar{align-items:flex-start}#app>.bar .tabs{order:2}#logout.logout-btn{order:1;margin-left:auto}}
+
 </style>
 </head>
 <body>
@@ -150,12 +163,12 @@ body:has(#app.hidden) #loginCard {
 <main>
 <div class="notice" id="demoNotice"><strong>Estado:</strong> Promociones, solicitudes, fechas bloqueadas y registro de entrada: conexión real con Supabase. Los paquetes siguen en demostración. No confirmes eventos reales hasta completar las pruebas del sistema.</div>
 <section class="card login" id="loginCard">
-<h2>🔐 Acceso administrativo</h2>
-<p class="muted" id="loginHint">Inicia sesión con la cuenta autorizada de la dueña. Promociones, reservaciones y control de entrada están conectados a Supabase. Los paquetes siguen en demostración.</p>
+<div class="login-brand"><span class="login-leaf" aria-hidden="true">✦</span><span class="login-brand-name">Hacienda El Flambo</span><span class="login-brand-caption">MOROVIS · PUERTO RICO</span></div><h2>Acceso administrativo</h2>
+<p class="muted" id="loginHint">Bienvenida al área privada. Ingresa tus credenciales para administrar la hacienda.</p>
 <form id="loginForm"><div><label for="adminEmail">Correo electrónico</label><input id="adminEmail" type="email" autocomplete="username" required></div><div style="height:12px"></div><div><label for="adminPassword">Contraseña</label><input id="adminPassword" type="password" autocomplete="current-password" required></div><div class="actions"><button class="primary" type="submit">Entrar al panel</button></div></form>
 </section>
 <div id="app" class="hidden">
-<div class="bar"><nav class="tabs" aria-label="Secciones"><button type="button" class="tab active" data-tab="reservas">Reservaciones</button><button type="button" class="tab" data-tab="entrada">Entrada</button><button type="button" class="tab" data-tab="fechas">Fechas</button><button type="button" class="tab" data-tab="publicaciones">Anuncios y paquetes</button></nav><button id="logout" class="ghost">Salir</button></div>
+<div class="bar"><nav class="tabs" aria-label="Secciones"><button type="button" class="tab active" data-tab="reservas">Reservaciones</button><button type="button" class="tab" data-tab="entrada">Entrada</button><button type="button" class="tab" data-tab="fechas">Fechas</button><button type="button" class="tab" data-tab="publicaciones">Anuncios y paquetes</button></nav><button id="logout" class="ghost logout-btn" type="button" aria-label="Cerrar sesión">🚪 Cerrar sesión</button></div>
 <section class="panel active" id="panel-reservas">
 <div class="metrics"><div class="metric"><strong id="numPending">0</strong><span>Pendientes</span></div><div class="metric"><strong id="numApproved">0</strong><span>Aprobadas</span></div><div class="metric"><strong id="numRejected">0</strong><span>Rechazadas</span></div><div class="metric"><strong id="numBlocked">0</strong><span>Fechas bloqueadas</span></div></div>
 <div class="card"><h2>Solicitudes de actividades</h2><p class="muted">Las solicitudes pendientes caducan a las 48 horas. Puedes aprobar, rechazar o cancelar reservaciones. Las cancelaciones liberan la fecha. Si ya no necesitas conservar una reservación cancelada, puedes eliminar definitivamente sus datos y su lista de invitados con una confirmación adicional. Las pruebas rechazadas o vencidas también se pueden eliminar cuando estén marcadas PRUEBA DEL SISTEMA. Se muestran las últimas 200 solicitudes.</p><div class="actions"><button id="refresh" class="ghost small">↻ Actualizar</button><select id="filterReservations" aria-label="Filtrar reservas" style="max-width:240px"><option value="all">Todas</option><option value="pending">Pendientes</option><option value="approved">Aprobadas</option><option value="rejected">Rechazadas</option><option value="expired">Vencidas</option><option value="cancelled">Canceladas</option></select></div><div id="reservationList"></div></div>
