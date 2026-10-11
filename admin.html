@@ -243,6 +243,96 @@ body:not(:has(#app.hidden)) #demoNotice{display:none}
 }
 @media(max-width:370px){.admin-topbar{flex-wrap:wrap}.admin-topbar #logout.logout-btn{margin-left:auto}}
 
+
+/* ===== Dashboard: encabezado elegante, centrado y responsive ===== */
+body:not(:has(#app.hidden)) .admin-topbar {
+  background: linear-gradient(180deg, #fffdf8 0%, #f7f3ea 100%);
+  border-bottom: 1px solid #ece5d6;
+  padding: 43px 22px 33px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 17px;
+  text-align: center;
+}
+body:not(:has(#app.hidden)) .admin-topbar > div {
+  width: 100%;
+  max-width: 760px;
+  margin-inline: auto;
+}
+body:not(:has(#app.hidden)) .admin-eyebrow {
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .17em;
+  color: #9b8353;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+body:not(:has(#app.hidden)) .admin-topbar h1 {
+  font-family: Georgia, 'Times New Roman', serif;
+  color: #1d4a35;
+  font-size: clamp(30px, 4.4vw, 47px);
+  line-height: 1.13;
+  margin: 0 0 13px;
+  text-wrap: balance;
+}
+body:not(:has(#app.hidden)) .admin-topbar p {
+  font-size: clamp(14px, 1.5vw, 17px);
+  color: #718176;
+  margin: 0 auto;
+  line-height: 1.5;
+  max-width: 600px;
+}
+body:not(:has(#app.hidden)) .admin-topbar #logout.logout-btn {
+  order: initial;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 7px auto 0;
+  flex-shrink: 0;
+  background: #fff;
+  color: #264a37;
+  border: 1px solid #d8dfd1;
+  border-radius: 13px;
+  padding: 12px 22px;
+  font-size: 15px;
+  font-weight: 800;
+  box-shadow: 0 8px 24px rgba(0,0,0,.06);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+body:not(:has(#app.hidden)) .admin-topbar #logout.logout-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(0,0,0,.08);
+}
+body:not(:has(#app.hidden)) .admin-content {
+  width: 100%;
+  max-width: 1250px;
+}
+@media (max-width:760px) {
+  body:not(:has(#app.hidden)) .admin-topbar {
+    padding: 30px 17px 25px;
+    gap: 13px;
+  }
+  body:not(:has(#app.hidden)) .admin-topbar h1 {font-size: clamp(29px, 8vw, 41px);}
+  body:not(:has(#app.hidden)) .admin-topbar p {font-size: 14px;}
+  body:not(:has(#app.hidden)) .admin-eyebrow {font-size: 10px;letter-spacing: .12em;}
+  body:not(:has(#app.hidden)) .admin-topbar #logout.logout-btn {
+    width: min(100%, 310px);
+    padding: 12px 18px;
+    font-size: 15px;
+    margin: 6px auto 0;
+  }
+  body:not(:has(#app.hidden)) .admin-mobile-menu {text-align: center;}
+  body:not(:has(#app.hidden)) .admin-mobile-label {margin-bottom: 11px;}
+}
+@media (max-width:370px) {
+  body:not(:has(#app.hidden)) .admin-topbar #logout.logout-btn {margin-inline:auto;}
+}
+@media (prefers-reduced-motion:reduce) {
+  body:not(:has(#app.hidden)) .admin-topbar #logout.logout-btn {transition:none;}
+}
+
 </style>
 </head>
 <body>
