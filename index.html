@@ -253,7 +253,7 @@ section{padding:76px 0}.heading{text-align:center;margin-bottom:33px}.heading h2
 <div id="modeNotice" class="notice booking-info hidden"></div><h3>📅 Verifica disponibilidad</h3><p class="note">Las fechas en amarillo tienen una solicitud pendiente, las rojas ya están reservadas o bloqueadas. Las solicitudes pendientes se mantienen hasta por 48 horas, salvo que la administración decida antes.</p>
 <div class="calendar"><div class="calhead"><button type="button" id="prevMonth" aria-label="Mes anterior">‹</button><strong id="calendarMonth">Calendario</strong><button type="button" id="nextMonth" aria-label="Mes siguiente">›</button></div><div class="days" id="calendarDays"></div><div class="legend"><span><i class="dot" style="background:#d9ecd9"></i>Disponible</span><span><i class="dot" style="background:#ffdf9c"></i>Pendiente</span><span><i class="dot" style="background:#eebaba"></i>Ocupada</span></div><div id="dateFeedback" role="status" aria-live="polite" class="status warn">Selecciona un día verde del calendario.</div></div>
 <form id="bookingForm" autocomplete="on"><div class="formgrid" style="margin-top:25px"><div class="field"><label for="eventDate">Fecha solicitada *</label><input id="eventDate" name="eventDate" type="date" required></div><div class="field"><label for="eventType">Tipo de actividad *</label><select id="eventType" required><option value="">Seleccionar actividad</option><option>Cumpleaños</option><option>Boda</option><option>Actividad familiar</option><option>Evento corporativo</option><option>Taller</option><option>Sesión fotográfica</option><option>Pasadía privado</option><option>Otro</option></select></div>
-<div class="field"><label for="customerName">Nombre de quien reserva *</label><input id="customerName" maxlength="120" required autocomplete="name" placeholder="Nombre completo"></div><div class="field"><label for="customerPhone">Teléfono / WhatsApp *</label><input id="customerPhone" type="tel" maxlength="25" required autocomplete="tel" placeholder="787-000-0000"></div><div class="field"><label for="customerEmail">Correo electrónico *</label><input id="customerEmail" type="email" maxlength="150" required autocomplete="email" placeholder="correo@ejemplo.com"></div><div class="field"><label for="eventPackage">Paquete de interés</label><select id="eventPackage"><option value="">Por decidir / personalizado</option></select></div><div class="field full"><label for="eventNotes">Detalles adicionales (opcional)</label><textarea id="eventNotes" maxlength="1500" placeholder="Cuéntanos qué te gustaría para tu actividad…"></textarea></div></div>
+<div class="field"><label for="customerName">Nombre de quien reserva *</label><input id="customerName" maxlength="120" required autocomplete="name" placeholder="Nombre completo"></div><div class="field"><label for="customerPhone">Teléfono / WhatsApp *</label><input id="customerPhone" type="tel" maxlength="25" required autocomplete="tel" placeholder="787-000-0000"></div><div class="field"><label for="customerEmail">Correo electrónico *</label><input id="customerEmail" type="email" maxlength="150" required autocomplete="email" placeholder="correo@ejemplo.com"></div><div class="field"><label for="eventPackage">Paquete de interés</label><select id="eventPackage"><option value="">Por decidir / personalizado</option></select><p id="selectedPackageNotice" class="status success hidden" role="status" aria-live="polite"></p></div><div class="field full"><label for="eventNotes">Detalles adicionales (opcional)</label><textarea id="eventNotes" maxlength="1500" placeholder="Cuéntanos qué te gustaría para tu actividad…"></textarea></div></div>
 <h3 class="subheading">👥 Lista de invitados</h3><p class="note">Escribe la cantidad total de personas que asistirán, incluyendo al organizador si asistirá. Se generará automáticamente un campo por cada persona. Máximo 100.</p><div class="field"><label for="guestCount">Cantidad total de personas *</label><input type="number" id="guestCount" min="1" max="100" step="1" placeholder="Ejemplo: 35" required></div><div id="guestRows" class="guestrows"></div><p class="note" id="guestCounter" aria-live="polite">0 nombres de 0 personas.</p>
 <div class="notice">Enviar la solicitud <strong>no confirma la reservación</strong>. La dueña de Hacienda El Flambo puede aprobarla o rechazarla. Cuando se apruebe, la fecha quedará reservada. No se solicita pago desde esta página.</div>
 <div class="field full" style="margin:18px 0 14px">
@@ -282,19 +282,13 @@ async function cargarPromocionesReales(){
 <script>
 const promoSupabase = window.supabase?.createClient("https://pptrhfrolcndblgrpnhe.supabase.co", "sb_publishable_V6HjIiUXMkCp1COM_aUXtA_bd4AsgEe");
 'use strict';
-/* CONFIGURACIÓN:
-  API_BASE = URL pública HTTPS del backend, sin barra final. Ej.: https://tu-api.onrender.com
-  Dejar vacío habilita SOLO modo demostración local: datos y reservas NO se comparten entre dispositivos.
-  API requerida:
-    GET  /api/public/catalog => {announcements:[{id,title,description,image_url,active}],packages:[{id,title,description,image_url,price_label,active}]}
-    GET  /api/public/calendar?month=YYYY-MM => {dates:{"YYYY-MM-DD":"pending"|"approved"|"blocked"}}
-    POST /api/public/reservations => {reservation_id,status:"pending",expires_at}
-  La API debe validar todo de nuevo, proteger datos personales y aplicar un bloqueo atómico por fecha.
-  Nunca incluyas claves de administración o SERVICE_ROLE_KEY en este archivo.
+/*
+  Hacienda El Flambo — catálogo real de paquetes.
+  Lectura pública limitada a paquetes activos mediante Supabase RLS.
+  Las reservaciones se envían por la Edge Function crear-reservacion;
+  el calendario se consulta mediante calendario_publico.
+  Nunca colocar una service_role key ni secretos en este HTML público.
 */
-const API_BASE = '';
-const DEMO = !API_BASE.trim();
-const DEMO_KEY = 'flambo_demo_v3';
 const $=id=>document.getElementById(id);
 const todayLocal=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 const pad=n=>String(n).padStart(2,'0');
@@ -302,18 +296,79 @@ const months=['enero','febrero','marzo','abril','mayo','junio','julio','agosto',
 let viewDate=new Date();viewDate.setDate(1);
 let calendarDates={};let catalog={announcements:[],packages:[]};let selectedDate='';let isLoading=false;
 let calendarReady=false, calendarRequestId=0, bookingBusy=false;
-const demoRead=()=>{try{return JSON.parse(localStorage.getItem(DEMO_KEY))||{reservations:[],announcements:[],packages:[],blocked:[]}}catch{return {reservations:[],announcements:[],packages:[],blocked:[]}}};
-const demoWrite=o=>localStorage.setItem(DEMO_KEY,JSON.stringify(o));
-function demoCalendar(month){const data=demoRead();const res={};const now=Date.now();for(const d of (data.blocked||[]))if(d.startsWith(month))res[d]='blocked';for(const r of (data.reservations||[])){if(!r.date.startsWith(month)||r.status==='rejected')continue;if(r.status==='pending'&&Date.parse(r.expires_at)<=now)continue;res[r.date]=r.status==='approved'?'approved':'pending'}return {dates:res}}
-async function api(path,options={}){const r=await fetch(`${API_BASE}${path}`,{...options,headers:{'Content-Type':'application/json',...(options.headers||{})}});let data={};try{data=await r.json()}catch{}if(!r.ok)throw Error(data.error||data.message||`Error ${r.status}`);return data}
 function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function imageSafe(u){if(!u)return '';try{const x=new URL(u,location.href);return ['https:','http:'].includes(x.protocol)?x.href:''}catch{return ''}}
 const services=[['🎂','Cumpleaños y bodas','Celebraciones inolvidables en un ambiente natural.'],['🐐','Animales de granja','Experiencias cercanas a la naturaleza.'],['🎪','Casa de brinco y carpas','Opciones recreativas para tu actividad.'],['🍽️','Catering y estaciones','Catering, coffee bar, açaí, charcutería y más.'],['🎶','Música y entretenimiento','Opciones de música y equipo para festejar.'],['📸','Fotografía y escenarios','Casita del árbol y rincones para fotos.'],['🍿','Dulces y bebidas','Popcorn, algodón, piraguas y piña colada.'],['🌳','Museo la Abuela','Descubre espacios llenos de encanto.']];
 $('serviceGrid').innerHTML=services.map(([em,t,d])=>`<div class="service"><span class="emoji">${em}</span><b>${t}</b><span>${d}</span></div>`).join('');
-function cardsRender(items,id,isPackage){const root=$(id);if(!items.length){root.innerHTML=`<div class="empty">${isPackage?'Pronto estarán disponibles nuestros paquetes. ¡Contáctanos para una cotización!':'La administración todavía no ha publicado anuncios.'}</div>`;return}root.innerHTML=items.filter(x=>x.active!==false).map(x=>{const u=imageSafe(x.image_url);const img=u?`<img src="${escapeHtml(u)}" alt="${escapeHtml(x.title)}" loading="lazy">`:'';return `<article class="tile">${img}<div class="tilebody">${x.price_label?`<span class="tag">${escapeHtml(x.price_label)}</span>`:''}<h3>${escapeHtml(x.title)}</h3><p>${escapeHtml(x.description||'')}</p>${isPackage?`<button class="pill" type="button" data-package="${escapeHtml(x.id)}">Me interesa este paquete</button>`:''}</div></article>`}).join('')||'<div class="empty">No hay publicaciones activas.</div>'}
-function renderCatalog(){/* Las promociones reales se muestran por separado con Supabase. */cardsRender(catalog.packages||[],'packageCards',true);$('eventPackage').innerHTML='<option value="">Por decidir / personalizado</option>'+(catalog.packages||[]).filter(x=>x.active!==false).map(x=>`<option value="${escapeHtml(x.id)}">${escapeHtml(x.title)}</option>`).join('')}
-$('packageCards').addEventListener('click',e=>{const btn=e.target.closest('[data-package]');if(!btn)return;$('eventPackage').value=btn.dataset.package;location.hash='#reservar'});
-async function loadCatalog(){try{catalog=DEMO?{announcements:demoRead().announcements||[],packages:demoRead().packages||[]}:await api('/api/public/catalog');renderCatalog();await cargarPromocionesReales()}catch(e){$('announcementCards').innerHTML='<div class="empty">No se pudieron cargar los anuncios.</div>';$('packageCards').innerHTML='<div class="empty">No se pudieron cargar los paquetes.</div>'}}
+// Precios guardados por la administración con formato numérico (por ejemplo "250.00").
+function publicPackagePrice(raw){
+ const value=String(raw??'').trim();
+ if(!value)return '';
+ if(!/^\d+(?:[.,]\d{1,2})?$/.test(value))return escapeHtml(value);
+ const number=Number(value.replace(',','.'));
+ return Number.isFinite(number)?new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(number):'';
+}
+function cardsRender(items,id,isPackage){
+ const root=$(id);
+ const active=(items||[]).filter(x=>x.active!==false);
+ if(!active.length){
+  root.innerHTML=`<div class="empty">${isPackage?'Pronto estarán disponibles nuestros paquetes. ¡Contáctanos para una cotización!':'La administración todavía no ha publicado anuncios.'}</div>`;
+  return;
+ }
+ root.innerHTML=active.map(x=>{
+  const u=imageSafe(x.image_url);
+  const img=u?`<img src="${escapeHtml(u)}" alt="Fotografía de ${escapeHtml(x.title)}" loading="lazy">`:'';
+  const price=isPackage?publicPackagePrice(x.price_label):'';
+  return `<article class="tile">${img}<div class="tilebody">${price?`<span class="tag">${price}</span>`:''}<h3>${escapeHtml(x.title)}</h3><p>${escapeHtml(x.description||'')}</p>${isPackage?`<button class="pill" type="button" data-package="${escapeHtml(x.id)}" aria-label="Seleccionar paquete ${escapeHtml(x.title)}">Me interesa este paquete</button>`:''}</div></article>`;
+ }).join('');
+}
+function renderCatalog(){
+ // Las promociones siguen utilizando su consulta independiente de Supabase.
+ const picker=$('eventPackage');
+ const previous=picker.value;
+ const active=(catalog.packages||[]).filter(x=>x.active!==false);
+ cardsRender(active,'packageCards',true);
+ picker.innerHTML='<option value="">Por decidir / personalizado</option>'+active.map(x=>`<option value="${escapeHtml(x.id)}">${escapeHtml(x.title)}</option>`).join('');
+ if(active.some(x=>String(x.id)===previous))picker.value=previous;
+}
+$('packageCards').addEventListener('click',e=>{
+ const btn=e.target.closest('button[data-package]');
+ if(!btn)return;
+ const picker=$('eventPackage');
+ picker.value=btn.dataset.package;
+ if(!picker.value){return;}
+ const label=picker.selectedOptions[0]?.textContent||'tu paquete';
+ const notice=$('selectedPackageNotice');
+ notice.textContent=`✓ Seleccionaste: ${label}. Completa tu fecha y los datos de la actividad.`;
+ notice.classList.remove('hidden');
+ // Desplazamiento explícito: también funciona si el enlace #reservar ya estaba abierto.
+ $('reservar').scrollIntoView({behavior:'smooth',block:'start'});
+ if(location.hash!=='#reservar')location.hash='#reservar';
+});
+$('eventPackage').addEventListener('change',()=>{
+ $('selectedPackageNotice').classList.add('hidden');
+});
+async function loadCatalog(){
+ // Esta consulta usa la clave pública y las políticas RLS de la tabla packages.
+ try{
+  if(!promoSupabase)throw Error('No se pudo cargar Supabase');
+  const {data,error}=await promoSupabase.from('packages')
+   .select('id,title,description,price_label,image_url,active')
+   .eq('active',true).order('created_at',{ascending:false});
+  if(error)throw error;
+  catalog.packages=data||[];
+  renderCatalog();
+ }catch(e){
+  console.error('Error al cargar paquetes:',e);
+  $('packageCards').innerHTML='<div class="empty">No pudimos cargar los paquetes ahora mismo. Intenta nuevamente más tarde.</div>';
+  $('eventPackage').innerHTML='<option value="">Por decidir / personalizado</option>';
+ }
+ // Los errores del catálogo de paquetes nunca deben impedir cargar promociones.
+ try{await cargarPromocionesReales()}catch(e){
+  console.error('Error al cargar promociones:',e);
+  $('announcementCards').innerHTML='<div class="empty">No se pudieron cargar los anuncios.</div>';
+ }
+}
 function dateStatus(date){return calendarDates[date]||'available'}
 function showDateFeedback(msg,type='warn'){$('dateFeedback').className=`status ${type}`;$('dateFeedback').textContent=msg}
 function syncDate(date){
@@ -414,7 +469,7 @@ $('bookingForm').addEventListener('submit',async e=>{
   button.textContent='Enviando solicitud…';
   const result=await enviarReservacion(data,token);
   feedback(`Solicitud recibida correctamente. Número: ${result.reservation_id}. La fecha estará pendiente de aprobación, hasta un máximo de 48 horas. Esto NO es una confirmación de reserva.`,'success');
-  $('bookingForm').reset();$('guestRows').innerHTML='';selectedDate='';updateGuestCounter();
+  $('bookingForm').reset();$('guestRows').innerHTML='';selectedDate='';$('selectedPackageNotice').classList.add('hidden');updateGuestCounter();
   window.turnstile?.reset();await loadCalendar();
  }catch(err){
   feedback(`No fue posible enviar la solicitud: ${err.message}. Revisa la disponibilidad y vuelve a intentarlo.`,'error');
