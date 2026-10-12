@@ -499,7 +499,7 @@ body:not(:has(#app.hidden)) > main { width:100%;max-width:none;padding:0; }
 <body>
 <header><div><h1>🌿 Hacienda El Flambo</h1><p>Panel privado de administración · Morovis, Puerto Rico</p></div></header>
 <main>
-<div class="notice" id="demoNotice"><strong>Estado:</strong> Promociones, solicitudes, fechas bloqueadas y registro de entrada: conexión real con Supabase. Los paquetes siguen en demostración. No confirmes eventos reales hasta completar las pruebas del sistema.</div>
+<div class="notice" id="demoNotice"><strong>Estado:</strong> Promociones, solicitudes, fechas bloqueadas y registro de entrada: conexión real con Supabase. Los paquetes se guardan en Supabase. No confirmes eventos reales hasta completar las pruebas del sistema.</div>
 <section class="card login" id="loginCard">
 <div class="login-brand"><img class="login-logo" src="logo_login_admin.JPG" alt="Hacienda El Flambo" decoding="async"></div>
 <h2>PANEL ADMINISTRATIVO</h2>
@@ -597,7 +597,7 @@ body:not(:has(#app.hidden)) > main { width:100%;max-width:none;padding:0; }
 <div class="card"><div class="bar"><h2>Promociones publicadas</h2><button type="button" class="ghost small" id="promoReload">Actualizar</button></div><div id="realPromoList"><p class="muted">Cargando…</p></div></div>
 <div class="card package-card">
   <h2>🎁 Paquetes</h2>
-  <p class="muted">Los paquetes siguen en modo demostración y se guardan solo en este navegador. Todavía no se sincronizan con Supabase ni con otros dispositivos.</p>
+  <p class="muted">Los paquetes se guardan en Supabase. Sus precios y fotografías podrán aparecer en la página pública una vez que conectemos también el index.html.</p>
   <form id="packageForm" class="formgrid">
     <div class="full"><label for="packageTitle">Nombre del paquete</label><input id="packageTitle" name="title" maxlength="100" placeholder="Ej. Cumpleaños en la hacienda" required></div>
     <div class="full"><label for="packageDescription">Descripción</label><textarea id="packageDescription" name="description" maxlength="1000" placeholder="¿Qué incluye este paquete?"></textarea></div>
@@ -610,12 +610,12 @@ body:not(:has(#app.hidden)) > main { width:100%;max-width:none;padding:0; }
       <div class="package-upload-area">
         <input id="packagePhotoFile" type="file" accept="image/*,.heic,.heif" class="package-file-input" aria-describedby="packagePhotoHint packagePhotoStatus">
         <label for="packagePhotoFile" class="package-upload-button"><span aria-hidden="true">📁</span> Agregar archivo</label>
-        <span class="package-upload-note" id="packagePhotoHint">Selecciona una foto de tu iPhone o computadora. Se optimiza para guardarla en este navegador.</span>
+        <span class="package-upload-note" id="packagePhotoHint">Selecciona una foto de tu iPhone o computadora. Se optimiza y se sube a Supabase. Formatos JPG, PNG, WebP o imágenes compatibles de tu iPhone.</span>
         <span id="packagePhotoStatus" class="package-upload-status" role="status" aria-live="polite">Ninguna fotografía seleccionada.</span>
         <div id="packagePhotoPreview" class="package-photo-preview hidden"><img id="packagePhotoPreviewImage" alt="Vista previa de la fotografía del paquete"><button id="packageRemovePhoto" class="ghost small" type="button">Quitar fotografía</button></div>
       </div>
     </div>
-    <div class="full"><button class="primary package-save" id="packageSaveButton" type="submit">Guardar paquete de prueba</button></div>
+    <div class="full"><button class="primary package-save" id="packageSaveButton" type="submit">Guardar paquete</button></div>
   </form>
   <div id="packageList" class="package-list"></div>
 </div>
@@ -631,7 +631,7 @@ body:not(:has(#app.hidden)) > main { width:100%;max-width:none;padding:0; }
 'use strict';
 /*
   Hacienda El Flambo: promociones y reservaciones reales con Supabase.
-  Los paquetes continuan en demostracion local hasta crear su backend.
+  Los paquetes, sus precios y sus fotos usan Supabase (tabla packages / bucket paquetes).
   Las consultas se protegen con RLS y las acciones con RPC administrativas.
   No colocar SUPABASE_SERVICE_ROLE_KEY en este archivo.
 */
@@ -639,25 +639,17 @@ const API_BASE = '';
 const SB_URL = 'https://pptrhfrolcndblgrpnhe.supabase.co';
 const SB_KEY = 'sb_publishable_V6HjIiUXMkCp1COM_aUXtA_bd4AsgEe';
 const sb = window.supabase?.createClient(SB_URL, SB_KEY, {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
-const DEMO = true; // Solo paquetes: demostracion local
-const DEMO_KEY = 'flambo_demo_v3';
 const $ = s => document.getElementById(s);
 const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const uid = () => crypto.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 const initial = () => ({reservations:[],announcements:[],packages:[],blocked:[]});
-const read = () => {try{return {...initial(),...JSON.parse(localStorage.getItem(DEMO_KEY)||'{}')}}catch{return initial()}};
-const write = data => localStorage.setItem(DEMO_KEY,JSON.stringify(data));
 const now = () => Date.now();
 const expired = r => r.status==='pending' && (!r.expires_at || Date.parse(r.expires_at)<=now());
 const actualStatus = r => expired(r)?'expired':r.status;
-let data=initial(),secret='';
+let data=initial();
 const statusNames={pending:'Pendiente',approved:'Aprobada',rejected:'Rechazada',expired:'Vencida',cancelled:'Cancelada'};
 let selectedEvent='';
 function notify(msg){const t=$('toast');t.textContent=msg;t.classList.remove('hidden');clearTimeout(notify.timer);notify.timer=setTimeout(()=>t.classList.add('hidden'),4500)}
-async function request(path,options={}){
- const r=await fetch(API_BASE+path,{...options,headers:{'Content-Type':'application/json','Authorization':'Bearer '+secret,...options.headers}});
- let v={};try{v=await r.json()}catch{}if(!r.ok)throw Error(v.error||`Error ${r.status}`);return v;
-}
 async function adminRpc(nombre, parametros){
  if(!sb)throw Error('No se pudo conectar a Supabase');
  const {data:result,error}=await sb.rpc(nombre,parametros);
@@ -688,9 +680,19 @@ async function loadRealState(){
  return {
   reservations:(reservations||[]).map(r=>({...r,guests:group.get(r.reservation_id)||[]})),
   blocked:blocked||[],
-  packages:read().packages||[],
+  packages:[],
   announcements:[]
  };
+}
+// Reservaciones y lista de invitados conservan su consulta original.
+// Si falla la lectura de paquetes, no se pierden las reservaciones en pantalla.
+async function loadPackages(){
+ if(!sb)throw Error('No se pudo conectar a Supabase');
+ const {data:items,error}=await sb.from('packages')
+   .select('id,title,description,price_label,image_url,active,created_at')
+   .order('created_at',{ascending:false});
+ if(error)throw Error(error.message);
+ return items||[];
 }
 let refreshSequence=0;
 async function refresh(){
@@ -698,10 +700,23 @@ async function refresh(){
  try{
   const live=await loadRealState();
   if(seq!==refreshSequence)return;
-  data={...initial(),...live};render();
+  data={...initial(),...live};
+  try{
+   const packages=await loadPackages();
+   if(seq!==refreshSequence)return;
+   data.packages=packages;
+  }catch(packageError){
+   if(seq!==refreshSequence)return;
+   data.packages=[];
+   render();
+   $('packageList').textContent='No se pudieron cargar los paquetes: '+packageError.message;
+   notify('Problema cargando paquetes: '+packageError.message);
+   return;
+  }
+  render();
  }catch(e){
   if(seq!==refreshSequence)return;
-  data={...initial(),packages:read().packages||[]};render();
+  data={...initial()};render();
   $('reservationList').textContent='No fue posible cargar las reservaciones desde Supabase. Pulsa Actualizar e intenta de nuevo.';
   notify('No se pudo actualizar: '+e.message);
  }
@@ -905,7 +920,7 @@ function compressPackageImage(file){
      scale*=.79;
     }
     if(!result.startsWith('data:image/jpeg;base64,')||result.length>600000)
-      throw Error('La fotografía es demasiado grande para guardar localmente. Intenta otra.');
+      throw Error('La fotografía es demasiado grande para procesarla. Intenta otra.');
     resolve(result);
    }catch(e){reject(e)}
   };
@@ -921,58 +936,122 @@ function packagePriceLabel(raw){
    throw Error('Escribe un precio válido en números (ejemplo: 250 o 250.50).');
  return number.toFixed(2);
 }
+// Solo se muestran fotos HTTPS, nunca contenido ejecutable o datos base64.
 function packagePhotoUrl(a){
- // Datos locales convertidos a JPEG o fotos https anteriores, nunca scripts.
- if(typeof a.image_data_url==='string'&&/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(a.image_data_url))return a.image_data_url;
- if(typeof a.image_url==='string')try{const u=new URL(a.image_url);if(u.protocol==='https:')return u.href}catch{}
- return '';
+ if(typeof a.image_url!=='string'||!a.image_url)return '';
+ try{
+  const u=new URL(a.image_url);
+  return u.protocol==='https:'?u.href:'';
+ }catch{return ''}
+}
+function packageStoragePath(url){
+ try{
+  const u=new URL(url);
+  const origin=new URL(SB_URL).origin;
+  const prefix='/storage/v1/object/public/paquetes/';
+  if(u.origin!==origin||!u.pathname.startsWith(prefix))return null;
+  const path=decodeURIComponent(u.pathname.slice(prefix.length));
+  // Evita rutas extrañas cuando se limpia una fotografía.
+  return path && !path.includes('..')?path:null;
+ }catch{return null}
 }
 $('packageForm').onsubmit=async e=>{
  e.preventDefault();
- const formEl=e.currentTarget;
+ const form=e.currentTarget;
  const button=$('packageSaveButton');
- const payload=Object.fromEntries(new FormData(formEl));
- payload.title=String(payload.title||'').trim();
- payload.description=String(payload.description||'').trim();
- if(!payload.title){notify('Escribe el nombre del paquete.');return}
- button.disabled=true;button.textContent='Guardando…';
+ const payload=Object.fromEntries(new FormData(form));
+ const title=String(payload.title||'').trim();
+ const description=String(payload.description||'').trim();
+ if(!title){notify('Escribe el nombre del paquete.');return}
+ button.disabled=true;
+ button.textContent='Guardando en Supabase…';
+ let uploadedPath=null;
+ let insertSucceeded=false;
  try{
-  payload.price_label=packagePriceLabel(payload.price_label);
-  payload.active=true;
+  if(!sb)throw Error('No se pudo conectar a Supabase');
+  const price_label=packagePriceLabel(payload.price_label);
+  let image_url='';
   const file=packagePhotoInput.files?.[0];
-  if(file)payload.image_data_url=await compressPackageImage(file);
-  if(DEMO){
-   const v=read();v.packages.unshift({id:uid(),...payload});
-   try{write(v)}catch(err){throw Error('No hay suficiente espacio local para esta foto. Elige una imagen más pequeña o elimina paquetes de prueba antiguos.')}
-  }else await request('/api/admin/catalog/packages',{method:'POST',body:JSON.stringify(payload)});
-  formEl.reset();clearPackagePhotoPreview();
-  await refresh();notify('Paquete de prueba guardado en este dispositivo.');
- }catch(err){notify('No se pudo guardar: '+err.message)}
- finally{button.disabled=false;button.textContent='Guardar paquete de prueba'}
+  if(file){
+   // Comprimir primero permite usar fotos grandes del iPhone, almacenando JPEG.
+   const jpegData=await compressPackageImage(file);
+   const imageBlob=await (await fetch(jpegData)).blob();
+   if(!imageBlob.size||imageBlob.size>5*1024*1024)
+    throw Error('La fotografía comprimida es inválida o supera 5 MB.');
+   uploadedPath=uid()+'.jpg';
+   const {error:uploadError}=await sb.storage.from('paquetes')
+      .upload(uploadedPath,imageBlob,{contentType:'image/jpeg',cacheControl:'3600',upsert:false});
+   if(uploadError)throw Error('No se pudo subir la foto: '+uploadError.message);
+   image_url=sb.storage.from('paquetes').getPublicUrl(uploadedPath).data.publicUrl;
+  }
+  const {data:saved,error}=await sb.from('packages')
+    .insert({title,description,price_label,image_url,active:true})
+    .select('id').single();
+  if(error)throw Error('No se pudo crear el paquete: '+error.message);
+  if(!saved?.id)throw Error('Supabase no confirmó el paquete.');
+  insertSucceeded=true;
+  form.reset();clearPackagePhotoPreview();
+  await refresh();
+  notify('Paquete guardado en Supabase correctamente.');
+ }catch(err){
+  // Solo borrar un archivo nuevo si la inserción NO llegó a completarse.
+  if(uploadedPath&&!insertSucceeded){
+   const {error:cleanupError}=await sb.storage.from('paquetes').remove([uploadedPath]);
+   if(cleanupError)console.warn('Fotografía sin borrar:',cleanupError.message);
+  }
+  notify('Error al guardar paquete: '+err.message);
+ }finally{
+  button.disabled=false;
+  button.textContent='Guardar paquete';
+ }
 };
 function renderCatalog(type){
- $(type==='announcements'?'realPromoList':'packageList').innerHTML=(data[type]||[]).length?data[type].map(a=>{
-  const photo=type==='packages'?packagePhotoUrl(a):'';
+ if(type!=='packages')return;
+ $('packageList').innerHTML=(data.packages||[]).length?data.packages.map(a=>{
+  const photo=packagePhotoUrl(a);
   const photoMarkup=photo?`<img class="package-list-photo" src="${esc(photo)}" alt="Fotografía de ${esc(a.title)}" loading="lazy">`:'';
   let price='';
-  if(type==='packages'&&a.price_label){
+  if(a.price_label){
    const original=String(a.price_label);
    const numeric=Number(original.replace(',','.'));
    price=Number.isFinite(numeric)&&/^\d+(?:[.,]\d{1,2})?$/.test(original)
     ?`<span class="package-list-price">$${numeric.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`
     :`<span class="package-list-price">${esc(original)}</span>`;
   }
-  return `<div class="entry package-list-entry">${photoMarkup}<div class="package-list-details"><strong>${esc(a.title)}</strong><p class="muted">${esc(a.description)}</p>${price}<span class="tag">${a.active!==false?'Visible':'Oculto'}</span><div class="actions"><button class="ghost small" data-type="${type}" data-id="${esc(a.id)}" data-op="toggle">${a.active!==false?'Ocultar':'Mostrar'}</button><button class="danger small" data-type="${type}" data-id="${esc(a.id)}" data-op="delete">Eliminar</button></div></div></div>`;
- }).join(''):'<p class="muted">No hay paquetes guardados todavía.</p>';
+  return `<div class="entry package-list-entry">${photoMarkup}<div class="package-list-details"><strong>${esc(a.title)}</strong><p class="muted">${esc(a.description||'')}</p>${price}<span class="tag">${a.active!==false?'Visible':'Oculto'}</span><div class="actions"><button class="ghost small" data-id="${esc(a.id)}" data-op="toggle">${a.active!==false?'Ocultar':'Mostrar'}</button><button class="danger small" data-id="${esc(a.id)}" data-op="delete">Eliminar</button></div></div></div>`;
+ }).join(''):'<p class="muted">No hay paquetes guardados en Supabase todavía.</p>';
 }
-for(const id of ['packageList'])$(id).onclick=async e=>{
- const b=e.target.closest('[data-op]');if(!b)return;const {type,id:itemid,op}=b.dataset;
- if(op==='delete'&&!confirm('¿Eliminar esta publicación?'))return;
- try{if(DEMO){const v=read();const item=v[type].find(x=>x.id===itemid);if(op==='delete')v[type]=v[type].filter(x=>x.id!==itemid);else if(item)item.active=item.active===false;write(v)}
- else{const base=`/api/admin/catalog/${type}/${encodeURIComponent(itemid)}`;await request(base,{method:op==='delete'?'DELETE':'PATCH',...(op==='toggle'?{body:JSON.stringify({active: data[type].find(x=>x.id===itemid)?.active===false})}:{})})}
- await refresh();notify('Publicación actualizada.')}catch(err){notify(err.message)}
+$('packageList').onclick=async e=>{
+ const button=e.target.closest('button[data-op]');
+ if(!button||button.disabled)return;
+ const item=data.packages.find(p=>p.id===button.dataset.id);
+ if(!item){notify('El paquete ya no aparece. Presiona Actualizar.');return}
+ const op=button.dataset.op;
+ if(op==='delete'&&!confirm('¿Eliminar definitivamente el paquete «'+item.title+'»? Esta acción no se puede deshacer.'))return;
+ button.disabled=true;
+ try{
+  if(op==='toggle'){
+   const {data:updated,error}=await sb.from('packages')
+     .update({active:item.active===false}).eq('id',item.id).select('id').single();
+   if(error||!updated?.id)throw Error(error?.message||'No se actualizó el paquete');
+   await refresh();
+   notify('Visibilidad del paquete actualizada.');
+  }else if(op==='delete'){
+   const {data:deleted,error}=await sb.from('packages')
+     .delete().eq('id',item.id).select('id').single();
+   if(error||!deleted?.id)throw Error(error?.message||'No se eliminó el paquete');
+   let warning='';
+   const imagePath=packageStoragePath(item.image_url);
+   if(imagePath){
+    const {error:removeError}=await sb.storage.from('paquetes').remove([imagePath]);
+    if(removeError)warning=' No se pudo eliminar su foto: '+removeError.message;
+   }
+   await refresh();
+   notify('Paquete eliminado de Supabase.'+warning);
+  }
+ }catch(err){notify('No se pudo modificar el paquete: '+err.message)}
+ finally{button.disabled=false}
 };
-window.addEventListener('storage',e=>{if(DEMO&&e.key===DEMO_KEY&&!$('app').classList.contains('hidden'))renderCatalog('packages')});
 
 /* Promociones reales: se ejecutan DESPUÉS de inicializar Supabase y el panel. */
 const escAttr = esc;
