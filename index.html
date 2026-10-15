@@ -214,6 +214,163 @@ section{padding:76px 0}.heading{text-align:center;margin-bottom:33px}.heading h2
 
 /* Aviso informativo de reservaciones: sin alerta obsoleta de modo demostracion. */
 #modeNotice.booking-info{background:#eef6ee;border-color:#cbdcc9;color:#285539}
+
+/* ============================================================
+   HACIENDA EL FLAMBO · SERVICIOS FOTOGRAFICOS
+   Fotografias reutilizadas de "Postales de El Flambo".
+   Este bloque solo modifica la apariencia de #servicios.
+   ============================================================ */
+#servicios {
+  background: linear-gradient(180deg,#f2f6ee 0%,#faf8ef 100%);
+}
+#servicios .heading {margin-bottom:36px;}
+#servicios .heading h2 {letter-spacing:-.5px;}
+#servicios .servicegrid {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:19px;
+  align-items:stretch;
+}
+#servicios .service-card {
+  min-width:0;
+  padding:0;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  isolation:isolate;
+  background:#fffdf8;
+  border:1px solid #e4e9dc;
+  border-radius:23px;
+  box-shadow:0 12px 30px rgba(21,60,37,.085);
+  transition:transform .25s ease,box-shadow .25s ease;
+}
+#servicios .service-photo {
+  position:relative;
+  aspect-ratio: 4 / 3;
+  width:100%;
+  overflow:hidden;
+  background:#dfe9dc;
+}
+#servicios .service-photo img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  transition:transform .35s ease;
+}
+#servicios .service-photo::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,transparent 50%,rgba(10,33,20,.65) 100%);
+  pointer-events:none;
+}
+#servicios .service-label {
+  position:absolute;
+  z-index:1;
+  bottom:13px;
+  left:14px;
+  display:inline-block;
+  padding:7px 12px;
+  border:1px solid rgba(255,255,255,.45);
+  border-radius:100px;
+  background:rgba(23,53,33,.7);
+  color:#fff8ea;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.06em;
+  backdrop-filter:blur(7px);
+  -webkit-backdrop-filter:blur(7px);
+}
+#servicios .service-copy {
+  display:flex;
+  flex:1;
+  flex-direction:column;
+  align-items:flex-start;
+  padding:21px 20px 22px;
+  gap:10px;
+}
+#servicios .service-copy h3 {
+  font:700 clamp(19px,1.85vw,23px)/1.18 Georgia,serif;
+  letter-spacing:-.35px;
+  color:#254c36;
+  margin:0;
+}
+#servicios .service-copy p {
+  color:#617364;
+  font-size:13px;
+  line-height:1.65;
+  margin:0;
+  flex:1;
+}
+#servicios .service-decor {
+  display:block;
+  width:37px;
+  height:3px;
+  margin-top:8px;
+  background:#d5a958;
+  border-radius:4px;
+}
+#servicios .service-outro {
+  margin:36px auto 0;
+  max-width:650px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:14px;
+  text-align:center;
+}
+#servicios .service-outro p {
+  color:#49634d;
+  font:italic 20px/1.5 Georgia,serif;
+  margin:0;
+}
+#servicios .service-outro a {
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  padding:14px 24px;
+  min-height:48px;
+  color:white;
+  background:#254c36;
+  border-radius:40px;
+  font-weight:800;
+  font-size:14px;
+  box-shadow:0 7px 20px rgba(23,69,38,.15);
+  transition:background .2s ease,transform .2s ease;
+}
+#servicios .service-outro a:hover {background:#397650;transform:translateY(-2px);}
+#servicios .service-outro a:focus-visible {outline:3px solid #d5a958;outline-offset:4px;}
+@media(hover:hover) and (pointer:fine) {
+  #servicios .service-card:hover {transform:translateY(-5px);box-shadow:0 20px 38px rgba(21,60,37,.14);}
+  #servicios .service-card:hover .service-photo img {transform:scale(1.055);}
+}
+@media(max-width:1050px) {
+  #servicios .servicegrid {grid-template-columns:repeat(2,minmax(0,1fr));}
+  #servicios .service-copy h3 {font-size:23px;}
+}
+@media(max-width:600px) {
+  #servicios .heading {margin-bottom:24px;}
+  #servicios .servicegrid {grid-template-columns:1fr;gap:15px;}
+  #servicios .service-card {display:grid;grid-template-columns:42% minmax(0,1fr);border-radius:18px;}
+  #servicios .service-photo {aspect-ratio:auto;height:100%;min-height:183px;}
+  #servicios .service-label {font-size:9px;left:10px;bottom:11px;padding:6px 9px;letter-spacing:0;}
+  #servicios .service-copy {min-width:0;padding:18px 15px;gap:8px;}
+  #servicios .service-copy h3 {font-size:clamp(18px,4.7vw,21px);}
+  #servicios .service-copy p {font-size:12px;line-height:1.52;}
+  #servicios .service-decor {margin-top:3px;}
+  #servicios .service-outro {margin-top:29px;}
+  #servicios .service-outro p {font-size:18px;}
+}
+@media(max-width:365px) {
+  #servicios .service-card {grid-template-columns:1fr;}
+  #servicios .service-photo {aspect-ratio:16/9;min-height:0;height:auto;}
+  #servicios .service-copy {padding:19px;}
+}
+@media(prefers-reduced-motion:reduce) {
+  #servicios .service-card,#servicios .service-photo img,#servicios .service-outro a {transition:none;}
+}
+
 </style>
 </head>
 <body>
@@ -247,7 +404,18 @@ section{padding:76px 0}.heading{text-align:center;margin-bottom:33px}.heading h2
 </div><p class="gallery-hint">Toca cualquier foto para verla más grande.</p></div></section>
 <div class="lightbox hidden" id="photoViewer" role="dialog" aria-modal="true" aria-label="Fotografía ampliada"><button class="lightbox-close" type="button" id="closePhoto" aria-label="Cerrar foto">×</button><img id="largePhoto" alt=""><p id="largeCaption"></p></div>
 <section id="anuncios"><div class="container"><div class="heading"><span class="eyebrow">Novedades</span><h2>Anuncios y promociones</h2><p>Descubre las próximas experiencias, ofertas y novedades de Hacienda El Flambo.</p></div><div id="announcementCards" class="cards"><div class="empty">Cargando anuncios…</div></div></div></section>
-<section id="servicios" style="background:#f1f6ee"><div class="container"><div class="heading"><span class="eyebrow">Celebra con nosotros</span><h2>Un lugar donde lo tienes todo</h2><p>Entre flora, animales de granja, espacios para fotografías y muchas amenidades, creamos momentos para recordar.</p></div><div class="servicegrid" id="serviceGrid"></div></div></section>
+<section id="servicios"><div class="container">
+  <div class="heading">
+    <span class="eyebrow">Celebra con nosotros</span>
+    <h2>Un lugar donde lo tienes todo</h2>
+    <p>Entre flora, animales de granja, espacios para fotografías y muchas amenidades, creamos momentos para recordar.</p>
+  </div>
+  <div class="servicegrid" id="serviceGrid"></div>
+  <div class="service-outro">
+    <p>Tu celebración, rodeada de naturaleza y buenos momentos.</p>
+    <a href="#reservar">🌿 Separar mi fecha</a>
+  </div>
+</div></section>
 <section id="paquetes"><div class="container"><div class="heading"><span class="eyebrow">A tu gusto</span><h2>Paquetes para tu celebración</h2><p>La administración publica los paquetes y sus detalles. La disponibilidad se confirma al aprobar la solicitud.</p></div><div class="cards" id="packageCards"><div class="empty">Cargando paquetes…</div></div></div></section>
 <section class="band" id="reservar"><div class="container"><div class="heading"><span class="eyebrow">Reserva tu experiencia</span><h2>Solicita tu fecha especial</h2><p>Selecciona una fecha disponible, completa los datos de la actividad y envía los nombres de tus invitados.</p></div><div class="bookingbox">
 <div id="modeNotice" class="notice booking-info hidden"></div><h3>📅 Verifica disponibilidad</h3><p class="note">Las fechas en amarillo tienen una solicitud pendiente, las rojas ya están reservadas o bloqueadas. Las solicitudes pendientes se mantienen hasta por 48 horas, salvo que la administración decida antes.</p>
@@ -298,8 +466,29 @@ let calendarDates={};let catalog={announcements:[],packages:[]};let selectedDate
 let calendarReady=false, calendarRequestId=0, bookingBusy=false;
 function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function imageSafe(u){if(!u)return '';try{const x=new URL(u,location.href);return ['https:','http:'].includes(x.protocol)?x.href:''}catch{return ''}}
-const services=[['🎂','Cumpleaños y bodas','Celebraciones inolvidables en un ambiente natural.'],['🐐','Animales de granja','Experiencias cercanas a la naturaleza.'],['🎪','Casa de brinco y carpas','Opciones recreativas para tu actividad.'],['🍽️','Catering y estaciones','Catering, coffee bar, açaí, charcutería y más.'],['🎶','Música y entretenimiento','Opciones de música y equipo para festejar.'],['📸','Fotografía y escenarios','Casita del árbol y rincones para fotos.'],['🍿','Dulces y bebidas','Popcorn, algodón, piraguas y piña colada.'],['🌳','Museo la Abuela','Descubre espacios llenos de encanto.']];
-$('serviceGrid').innerHTML=services.map(([em,t,d])=>`<div class="service"><span class="emoji">${em}</span><b>${t}</b><span>${d}</span></div>`).join('');
+// Las mismas fotografias de la galeria "Postales de El Flambo".
+// Se reutilizan los archivos ya publicados en /fotos/; no requiere subir imagenes nuevas.
+const services=[
+  {title:'Cumpleaños y bodas',description:'Celebraciones inolvidables en un ambiente natural.',photo:'fotos/bodas.webp',tag:'Momentos especiales'},
+  {title:'Animales de granja',description:'Experiencias cercanas a la naturaleza para compartir en familia.',photo:'fotos/animales.webp',tag:'Naturaleza y familia'},
+  {title:'Casa de brinco y carpas',description:'Opciones recreativas para disfrutar durante tu actividad.',photo:'fotos/recreacion.webp',tag:'Diversión para todos'},
+  {title:'Catering y estaciones',description:'Catering, coffee bar, açaí, charcutería y más.',photo:'fotos/catering.webp',tag:'Sabores especiales'},
+  {title:'Música y entretenimiento',description:'Opciones de música y equipo para celebrar a tu estilo.',photo:'fotos/musica.webp',tag:'Celebra a tu ritmo'},
+  {title:'Fotografía y escenarios',description:'Casita del árbol, jardines y rincones para tus mejores fotos.',photo:'fotos/jardin.webp',tag:'Rincones únicos'},
+  {title:'Dulces y bebidas',description:'Popcorn, algodón, piraguas y piña colada para completar tu fiesta.',photo:'fotos/actividades.webp',tag:'Detalles para disfrutar'},
+  {title:'Museo la Abuela',description:'Descubre espacios llenos de encanto y tradición.',photo:'fotos/museo.webp',tag:'Historia y tradición'}
+];
+$('serviceGrid').innerHTML=services.map(s=>`<article class="service service-card">
+  <div class="service-photo">
+    <img src="${escapeHtml(s.photo)}" alt="${escapeHtml(s.title)} en Hacienda El Flambo" loading="lazy" decoding="async">
+    <span class="service-label">${escapeHtml(s.tag)}</span>
+  </div>
+  <div class="service-copy">
+    <h3>${escapeHtml(s.title)}</h3>
+    <p>${escapeHtml(s.description)}</p>
+    <span class="service-decor" aria-hidden="true"></span>
+  </div>
+</article>`).join('');
 // Precios guardados por la administración con formato numérico (por ejemplo "250.00").
 function publicPackagePrice(raw){
  const value=String(raw??'').trim();
