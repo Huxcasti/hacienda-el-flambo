@@ -592,8 +592,12 @@ body:not(:has(#app.hidden)) > main { width:100%;max-width:none;padding:0; }
 <div class="grid"><div class="card"><h2>Bloquear una fecha</h2><form id="blockForm"><label for="blockDate">Fecha</label><input type="date" id="blockDate" required><div style="height:12px"></div><label for="blockReason">Motivo (interno)</label><input id="blockReason" maxlength="200" placeholder="Mantenimiento / evento privado"><div class="actions"><button class="primary">Bloquear fecha</button></div></form></div><div class="card"><h2>Fechas bloqueadas manualmente</h2><div id="blockedList"></div></div></div>
 </section>
 <section class="panel" id="panel-publicaciones">
-<div class="card"><h2>🎬 Publicar fotografía o video</h2><p class="muted">Esta sección SÍ funciona con Supabase. Máximo 6 MB por archivo (JPG, PNG, WebP, MP4, WebM). Para videos mayores necesitaremos carga resumible.</p>
-<form id="realPromoForm" class="formgrid" method="post"><div class="full"><label for="promoTitulo">Título de promoción</label><input id="promoTitulo" maxlength="120" required></div><div class="full"><label for="promoDescripcion">Descripción</label><textarea id="promoDescripcion" maxlength="1200"></textarea></div><div class="full"><label for="promoArchivo">Imagen o video</label><input id="promoArchivo" type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm" required></div><div class="full"><button type="submit" class="primary" id="promoSubmit">Publicar en la web</button></div><p id="promoStatus" class="muted full" role="status" aria-live="polite"></p></form></div>
+<div class="card">
+  <div class="bar"><h2>📣 Administrar promociones</h2><button type="button" class="primary" id="promoNew" aria-controls="promoEditor" aria-expanded="false">+ Nueva promoción</button></div>
+  <p class="muted">Puedes publicar varias promociones sin borrar las anteriores. Cada una aparecerá en la página pública.</p>
+  <div id="promoEditor" class="hidden">
+  <h3>🎬 Publicar fotografía o video</h3><p class="muted">Esta sección SÍ funciona con Supabase. Máximo 6 MB por archivo (JPG, PNG, WebP, MP4, WebM). Para videos mayores necesitaremos carga resumible.</p>
+<form id="realPromoForm" class="formgrid" method="post"><div class="full"><label for="promoTitulo">Título de promoción</label><input id="promoTitulo" maxlength="120" required></div><div class="full"><label for="promoDescripcion">Descripción</label><textarea id="promoDescripcion" maxlength="1200"></textarea></div><div class="full"><label for="promoArchivo">Imagen o video</label><input id="promoArchivo" type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm" required></div><div class="full"><button type="submit" class="primary" id="promoSubmit">Publicar en la web</button></div><p id="promoStatus" class="muted full" role="status" aria-live="polite"></p></form></div></div>
 <div class="card"><div class="bar"><h2>Promociones publicadas</h2><button type="button" class="ghost small" id="promoReload">Actualizar</button></div><div id="realPromoList"><p class="muted">Cargando…</p></div></div>
 <div class="card package-card">
   <h2>🎁 Paquetes</h2>
@@ -1077,13 +1081,28 @@ async function invokePromo(body,headers={}){
  const response=await fetch(SB_URL+'/functions/v1/gestionar-promociones',{method:'POST',headers:{'Authorization':'Bearer '+session.access_token,'apikey':SB_KEY,...headers},body});
  const payload=await response.json().catch(()=>({}));if(!response.ok)throw Error(payload.error||payload.detalle||`Error ${response.status}`);return payload;
 }
+$('promoNew').onclick=()=>{
+ const editor=$('promoEditor'),btn=$('promoNew');
+ if(editor.classList.contains('hidden')){
+  $('realPromoForm').reset();
+  $('promoStatus').textContent='';
+  editor.classList.remove('hidden');
+  btn.textContent='Cerrar formulario';
+  btn.setAttribute('aria-expanded','true');
+  $('promoTitulo').focus();
+ }else{
+  editor.classList.add('hidden');
+  btn.textContent='+ Nueva promoción';
+  btn.setAttribute('aria-expanded','false');
+ }
+};
 $('realPromoForm').onsubmit=async e=>{
  e.preventDefault();const file=$('promoArchivo').files[0],button=$('promoSubmit');
  if(!file){$('promoStatus').textContent='Selecciona una foto o video';notify('Selecciona una foto o video');return}
  if(file.size>6*1024*1024){$('promoStatus').textContent='El archivo pesa '+(file.size/1048576).toFixed(1)+' MB. El límite actual es 6 MB. Comprímelo antes de publicarlo.';notify('El archivo supera 6 MB. Comprímelo primero.');return}
  const form=new FormData();form.set('accion','subir');form.set('titulo',$('promoTitulo').value.trim());form.set('descripcion',$('promoDescripcion').value.trim());form.set('archivo',file);
  $('promoStatus').textContent='Subiendo '+file.name+'… No cierres esta página.';button.disabled=true;button.textContent='Subiendo…';
- try{await invokePromo(form);e.target.reset();await refreshPromos();$('promoStatus').textContent='Promoción publicada correctamente.';notify('Promoción publicada correctamente')}
+ try{await invokePromo(form);e.target.reset();await refreshPromos();$('promoStatus').textContent='Promoción publicada correctamente.';$('promoEditor').classList.add('hidden');$('promoNew').textContent='+ Nueva promoción';$('promoNew').setAttribute('aria-expanded','false');notify('Promoción publicada correctamente')}
  catch(err){$('promoStatus').textContent='No se pudo publicar: '+err.message;notify('No se pudo publicar: '+err.message)}finally{button.disabled=false;button.textContent='Publicar en la web'}
 };
 $('promoReload').onclick=refreshPromos;
