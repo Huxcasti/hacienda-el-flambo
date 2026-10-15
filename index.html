@@ -377,6 +377,11 @@ section{padding:76px 0}.heading{text-align:center;margin-bottom:33px}.heading h2
 #announcementCards .tile > img{display:block;width:100%;height:auto;max-height:none;object-fit:contain;object-position:center;background:#fff;}
 
 #packageCards .tile{align-self:start;}
+/* La tarjeta de ubicación es un enlace accesible a Google Maps. */
+.contact-location{display:block;text-decoration:none;cursor:pointer;transition:border-color .2s,transform .2s}
+.contact-location:hover{border-color:#3b7853;transform:translateY(-2px)}
+.contact-location:focus-visible{outline:3px solid #dcae57;outline-offset:3px}
+.contact-location .map-cta{display:inline-block;margin-top:4px;color:#234b36;font-size:13px;font-weight:800;text-decoration:underline;text-underline-offset:3px}
 /* Lectura mejorada en tarjetas de anuncios y paquetes, especialmente en iPhone. */
 #announcementCards .tilebody,
 #packageCards .tilebody{padding:clamp(20px,4vw,28px);}
@@ -469,7 +474,7 @@ section{padding:76px 0}.heading{text-align:center;margin-bottom:33px}.heading h2
 </div>
 <button id="submitBooking" class="submit" type="submit">Enviar solicitud de reservación</button><div id="submitFeedback" role="status" aria-live="polite"></div></form>
 </div></div></section>
-<section id="contacto"><div class="container"><div class="heading"><span class="eyebrow">Estamos para ayudarte</span><h2>Comunícate con nosotros</h2><p>Separa tu fecha con anticipación y consulta los detalles de tu celebración.</p></div><div class="contactgrid"><div class="contact"><span class="emoji">📍</span><strong>Ubicación</strong><p>Morovis, Puerto Rico</p></div><div class="contact"><span class="emoji">💬</span><strong>WhatsApp</strong><p><a href="https://wa.me/17875141034" target="_blank" rel="noopener noreferrer">(787) 514-1034</a></p></div><div class="contact"><span class="emoji">✉️</span><strong>Correo</strong><p><a href="mailto:haciendaelflambo@gmail.com">haciendaelflambo@gmail.com</a></p></div></div></div></section>
+<section id="contacto"><div class="container"><div class="heading"><span class="eyebrow">Estamos para ayudarte</span><h2>Comunícate con nosotros</h2><p>Separa tu fecha con anticipación y consulta los detalles de tu celebración.</p></div><div class="contactgrid"><a class="contact contact-location" href="https://www.google.com/maps/search/?api=1&amp;query=Hacienda%20El%20Flambo%2C%20Morovis%2C%20Puerto%20Rico" target="_blank" rel="noopener noreferrer" aria-label="Abrir ubicación de Hacienda El Flambo en Google Maps"><span class="emoji">📍</span><strong>Ubicación</strong><p>Hacienda El Flambo · Morovis, Puerto Rico</p><span class="map-cta">Ver ubicación y cómo llegar ↗</span></a><div class="contact"><span class="emoji">💬</span><strong>WhatsApp</strong><p><a href="https://wa.me/17875141034" target="_blank" rel="noopener noreferrer">(787) 514-1034</a></p></div><div class="contact"><span class="emoji">✉️</span><strong>Correo</strong><p><a href="mailto:haciendaelflambo@gmail.com">haciendaelflambo@gmail.com</a></p></div></div></div></section>
 </main><footer><div class="container"><strong>🌿 Hacienda El Flambo</strong>Morovis, Puerto Rico · <a href="https://www.instagram.com/hacienda_el_flambo/" target="_blank" rel="noopener noreferrer">@hacienda_el_flambo</a><p>© <span id="year"></span> Hacienda El Flambo. Todos los derechos reservados.</p></div></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
@@ -480,7 +485,7 @@ async function cargarPromocionesReales(){
  const {data,error}=await promoSupabase.from('promociones').select('id,titulo,descripcion,tipo,archivo_url').eq('activo',true).order('creado_en',{ascending:false});
  if(error){target.innerHTML='<div class="empty">No se pudieron cargar las promociones.</div>';return}
  target.innerHTML=(data||[]).length?data.map(p=>{
-  const url=imageSafe(p.archivo_url);const media=url?(p.tipo==='video'?`<video controls playsinline preload="metadata" style="display:block;width:100%;max-height:340px;background:#17251b;border-radius:15px" src="${escapeHtml(url)}"></video>`:`<img loading="lazy" src="${escapeHtml(url)}" alt="${escapeHtml(p.titulo)}">`):'';
+  const url=imageSafe(p.archivo_url);const media=url?(p.tipo==='video'?`<video controls playsinline preload="metadata" poster="hacienda_flambo.JPG" aria-label="Video promocional: ${escapeHtml(p.titulo)}" style="display:block;width:100%;aspect-ratio:16/9;max-height:440px;object-fit:contain;background:#17251b;border-radius:15px" src="${escapeHtml(url)}#t=0.1"></video>`:`<img loading="lazy" src="${escapeHtml(url)}" alt="${escapeHtml(p.titulo)}">`):'';
   return `<article class="tile">${media}<div class="tilebody"><h3>${escapeHtml(p.titulo)}</h3><p>${escapeHtml(p.descripcion||'')}</p></div></article>`;
  }).join(''):'<div class="empty">La administración todavía no ha publicado anuncios.</div>';
 }
