@@ -581,7 +581,7 @@ body:not(:has(#app.hidden)) > main { width:100%;max-width:none;padding:0; }
 <div class="card reservations-card">
   <div class="reservations-card-header"><h2>Solicitudes de actividades</h2><p>Revisa y administra las reservaciones recibidas.</p></div>
   <div class="reservations-toolbar"><div class="actions"><button id="refresh" class="ghost small" type="button">↻ Actualizar</button><select id="filterReservations" aria-label="Filtrar reservaciones"><option value="all">Todas</option><option value="pending">Pendientes</option><option value="approved">Aprobadas</option><option value="rejected">Rechazadas</option><option value="expired">Vencidas</option><option value="cancelled">Canceladas</option></select></div></div>
-  <details class="reservations-help"><summary>Información sobre las reservaciones y sus estados</summary><p>Las solicitudes pendientes caducan a las 48 horas. Puedes aprobar, rechazar o cancelar reservaciones. Las cancelaciones liberan la fecha. Si ya no necesitas conservar una reservación cancelada, puedes eliminar definitivamente sus datos y su lista de invitados con una confirmación adicional. Las pruebas rechazadas o vencidas también se pueden eliminar cuando estén marcadas PRUEBA DEL SISTEMA. Se muestran las últimas 200 solicitudes.</p></details>
+  <details class="reservations-help"><summary>Información sobre las reservaciones y sus estados</summary><p>Las solicitudes pendientes caducan a las 48 horas. Puedes aprobar, rechazar o cancelar reservaciones. Las cancelaciones liberan la fecha. Si ya no necesitas conservar una reservación cancelada, puedes eliminar definitivamente sus datos y su lista de invitados con una confirmación adicional. Las reservaciones rechazadas también pueden eliminarse definitivamente, si la función de eliminación está configurada en Supabase. Las pruebas vencidas se pueden eliminar cuando estén marcadas PRUEBA DEL SISTEMA. Se muestran las últimas 200 solicitudes.</p></details>
   <div id="reservationList"></div>
 </div>
 </section>
@@ -781,7 +781,8 @@ function renderReservations(){
    ${status==='pending'?`<p class="reservation-expiration">Vence: ${esc(new Date(r.expires_at).toLocaleString('es-PR'))}</p><div class="reservation-actions"><button class="primary small" data-action="approve" data-id="${id}">✓ Aprobar</button><button class="danger" data-action="reject" data-id="${id}">Rechazar</button></div>`:''}
    ${['pending','approved'].includes(status)?`<div class="reservation-actions"><button class="ghost small" data-action="cancel" data-id="${id}">Cancelar reservación</button></div>`:''}
    ${status==='cancelled'?`<div class="reservation-actions"><button class="danger small" data-action="delete-cancelled" data-id="${id}">Eliminar reservación definitivamente</button></div>`:''}
-   ${['rejected','expired'].includes(status) && String(r.notes||'').trim().toUpperCase().startsWith('PRUEBA DEL SISTEMA')?`<div class="reservation-actions"><button class="danger small" data-action="delete-test" data-id="${id}">Eliminar prueba permanentemente</button></div>`:''}
+   ${status==='rejected'?`<div class="reservation-actions"><button class="danger small" data-action="delete-rejected" data-id="${id}">Eliminar reservación definitivamente</button></div>`:''}
+   ${status==='expired' && String(r.notes||'').trim().toUpperCase().startsWith('PRUEBA DEL SISTEMA')?`<div class="reservation-actions"><button class="danger small" data-action="delete-test" data-id="${id}">Eliminar prueba permanentemente</button></div>`:''}
  </article>`;
  }).join(''):'<p class="muted">No hay reservaciones en esta categoría.</p>';
 }
@@ -814,6 +815,12 @@ $('reservationList').addEventListener('click',async e=>{
   if(prompt(aviso)?.trim().toUpperCase()!=='ELIMINAR')return;
   rpc='admin_eliminar_reservacion_cancelada';params={p_reservacion:id};
   mensaje='Reservación cancelada e invitados eliminados definitivamente de Supabase.';
+ }else if(accion==='delete-rejected'){
+  if(estado!=='rejected'){notify('Solo se pueden eliminar solicitudes rechazadas.');return}
+  const aviso=`ATENCIÓN: se eliminará definitivamente la reservación RECHAZADA de ${r.customer_name}, fecha ${r.date}, y sus invitados. No se puede deshacer.\n\nEscribe ELIMINAR para confirmar:`;
+  if(prompt(aviso)?.trim().toUpperCase()!=='ELIMINAR')return;
+  rpc='admin_eliminar_reservacion_rechazada';params={p_reservacion:id};
+  mensaje='Reservación rechazada e invitados eliminados definitivamente.';
  }else if(accion==='delete-test'){
   if(!['rejected','expired'].includes(estado)||!String(r.notes||'').trim().toUpperCase().startsWith('PRUEBA DEL SISTEMA')){
    notify('Solo puedes eliminar reservaciones de prueba ya finalizadas.');return;
